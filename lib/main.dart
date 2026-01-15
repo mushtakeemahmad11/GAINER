@@ -111,6 +111,7 @@ class MyApp extends StatelessWidget {
       getPages: AppPages.routes,
     );
 
+
     return GetMaterialApp(
       // showPerformanceOverlay: true,
       debugShowCheckedModeBanner: false,
