@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/constants/gainer_color.dart';
+import 'package:gainer/gainer_app/modules/app_switcher_view/app_switcher_controller.dart';
+import 'package:get/get.dart';
 
 class BalanceCard extends StatelessWidget {
   const BalanceCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final c = Get.find<AppSwitcherController>();
     return Card(
       // color: Colors.white,
       elevation: 2,
@@ -40,11 +43,11 @@ class BalanceCard extends StatelessWidget {
                 ),
               ],
             ),
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text("Last Stock Update"),
-                Text("04 Dec 2025",
+                Text(c.getStock()!.stockDate ?? '',
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ],

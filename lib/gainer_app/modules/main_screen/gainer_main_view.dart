@@ -2,9 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/constants/gainer_image.dart';
-import 'package:gainer/gainer_app/modules/main_screen/widgets/action_section.dart';
-import 'package:gainer/gainer_app/modules/main_screen/widgets/balance_card.dart';
-import 'package:gainer/testing/test_dropdown.dart';
 import 'package:get/get.dart';
 import '../../core/constants/gainer_color.dart';
 import 'gainer_main_controller.dart';
@@ -24,7 +21,13 @@ class GainerMainView extends GetView<GainerMainController> {
           const Icon(Icons.notifications),
           const SizedBox(width: 12),
           // Icon(Icons.settings),
-          Image.asset(GainerImages.scsCircle),
+          GestureDetector(
+              onTap: () {
+                if (controller.currentIndex.value != 0) {
+                  controller.currentIndex.value = 0;
+                }
+              },
+              child: Image.asset(GainerImages.scsCircle, height: 30)),
           const SizedBox(width: 12),
         ],
       ),
@@ -40,15 +43,15 @@ class GainerMainView extends GetView<GainerMainController> {
       // ),
 
       body: Obx(() => IndexedStack(
-        index: controller.currentIndex.value,
-        children: controller.pages,
-      )),
+            index: controller.currentIndex.value,
+            children: controller.pages,
+          )),
       bottomNavigationBar: Obx(() => BottomNavigationBar(
-        currentIndex: controller.currentIndex.value,
-        onTap: controller.changeTab,
-        items: controller.items,
-        type: BottomNavigationBarType.fixed,
-      )),
+            currentIndex: controller.currentIndex.value,
+            onTap: controller.changeTab,
+            items: controller.items,
+            type: BottomNavigationBarType.fixed,
+          )),
 
 /*
       body: SingleChildScrollView(

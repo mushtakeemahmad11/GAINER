@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:gainer/gainer/model/user_model.dart';
+import 'package:gainer/gainer_app/modules/main_screen/models/location_data_model.dart';
+import 'package:gainer/gainer_app/modules/main_screen/models/location_data_model.dart';
 import 'package:get/get.dart';
 import '../../../gainer/apis_functionality/api_service.dart';
 import '../../../gainer/apis_functionality/firebase_db_creation.dart';
@@ -14,17 +16,36 @@ class AppSwitcherController extends GetxController {
   RxnString errMsg = RxnString(null);
 
   // Data list with full structure for store all location which got according to tCode
-  RxList<Map<String, dynamic>> locationList = <Map<String, dynamic>>[].obs;
+  // RxList<Map<String, dynamic>> locationList = <Map<String, dynamic>>[].obs;
   // RxnString? selectedLocation which user select and by default zero index;
   Rx<String?> selectedLocation = Rx<String?>(null);
   Rx<String?> selectedLocationId = Rx<String?>(null);
 
+  RxList<LocationDataModel> locationDataList = <LocationDataModel>[].obs;
   // Observable Map that holds the location data(location:locationID)
   var locationIdMap = <String, String>{}.obs;
 
-  //Observable Map that holds the locationId and StockVal data(locationID:StockVal)
-  var stockValMap = <String, String>{}.obs;
+  Rxn<LocationDataModel> selectedStock = Rxn<LocationDataModel>();
+  void updateStockDetails(String selectedLocationID) {
+    final foundStock = locationDataList.firstWhere(
+      (e) => e.locationId.toString() == selectedLocationID,
+    );
 
+    selectedStock.value = foundStock;
+    // Example usage
+    // setStringData('selectedLocationID', foundStock.locationId.toString());
+    // setStringData('dealerID', foundStock.dealerId.toString());
+    // setStringData('brandID', foundStock.brandId.toString());
+  }
+
+  LocationDataModel? getStock() => selectedStock.value;
+
+  // //stock data according to location
+  // var stockData = <String, String>{}.obs;
+
+  // final RxList<LocationDataModel> stockList = <LocationDataModel>[].obs;
+
+  // final Rxn<int> selectedLocationId = Rxn<int>();
 
   // for notified app update
   RxString oldVersion = '1.0.1'.obs;
@@ -72,10 +93,10 @@ class AppSwitcherController extends GetxController {
       await getLocationUsingTCode(userTCode.toString());
       String? userId = await AuthService.getUserId();
       // Get the DealerID (assuming all have the same one)
-      final dealerId = locationList.first['DealerID'];
+      final dealerId = locationDataList.first.dealerId;
       // Get all locations
-      final List<String> locationsId = locationList
-          .map<String>((item) => item['LocationID'].toString())
+      final List<String> locationsId = locationDataList
+          .map<String>((item) => item.locationId.toString())
           .toList();
       FirebaseDB firebaseDB = FirebaseDB();
       await firebaseDB.storeDeviceToken(
@@ -93,41 +114,68 @@ class AppSwitcherController extends GetxController {
   Future<void> getLocationUsingTCode(String tCode) async {
     try {
       final response = await ApiService().getLocation(tCode);
+      locationDataList.clear();
       if (response['success']) {
-        final locationData = response['data'];
-        var data = jsonDecode(locationData);
-        locationList.clear(); // Clear the list before adding new data
+        final data1 = jsonDecode(response['data']) as List;
+        print("dataaaa: $data1");
+        final locationsData =
+            data1.map((e) => LocationDataModel.fromJson(e)).toList();
+        locationDataList.assignAll(locationsData);
 
-        for (var item in data) {
-          locationList.add({
-            "BrandID": item['BrandID'] ?? '',
-            "DealerID": item['DealerID'] ?? '',
-            "LocationID": item['LocationID'] ?? '',
-            "Brand": item['Brand'] ?? '',
-            "Dealer": item['Dealer'] ?? '',
-            "Location": item['Location'] ?? '',
-            "StockDate": item['StockDate'] ?? '',
-            "StockVal": item['StockVal'] ?? '',
-          });
+        for (var items in locationDataList) {
+          print("${items.location}: ${items.stockVal}");
         }
 
+        ///LocationsId and locations fro dropdown
         locationIdMap.value = {
-          for (var item in data)
-            item['Location'] as String: item['LocationID'].toString()
+          for (var item in locationDataList)
+            item.location: item.locationId.toString()
         };
 
-        // locationID and StockVal in key value
-        stockValMap.value = {
-          for (var item in data)
-            item['LocationID'].toString(): item['StockVal'].toString()
-        };
+        //update stock details by default 0 index
+        updateStockDetails(locationIdMap.values.first);
 
-        if (locationList.isNotEmpty) {
-          // selectedLocation.value = locationList[0]['Location']; // Set the default selected location
-          selectedLocation.value = locationIdMap.keys
-              .elementAt(0)
-              .toString(); // Set the default selected location
-        }
+        // // locationID and StockVal in key value
+        // stockValMap.value = {
+        //   for (var item in locationDataList)
+        //     item.locationId.toString(): item.stockVal.toString()
+        // };
+
+        ///---------------------
+        // final locationData = response['data'];
+        // var data = jsonDecode(locationData);
+        // locationList.clear(); // Clear the list before adding new data
+        //
+        // for (var item in data) {
+        //   locationList.add({
+        //     "BrandID": item['BrandID'] ?? '',
+        //     "DealerID": item['DealerID'] ?? '',
+        //     "LocationID": item['LocationID'] ?? '',
+        //     "Brand": item['Brand'] ?? '',
+        //     "Dealer": item['Dealer'] ?? '',
+        //     "Location": item['Location'] ?? '',
+        //     "StockDate": item['StockDate'] ?? '',
+        //     "StockVal": item['StockVal'] ?? '',
+        //   });
+        // }
+        //
+        // // locationIdMap.value = {
+        // //   for (var item in data)
+        // //     item['Location'] as String: item['LocationID'].toString()
+        // // };
+        //
+        // // locationID and StockVal in key value
+        // // stockValMap.value = {
+        // //   for (var item in data)
+        // //     item['LocationID'].toString(): item['StockVal'].toString()
+        // // };
+        //
+        // if (locationList.isNotEmpty) {
+        //   // selectedLocation.value = locationList[0]['Location']; // Set the default selected location
+        //   selectedLocation.value = locationIdMap.keys
+        //       .elementAt(0)
+        //       .toString(); // Set the default selected location
+        // }
       } else {
         errMsg.value = response['message'];
       }
@@ -135,6 +183,20 @@ class AppSwitcherController extends GetxController {
       errMsg.value = 'Error fetching locations';
     }
   }
+
+  // Future<void> loadStockData() async {
+  //   final data = await repository.getStockList();
+  //   stockList.assignAll(data);
+  // }
+
+  // /// Unique locations for dropdown
+  // List<LocationDataModel> get uniqueLocations {
+  //   final map = <int, LocationDataModel>{};
+  //   for (var item in locationDataList) {
+  //     map[item.locationId] = item;
+  //   }
+  //   return map.values.toList();
+  // }
 
   void loadDashboardData() async {
     isLoading.value = true;

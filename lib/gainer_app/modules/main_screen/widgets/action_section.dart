@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../action_item_model.dart';
+import '../models/action_item_model.dart';
 import 'action_item_card.dart';
 
 class ActionColumn extends StatelessWidget {
@@ -37,10 +37,13 @@ class ActionColumn extends StatelessWidget {
               margin: EdgeInsets.zero,
               color: Colors.white70,
               child: Column(
+                spacing: 4,
                 // mainAxisSize: MainAxisSize.max,
-                children: items
-                    .map((item) => ActionItemCard(item: item))
-                    .toList(),
+                children: [
+                  SizedBox(height: 2),
+                  ...items.map((item) => ActionItemCard(item: item)),
+                  SizedBox(height: 2)
+                ],
               ),
             ),
           ],

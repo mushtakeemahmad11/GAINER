@@ -40,28 +40,32 @@ class GainerTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      readOnly: readOnly,
-      maxLines: maxLines,
-      validator: validator,
-      onChanged: onChanged,
-      onTap: onTap,
-      decoration: InputDecoration(
-        isDense: true,
-        labelText: label,
-        hintText: hint,
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: Colors.white,
-        border: _border(GainerColors.border),
-        enabledBorder: _border(GainerColors.border),
-        focusedBorder: _border(GainerColors.primary),
-        errorBorder: _border(GainerColors.error),
-        focusedErrorBorder: _border(GainerColors.error),
+    return SizedBox(
+      height: 30,
+      child: TextFormField(
+        controller: controller,
+        keyboardType: keyboardType,
+        obscureText: obscureText,
+        readOnly: readOnly,
+        maxLines: maxLines,
+        validator: validator,
+        onChanged: onChanged,
+        onTap: onTap,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 5,horizontal: 8),
+          isDense: true,
+          labelText: label,
+          hintText: hint,
+          prefixIcon: prefixIcon,
+          suffixIcon: suffixIcon,
+          filled: true,
+          fillColor: Colors.white,
+          border: _border(GainerColors.border),
+          enabledBorder: _border(GainerColors.border),
+          focusedBorder: _border(GainerColors.primary),
+          errorBorder: _border(GainerColors.error),
+          focusedErrorBorder: _border(GainerColors.error),
+        ),
       ),
     );
   }

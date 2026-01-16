@@ -1,11 +1,78 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:gainer/gainer_app/modules/app_switcher_view/app_switcher_controller.dart';
+import 'package:gainer/gainer_app/modules/app_switcher_view/app_switcher_controller.dart';
 import 'package:get/get.dart';
 
-import '../../main_screen/action_item_model.dart';
+import '../../../../gainer/apis_functionality/api_service.dart';
+import '../../../../gainer/controllers/notification_controller.dart';
+import '../../main_screen/models/action_item_model.dart';
 
 class HomeController extends GetxController {
-  var selectedLocation = 'Location'.obs;
+  AppSwitcherController appSwitcherController =
+      Get.find<AppSwitcherController>();
+
+
+  onChangeLocation(locationId){
+
+  }
+  ///FIND LOCATION WORK
+  // API data list
+  // final RxList<String> locations = <String>[].obs;
+
+  // Selected value (nullable)
+  // final RxnString selectedLocation = RxnString();
+
+  // Loading state
+  // final RxBool isLoading = false.obs;
+
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   fetchLocations();
+  // }
+  //
+  // // Future<void> fetchLocations() async {
+  // //   try {
+  // //     isLoading.value = true;
+  // //
+  // //     // 🔹 Simulate API delay
+  // //     await Future.delayed(const Duration(seconds: 1));
+  // //
+  // //     // 🔹 API response
+  // //     final response = ['Delhi', 'Mumbai', 'Pune', 'Chennai'];
+  // //
+  // //     locations.assignAll(response);
+  // //   } finally {
+  // //     isLoading.value = false;
+  // //   }
+  // // }
+  // //
+  // // void clearLocation() {
+  // //   selectedLocation.value = null;
+  // // }
+
+  ///-------------------------
+  // final AppSwitcherController _c = Get.find();
+  //
+  // List<LocationDataModel> get filteredData {
+  //   final locationId = _c.selectedLocationId.value;
+  //
+  //   if (locationId == null) return [];
+  //
+  //   return _c.stockList
+  //       .where((e) => e.locationId == locationId)
+  //       .toList();
+  // }
+  //
+  // double get totalStockValue {
+  //   return filteredData.fold(
+  //     0,
+  //         (sum, item) => sum + item.stockVal,
+  //   );
+  // }
+
   SearchController searchController = SearchController();
 
   final RxInt currentIndex = 0.obs;
@@ -171,6 +238,48 @@ class HomeController extends GetxController {
   void onSearchChanged(String value) {
     // debounce / live search
     log("Typing: $value");
+  }
+
+  @override
+  void onInit() {
+    getBuyerDetails();
+    super.onInit();
+  }
+
+  final NotificationController _notificationController =
+      Get.find<NotificationController>();
+  Future<void> getBuyerDetails() async {
+    // fetchVersionFromFirestore(); //check for update
+    // for notification fetch
+    final stockDetails = appSwitcherController.getStock();
+    String? locationId = stockDetails?.locationId.toString() ?? '';
+    await _notificationController.fetchNotifications(locationId);
+    // print(
+    //     "location: $locationId, Notification Length: ${_notificationController.notifications.length}");
+
+    // locationController.errorMsg.value = null;
+    // locationController.isLoading.value = true;
+    final response = await ApiService().getBuyerValues(locationId);
+    // locationController.isLoading.value = false;
+
+    if (response['success']) {
+      var data = jsonDecode(response['data'].toString());
+      print("data from getbuyerValue: ${response['data']}");
+      // locationController.users.clear();
+      // for (Map<String, dynamic> index in data) {
+      //   locationController.users.add(StageData.fromJson(index));
+      // }
+      // locationController.usersMap.assignAll({
+      //   for (var user in locationController.users) user.stage: user,
+      // });
+      // locationController.usersMap = {for (var user in locationController.users) user.stage: user};
+
+      // var stockVal = locationController.stockDetails['StockVal'];
+      // locationController.listedStockShow.value =
+      //     getFormattedStockValue(stockVal);
+
+      // setState(() {});
+    } else {}
   }
 
   @override

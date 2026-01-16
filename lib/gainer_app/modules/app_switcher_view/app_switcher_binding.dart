@@ -4,6 +4,6 @@ import 'app_switcher_controller.dart';
 class AppSwitcherBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AppSwitcherController>(() => AppSwitcherController());
+    Get.put<AppSwitcherController>(AppSwitcherController());
   }
 }

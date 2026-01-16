@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/modules/navbar/home_view/home_controller.dart';
 import 'package:get/get.dart';
 
-import '../action_item_model.dart';
+import '../models/action_item_model.dart';
 
 class ActionItemCard extends StatelessWidget {
   final ActionItem item;
@@ -12,10 +12,11 @@ class ActionItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomeController controller = Get.find<HomeController>();
-    return GestureDetector(
-      onTap: () => controller.onActionTap(item.actionKey),
-      child: Card(
-        margin: const EdgeInsets.all(4),
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () => controller.onActionTap(item.actionKey),
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Column(

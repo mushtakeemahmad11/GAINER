@@ -3,6 +3,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gainer/app_navigate.dart';
+import 'package:gainer/gainer/controllers/notification_controller.dart';
+import 'package:gainer/gainer/controllers/notification_controller.dart';
 import 'package:get/get.dart';
 import 'firebase_options.dart';
 import 'gainer/controllers/check_internet/connectivity_controller.dart';
@@ -57,6 +59,11 @@ Future<void> main() async {
 
   Get.put<AppLauncherController>(
     AppLauncherController(),
+    permanent: true,
+  );
+
+  Get.put<NotificationController>(
+    NotificationController(),
     permanent: true,
   );
   // Register your GetX controller

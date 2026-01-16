@@ -5,7 +5,7 @@ import '../../../testing/example_screen.dart';
 import 'nav_model.dart';
 
 class GainerMainController extends GetxController {
-  var selectedLocation = 'Location'.obs;
+  // var selectedLocation = 'Location'.obs;
   SearchController searchController = SearchController();
 
   final RxInt currentIndex = 0.obs;
