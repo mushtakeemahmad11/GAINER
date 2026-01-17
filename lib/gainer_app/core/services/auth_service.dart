@@ -20,6 +20,10 @@ class AuthService {
   static const String _loginTime = 'login_time';
   static const String _deviceToken = 'device_token';
 
+  static const String _brandId = 'brand_id';
+  static const String _dealerId = 'dealer_id';
+  static const String _locationId = 'location_id';
+
   /* ================= USER ID ================= */
 
   static Future<void> saveUserId(String userId) async {
@@ -116,6 +120,37 @@ class AuthService {
     return _storage.read(key: _deviceToken);
   }
 
+  /* ================= store Brand Dealer Location ================= */
+  static Future<void> saveBDL(
+      String brandId, String dealerId, String locationId) async {
+    await _storage.write(key: _brandId, value: brandId);
+    await _storage.write(key: _dealerId, value: dealerId);
+    await _storage.write(key: _locationId, value: locationId);
+  }
+
+  static Future<String> getBrandId() async {
+    return await _storage.read(key: _brandId) ?? '';
+  }
+
+  static Future<String> getDealerId() async {
+    return await _storage.read(key: _dealerId) ?? '';
+  }
+
+  static Future<String> getLocationId() async {
+    return await _storage.read(key: _locationId) ?? '';
+  }
+
+  static Future<Map<String, String>> getBDL() async {
+    final bid = await getBrandId();
+    final did = await getDealerId();
+    final lid = await getLocationId();
+    return {
+      'brandId': bid,
+      'dealerId': did,
+      'locationId': lid,
+    };
+  }
+
   /* ================= LOGOUT ================= */
 
   static Future<void> logout(String logoutType) async {
@@ -137,6 +172,9 @@ class AuthService {
     await _storage.delete(key: _loginTime);
     await _storage.delete(key: _userData);
     await _storage.delete(key: _tCode);
+    await _storage.delete(key: _brandId);
+    await _storage.delete(key: _dealerId);
+    await _storage.delete(key: _locationId);
     // await _storage.delete(key: _userId);
 
     Get.offAllNamed(Routes.LOGIN);

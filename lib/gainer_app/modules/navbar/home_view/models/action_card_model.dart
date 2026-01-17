@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ActionItem {
+class ActionCardModel {
   final IconData icon;
   final String title;
   final String subtitle;
@@ -8,7 +8,7 @@ class ActionItem {
   final Color iconColor;
   final String actionKey; // 🔥 navigation key
 
-  ActionItem({
+  ActionCardModel({
     required this.icon,
     required this.title,
     required this.subtitle,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gainer/gainer/controllers/check_internet/connectivity_controller.dart';
 import 'package:gainer/gainer_app/modules/navbar/home_view/home_view.dart';
 import 'package:get/get.dart';
+import '../../../gainer/controllers/check_internet/no_internet_screen.dart';
 import '../../../testing/example_screen.dart';
 import 'nav_model.dart';
 
@@ -36,17 +38,20 @@ class GainerMainController extends GetxController {
 
   List<Widget> get pages => navItems.map((e) => e.page).toList();
 
-  List<BottomNavigationBarItem> get items =>
-      navItems
-          .map(
-            (e) => BottomNavigationBarItem(
+  List<BottomNavigationBarItem> get items => navItems
+      .map(
+        (e) => BottomNavigationBarItem(
           icon: Icon(e.icon),
           label: e.label,
         ),
       )
-          .toList();
+      .toList();
 
   void changeTab(int index) {
+    if (!Get.find<ConnectivityController>().isConnected.value) {
+      Get.to(() => NoInternetScreen());
+      return;
+    }
     currentIndex.value = index;
   }
 

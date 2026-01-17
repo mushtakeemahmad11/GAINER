@@ -17,9 +17,9 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F8F8),
+      backgroundColor: GainerColors.background,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF2C9AA0),
+        backgroundColor: GainerColors.primary,
         elevation: 0,
         title: Obx(() => Text(
               'Hi, ${controller.userName.value}',

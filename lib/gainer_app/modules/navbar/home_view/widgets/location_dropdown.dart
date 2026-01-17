@@ -7,7 +7,6 @@ import 'dart:developer';
 import '../../../../core/constants/gainer_color.dart';
 
 class LocationDropdown extends StatelessWidget {
-
   final HomeController c;
   const LocationDropdown({super.key, required this.c});
 
@@ -20,12 +19,22 @@ class LocationDropdown extends StatelessWidget {
       // initialItem: _list[0],
       // items: controller.locationDataList.map((item) => item.location).toList(),
       items: controller.locationIdMap.keys.toList(),
-      initialItem: controller.locationIdMap.keys.first,
+      // initialItem: controller.locationIdMap.keys.first,
+      initialItem: controller.selectedLocation.value,
       onChanged: (value) {
-        log('changing value to: $value');
-        // controller.locationIdMap.map((location)=>location)
-        //
-        // c.onChangeLocation(locationId);
+        if (value == null) return;
+
+        log('Selected location name: $value');
+        final locationId = controller.locationIdMap[value];
+        controller.selectedLocation.value = value;
+        controller.selectedLocationId.value = locationId;
+
+        if (locationId != null) {
+          log('Selected location id: $locationId');
+
+          controller.updateStockDetails(locationId);
+          c.getBuyerDetails();
+        }
       },
       closedHeaderPadding: EdgeInsets.all(10),
       // closedHeaderPadding: EdgeInsets.symmetric(vertical: 5,horizontal: 8),

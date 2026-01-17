@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import '../home_model.dart';
+import '../models/action_card_model.dart';
 
 class ActionItemCard extends StatelessWidget {
-  final ActionItem item;
+  final ActionCardModel item;
 
   const ActionItemCard({super.key, required this.item});
 

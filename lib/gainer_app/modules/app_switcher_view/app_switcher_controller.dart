@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:gainer/gainer/model/user_model.dart';
-import 'package:gainer/gainer_app/modules/main_screen/models/location_data_model.dart';
 import 'package:gainer/gainer_app/modules/main_screen/models/location_data_model.dart';
 import 'package:get/get.dart';
 import '../../../gainer/apis_functionality/api_service.dart';
@@ -24,7 +22,7 @@ class AppSwitcherController extends GetxController {
   RxList<LocationDataModel> locationDataList = <LocationDataModel>[].obs;
   // Observable Map that holds the location data(location:locationID)
   var locationIdMap = <String, String>{}.obs;
-
+  final RxString stockData = ''.obs;
   Rxn<LocationDataModel> selectedStock = Rxn<LocationDataModel>();
   void updateStockDetails(String selectedLocationID) {
     final foundStock = locationDataList.firstWhere(
@@ -32,6 +30,8 @@ class AppSwitcherController extends GetxController {
     );
 
     selectedStock.value = foundStock;
+    stockData.value = foundStock.stockDate ?? '';
+
     // Example usage
     // setStringData('selectedLocationID', foundStock.locationId.toString());
     // setStringData('dealerID', foundStock.dealerId.toString());
@@ -56,7 +56,6 @@ class AppSwitcherController extends GetxController {
   void onInit() {
     super.onInit();
     _getLocation();
-    loadDashboardData();
   }
   // void _init() {
   //   checkSession();
@@ -117,13 +116,13 @@ class AppSwitcherController extends GetxController {
       locationDataList.clear();
       if (response['success']) {
         final data1 = jsonDecode(response['data']) as List;
-        print("dataaaa: $data1");
+        print("getLocation: $data1");
         final locationsData =
             data1.map((e) => LocationDataModel.fromJson(e)).toList();
         locationDataList.assignAll(locationsData);
 
         for (var items in locationDataList) {
-          print("${items.location}: ${items.stockVal}");
+          print("${items.location}: ${items.stockDate}");
         }
 
         ///LocationsId and locations fro dropdown
@@ -132,6 +131,7 @@ class AppSwitcherController extends GetxController {
             item.location: item.locationId.toString()
         };
 
+        selectedLocation.value = locationIdMap.keys.first;
         //update stock details by default 0 index
         updateStockDetails(locationIdMap.values.first);
 
@@ -198,20 +198,15 @@ class AppSwitcherController extends GetxController {
   //   return map.values.toList();
   // }
 
-  void loadDashboardData() async {
-    isLoading.value = true;
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 2));
-
-    UserModel? user = await AuthService.getUser();
-    userName.value = "${user!.firstName} ${user.lastName}";
-    notificationCount.value = 5;
-
-    isLoading.value = false;
-  }
-
-  Future<void> logout() async {
-    // await AuthService.logout();
-    Get.offAllNamed('/login');
-  }
+  // void loadDashboardData() async {
+  //   isLoading.value = true;
+  //   // Simulate API call
+  //   await Future.delayed(const Duration(seconds: 2));
+  //
+  //   UserModel? user = await AuthService.getUser();
+  //   userName.value = "${user!.firstName} ${user.lastName}";
+  //   notificationCount.value = 5;
+  //
+  //   isLoading.value = false;
+  // }
 }
