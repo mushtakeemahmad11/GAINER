@@ -17,129 +17,163 @@ class HomeView extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-      child: Obx(() => Skeletonizer(
-            enabled: controller.isStageDataLoad.value,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /// Location Dropdown
-                SizedBox(height: 45, child: LocationDropdown(c: controller)),
+      child: Obx(() {
+        bool isLoading = controller.isStageDataLoad.value;
+        final dummyData = controller.buyerActionsDummyData;
+        final buyerData = controller.buyerActions;
+        final sellerData = controller.sellerActions;
+        return Skeletonizer(
+          enabled: isLoading,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// Location Dropdown
+              SizedBox(height: 45, child: LocationDropdown(c: controller)),
 
-                const SizedBox(height: 6),
+              const SizedBox(height: 6),
 
-                /// Search Part Text Field
-                Padding(
-                  padding: const EdgeInsets.only(left: 12.0),
-                  child: const Text("Search your Part",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          decoration: TextDecoration.underline)),
-                ),
-                const SizedBox(height: 2),
-                SizedBox(
-                  height: 45,
-                  child: GainerTextFormField(
-                    label: "Enter part number",
-                    controller: controller.searchController,
-                    suffixIcon: IconButton(
-                      onPressed: controller.onSearchPressed,
-                      icon: Icon(Icons.search),
-                    ),
-                    onChanged: controller.onSearchChanged,
+              /// Search Part Text Field
+              Padding(
+                padding: const EdgeInsets.only(left: 12.0),
+                child: const Text("Search your Part",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        decoration: TextDecoration.underline)),
+              ),
+              const SizedBox(height: 2),
+              SizedBox(
+                height: 45,
+                child: GainerTextFormField(
+                  label: "Enter part number",
+                  controller: controller.searchController,
+                  suffixIcon: IconButton(
+                    onPressed: controller.onSearchPressed,
+                    icon: Icon(Icons.search),
                   ),
+                  onChanged: controller.onSearchChanged,
                 ),
-                const BalanceCard(),
+              ),
+              const BalanceCard(),
 
-                /// SCS Logo
-                Center(
-                    child: Image.asset(AppImages.scsBlackLinear, height: 80)),
-
-                const SizedBox(height: 6),
-
-                /// Actions as buyer/Seller
-                Center(
-                  child: Card(
-                    elevation: 4,
-                    color: Colors.white70,
-                    margin: EdgeInsets.zero,
-                    child: Column(
+              /// SCS Logo
+              // Center(child: Image.asset(AppImages.scsBlackLinear, height: 80)),
+              const SizedBox(height: 2),
+              Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 2,
+                  children: [
+                    Image.asset(
+                      AppImages.scsLogo,
+                      height: 55,
+                    ),
+                    Column(
+                      spacing: 2,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            "What would you like to do today?",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 18),
-                          ),
+                        Image.asset(
+                          'assets/gainer_images/sparecare.png',
+                          height: 19,
                         ),
-                        Skeletonizer(
-                          enabled: controller.isStageDataLoad.value,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ActionColumn(
-                                  title: "Action as Buyer",
-                                  headerColor: Colors.blue,
-                                  items: controller.buyerActions,
-                                ),
-                                const SizedBox(width: 8),
-                                ActionColumn(
-                                  title: "Action as Seller",
-                                  headerColor: Colors.green,
-                                  items: controller.sellerActions,
-                                ),
-                              ],
-                            ),
-                          ),
+                        Image.asset(
+                          'assets/gainer_images/the_caring_expert.png',
+                          height: 14,
                         ),
                       ],
                     ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 2),
+
+              const SizedBox(height: 6),
+
+              /// Actions as buyer/Seller
+              Center(
+                child: Card(
+                  elevation: 4,
+                  color: Colors.white70,
+                  margin: EdgeInsets.zero,
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text(
+                          "What would you like to do today?",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 18),
+                        ),
+                      ),
+                      Skeletonizer(
+                        enabled: isLoading,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ActionColumn(
+                                title: "Action as Buyer",
+                                headerColor: Colors.blue,
+                                items: isLoading ? dummyData : buyerData,
+                                // items: controller.buyerActions,
+                              ),
+                              const SizedBox(width: 8),
+                              ActionColumn(
+                                title: "Action as Seller",
+                                headerColor: Colors.green,
+                                items: isLoading ? dummyData : sellerData,
+                                // items: controller.sellerActions,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                // Center(
-                //   child: Card(
-                //     elevation: 4,
-                //     color: Colors.white70,
-                //     margin: EdgeInsets.zero,
-                //     child: Column(
-                //       children: [
-                //         const Padding(
-                //           padding: EdgeInsets.all(8),
-                //           child: Text(
-                //             "What would you like to do today?",
-                //             style:
-                //                 TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                //           ),
-                //         ),
-                //         Padding(
-                //           padding: const EdgeInsets.all(8),
-                //           child: Row(
-                //             crossAxisAlignment: CrossAxisAlignment.start,
-                //             children: [
-                //               ActionColumn(
-                //                 title: "Action as Buyer",
-                //                 headerColor: Colors.blue,
-                //                 items: controller.buyerActions1,
-                //               ),
-                //               const SizedBox(width: 8),
-                //               ActionColumn(
-                //                 title: "Action as Seller",
-                //                 headerColor: Colors.green,
-                //                 items: controller.sellerActions1,
-                //               ),
-                //             ],
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-              ],
-            ),
-          )),
+              ),
+              // Center(
+              //   child: Card(
+              //     elevation: 4,
+              //     color: Colors.white70,
+              //     margin: EdgeInsets.zero,
+              //     child: Column(
+              //       children: [
+              //         const Padding(
+              //           padding: EdgeInsets.all(8),
+              //           child: Text(
+              //             "What would you like to do today?",
+              //             style:
+              //                 TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+              //           ),
+              //         ),
+              //         Padding(
+              //           padding: const EdgeInsets.all(8),
+              //           child: Row(
+              //             crossAxisAlignment: CrossAxisAlignment.start,
+              //             children: [
+              //               ActionColumn(
+              //                 title: "Action as Buyer",
+              //                 headerColor: Colors.blue,
+              //                 items: controller.buyerActions1,
+              //               ),
+              //               const SizedBox(width: 8),
+              //               ActionColumn(
+              //                 title: "Action as Seller",
+              //                 headerColor: Colors.green,
+              //                 items: controller.sellerActions1,
+              //               ),
+              //             ],
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }

@@ -24,7 +24,7 @@ class ActionColumn extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(2),
               child: Text(
                 title,
                 style: const TextStyle(

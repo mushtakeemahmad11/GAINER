@@ -36,9 +36,11 @@ class ActionItemCard extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              item.subtitle,
-                              style: const TextStyle(fontSize: 12),
+                            Expanded(
+                              child: Text(
+                                item.subtitle,
+                                style: const TextStyle(fontSize: 12),
+                              ),
                             ),
                             const Icon(
                               Icons.arrow_forward_ios,

@@ -15,7 +15,23 @@ class HomeController extends GetxController {
   AppSwitcherController appSwitcherController =
       Get.find<AppSwitcherController>();
 
-  onChangeLocation(locationId) {}
+  @override
+  void onInit() {
+    _initWork();
+    super.onInit();
+  }
+
+  ///After location changed from dropdown
+  void onChangeLocation(String location) {
+    final locationId = appSwitcherController.locationIdMap[location];
+    selectedLocation.value = location;
+    selectedLocationId.value = locationId;
+    if (locationId != null) {
+      log('Selected location id: $locationId');
+      getBuyerDetails(locationId);
+      appSwitcherController.updateStockDetails(locationId);
+    }
+  }
 
   ///FIND LOCATION WORK
   // API data list
@@ -140,7 +156,7 @@ class HomeController extends GetxController {
   //   ),
   // ].obs;
 
-  final buyerActions1 = [
+  final buyerActionsDummyData = [
     ActionItem(
       icon: Icons.shopping_cart,
       title: "Order Placed",
@@ -167,32 +183,32 @@ class HomeController extends GetxController {
     ),
   ];
 
-  final sellerActions1 = [
-    ActionItem(
-      icon: Icons.shopping_cart,
-      title: "Order Received",
-      subtitle: "6 orders | ₹10.13L",
-      status: "Pending since Jan 10, 2025",
-      iconColor: Colors.green,
-      actionKey: 'orderReceived',
-    ),
-    ActionItem(
-      icon: Icons.update,
-      title: "Manifestation",
-      subtitle: "3 orders | ₹3.22L",
-      status: "Pending since Jan 10, 2025",
-      iconColor: Colors.green,
-      actionKey: 'Manifestation',
-    ),
-    ActionItem(
-      icon: Icons.inventory,
-      title: "Dispatched Details",
-      subtitle: "8 orders | ₹13.45L",
-      status: "Pending since Jan 10, 2025",
-      iconColor: Colors.green,
-      actionKey: 'DispatchedDetails',
-    ),
-  ];
+  // final sellerActions1 = [
+  //   ActionItem(
+  //     icon: Icons.shopping_cart,
+  //     title: "Order Received",
+  //     subtitle: "6 orders | ₹10.13L",
+  //     status: "Pending since Jan 10, 2025",
+  //     iconColor: Colors.green,
+  //     actionKey: 'orderReceived',
+  //   ),
+  //   ActionItem(
+  //     icon: Icons.update,
+  //     title: "Manifestation",
+  //     subtitle: "3 orders | ₹3.22L",
+  //     status: "Pending since Jan 10, 2025",
+  //     iconColor: Colors.green,
+  //     actionKey: 'Manifestation',
+  //   ),
+  //   ActionItem(
+  //     icon: Icons.inventory,
+  //     title: "Dispatched Details",
+  //     subtitle: "8 orders | ₹13.45L",
+  //     status: "Pending since Jan 10, 2025",
+  //     iconColor: Colors.green,
+  //     actionKey: 'DispatchedDetails',
+  //   ),
+  // ];
 
   void onActionTap(String actionKey) {
     log('Tap on: $actionKey');
@@ -240,11 +256,16 @@ class HomeController extends GetxController {
     log("Typing: $value");
   }
 
-  @override
-  void onInit() {
-    getBuyerDetails();
-    super.onInit();
+  Rx<String?> selectedLocation = Rx<String?>(null);
+  Rx<String?> selectedLocationId = Rx<String?>(null);
+
+  _initWork() {
+    final stockDetails = appSwitcherController.getStock();
+    String? locationId = stockDetails?.locationId.toString() ?? '';
+    getBuyerDetails(locationId);
   }
+
+  Future<void> onChangedLocation() async {}
 
   final RxString funBalance = ''.obs;
   final RxList<StageModel> stageList = <StageModel>[].obs;
@@ -283,7 +304,7 @@ class HomeController extends GetxController {
         // title: stage.stage,
         title: stageName,
         // subtitle: partCount,
-        subtitle: '${stage.partsCount} orders | ₹ ${stage.val}L',
+        subtitle: '${stage.partsCount} orders | ₹${stage.val}L',
         status: 'Pending since Jan 10, 2025',
         iconColor: isBuyer
             ? (config?.buyerColor ?? Colors.blue)
@@ -315,21 +336,16 @@ class HomeController extends GetxController {
 
   final NotificationController _notificationController =
       Get.find<NotificationController>();
-  Future<void> getBuyerDetails() async {
+  Future<void> getBuyerDetails(String locationId) async {
     // fetchVersionFromFirestore(); //check for update
     // for notification fetch
-    final stockDetails = appSwitcherController.getStock();
-    String? locationId = stockDetails?.locationId.toString() ?? '';
-    await _notificationController.fetchNotifications(locationId);
-    print("LocationId: $locationId");
+    // final stockDetails = appSwitcherController.getStock();
+    // String? locationId = stockDetails?.locationId.toString() ?? '';
     isStageDataLoad.value = true;
     final response = await ApiService().getBuyerValues(locationId);
     isStageDataLoad.value = false;
     if (response['success']) {
-      // var data = jsonDecode(response['data']);
-      print("data from getbuyerValue: ${response['data']}");
       final List data = jsonDecode(response['data']);
-      // stageList.value = data.map((e) => StageModel.fromJson(e)).toList();
       final stages = data.map((e) => StageModel.fromJson(e)).toList();
 
       setStageData(stages);
@@ -352,6 +368,7 @@ class HomeController extends GetxController {
 
       // setState(() {});
     } else {}
+    await _notificationController.fetchNotifications(locationId);
   }
 
   @override

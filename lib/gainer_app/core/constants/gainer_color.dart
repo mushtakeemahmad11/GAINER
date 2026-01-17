@@ -5,7 +5,8 @@ class GainerColors {
   // static const Color primary = Color(0xFF3B616C);
   static const Color primary = Color(0xFF5A9FA3);
   static const Color secondary = Color(0xFFBBE4E1);
-  static const Color background = Color(0xFFE6F5F4);
+  // static const Color background = Color(0xFFE6F5F4);
+  static const Color background = Color(0xFFF2F7F6);
 
   static const buyer = Color(0xFF3B82F6);
   static const seller = Color(0xFF22C55E);

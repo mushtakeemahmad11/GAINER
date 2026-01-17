@@ -23,18 +23,18 @@ class LocationDropdown extends StatelessWidget {
       initialItem: controller.selectedLocation.value,
       onChanged: (value) {
         if (value == null) return;
-
-        log('Selected location name: $value');
-        final locationId = controller.locationIdMap[value];
-        controller.selectedLocation.value = value;
-        controller.selectedLocationId.value = locationId;
-
-        if (locationId != null) {
-          log('Selected location id: $locationId');
-
-          controller.updateStockDetails(locationId);
-          c.getBuyerDetails();
-        }
+        c.onChangeLocation(value);
+        // log('Selected location name: $value');
+        // final locationId = controller.locationIdMap[value];
+        // controller.selectedLocation.value = value;
+        // controller.selectedLocationId.value = locationId;
+        //
+        // if (locationId != null) {
+        //   log('Selected location id: $locationId');
+        //
+        //   c.getBuyerDetails(locationId);
+        //   controller.updateStockDetails(locationId);
+        // }
       },
       closedHeaderPadding: EdgeInsets.all(10),
       // closedHeaderPadding: EdgeInsets.symmetric(vertical: 5,horizontal: 8),
