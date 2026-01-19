@@ -1,0 +1,29 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../../dealer_monitoring/widgets/reusable_gainer_stock.dart';
+import '../../../controllers/part_request_controller.dart';
+import '../../../widget/circular_progress_indicator.dart';
+
+class PartRequestScreen extends StatelessWidget {
+  PartRequestScreen({super.key});
+  final PartRequestController _partRequestController =
+  Get.put(PartRequestController());
+
+  @override
+  Widget build(BuildContext context) {
+    final args = Get.arguments as Map<String, dynamic>? ?? {};
+    final String? partNumber = args['partNumber'];
+    return Scaffold(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: PartRequestBody(partNumber: partNumber,),
+          ),
+          Obx(() => _partRequestController.isLoading.value
+              ? customCircularProgressIndicator()
+              : const SizedBox.shrink()),
+        ],
+      ),
+    );
+  }
+}

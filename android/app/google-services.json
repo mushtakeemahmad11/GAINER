@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1094785253067",
+    "project_id": "gainer-app",
+    "storage_bucket": "gainer-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1094785253067:android:8475e1b56a26b2dc47654e",
+        "android_client_info": {
+          "package_name": "com.sparecare.tel_e_scope"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOGMeh0fnCdadooQJOOFglsL5lJa0Afag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

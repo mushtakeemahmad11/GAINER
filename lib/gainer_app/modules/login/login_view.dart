@@ -1,0 +1,363 @@
+import 'package:flutter/material.dart';
+import 'package:gainer/gainer_app/core/widgets/gainer_app_loader.dart';
+import 'package:gainer/gainer_app/core/widgets/gainer_text_field.dart';
+import 'package:get/get.dart';
+import '../../../gainer/screens/constant_image_path.dart';
+import '../../core/constants/gainer_color.dart';
+import '../../core/widgets/error_text.dart';
+import '../../core/widgets/gainer_primary_button.dart';
+import 'login_controller.dart';
+
+
+class LoginView extends GetView<LoginController> {
+  const LoginView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+
+    return Scaffold(
+      backgroundColor: GainerColors.background,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // Scrollable content
+            CustomScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              slivers: [
+                SliverToBoxAdapter(child: SizedBox(height: size.height * 0.02)),
+
+                /// Top banner (keep natural height, but fit screen nicely)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Image.asset(
+                      AppImages.loginBanner,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+
+                const SliverToBoxAdapter(child: SizedBox(height: 12)),
+
+                /// Logo + App Name
+                SliverToBoxAdapter(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(AppImages.appLogo, height: 46),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'Tel-e-scope',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SliverToBoxAdapter(child: SizedBox(height: 16)),
+
+                /// Form container (bottom sheet style)
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AnimatedPadding(
+                      duration: const Duration(milliseconds: 160),
+                      curve: Curves.easeOut,
+                      padding: EdgeInsets.only(bottom: bottomInset),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.fromLTRB(20, 14, 20, 16),
+                        decoration: const BoxDecoration(
+                          color: GainerColors.secondary,
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(30),
+                          ),
+                        ),
+                        child: Form(
+                          key: controller.loginKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.asset(AppImages.scsBlack, height: 92),
+
+                              /// Error msg
+                              AppErrorText(error: controller.errMsg),
+
+                              const SizedBox(height: 16),
+
+                              /// User ID
+                              GainerTextField(
+                                controller: controller.userIdCtrl,
+                                label: 'Enter your user id',
+                                prefixIcon: const Icon(Icons.person),
+                                validator: (value) =>
+                                (value == null || value.trim().isEmpty)
+                                    ? 'user id required'
+                                    : null,
+                              ),
+
+                              const SizedBox(height: 14),
+
+                              /// Password
+                              Obx(
+                                    () => GainerTextField(
+                                  label: 'Enter your password',
+                                  controller: controller.passwordCtrl,
+                                  isPass: !controller.isPasswordVisible.value,
+                                  prefixIcon: const Icon(Icons.lock),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      controller.isPasswordVisible.value
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                    ),
+                                    onPressed: controller.togglePassword,
+                                  ),
+                                  onChanged: (val) {
+                                    final filteredValue = val.replaceAll(
+                                      RegExp(
+                                          r'[^a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:,.<>?/|]'),
+                                      '',
+                                    );
+                                    if (val != filteredValue) {
+                                      controller.passwordCtrl.value =
+                                          TextEditingValue(
+                                            text: filteredValue,
+                                            selection: TextSelection.collapsed(
+                                              offset: filteredValue.length,
+                                            ),
+                                          );
+                                    }
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter your password';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+
+                              const SizedBox(height: 6),
+
+                              /// Remember Me
+                              Row(
+                                children: [
+                                  Obx(
+                                        () => Checkbox(
+                                      activeColor: GainerColors.primary,
+                                      value: controller.rememberMe.value,
+                                      onChanged: (_) =>
+                                          controller.toggleRemember(),
+                                    ),
+                                  ),
+                                  const Text('Remember Me'),
+                                ],
+                              ),
+
+                              const SizedBox(height: 8),
+
+                              /// Login Button
+                              Obx(
+                                    () => GainerPrimaryButton(
+                                  title: 'Login',
+                                  isLoading: controller.isLoading.value,
+                                  onPressed: controller.login,
+                                ),
+                              ),
+
+                              SizedBox(height: size.height * 0.02),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            /// Loader overlay (unchanged)
+            GainerAppLoader(isLoading: controller.isLoading),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+//
+// class LoginView extends GetView<LoginController> {
+//   const LoginView({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     Size size = MediaQuery.of(context).size;
+//     return Scaffold(
+//       // backgroundColor: const Color(0xFFE6F5F4),
+//       backgroundColor: GainerColors.background,
+//       body: Stack(
+//         children: [
+//           LayoutBuilder(
+//             builder: (context, constraints) {
+//               return SingleChildScrollView(
+//                 child: ConstrainedBox(
+//                   constraints: BoxConstraints(
+//                     minHeight: constraints.maxHeight,
+//                   ),
+//                   child: IntrinsicHeight(
+//                     child: Column(
+//                       mainAxisSize: MainAxisSize.min,
+//                       children: [
+//                         const SizedBox(height: 30),
+//
+//                         /// Top Image (natural height)
+//                         Image.asset(
+//                           AppImages.loginBanner,
+//                         ),
+//
+//                         const SizedBox(height: 10),
+//                         Row(
+//                           mainAxisAlignment: MainAxisAlignment.center,
+//                           children: [
+//                             Image.asset(
+//                               AppImages.appLogo,
+//                               height: 50,
+//                             ),
+//                             const SizedBox(width: 10),
+//                             const Text(
+//                               'Tel-e-scope',
+//                               style: TextStyle(
+//                                 fontSize: 25,
+//                                 fontWeight: FontWeight.bold,
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                         // const SizedBox(height: 20),
+//                         const Spacer(),
+//
+//                         /// THIS TAKES REMAINING HEIGHT
+//                         Container(
+//                           padding: const EdgeInsets.symmetric(horizontal: 20),
+//                           decoration: BoxDecoration(
+//                             color: GainerColors.secondary,
+//                             borderRadius:
+//                                 BorderRadius.vertical(top: Radius.circular(30)),
+//                             // border: Border.symmetric(horizontal: BorderSide(color: Colors.black26))
+//                           ),
+//                           child: Form(
+//                             key: controller.loginKey,
+//                             child: Column(
+//                               mainAxisSize: MainAxisSize.min,
+//                               mainAxisAlignment: MainAxisAlignment.center,
+//                               children: [
+//                                 SizedBox(height: 10),
+//                                 Image.asset(
+//                                   AppImages.scsBlack,
+//                                   height: 100,
+//                                 ),
+//
+//                                 ///Error msg
+//                                 AppErrorText(error: controller.errMsg),
+//
+//                                 const SizedBox(height: 20),
+//
+//                                 /// User ID
+//                                 GainerTextField(
+//                                   controller: controller.userIdCtrl,
+//                                   label: 'Enter your user id',
+//                                   prefixIcon: const Icon(Icons.person),
+//                                   validator: (value) =>
+//                                       value == null || value.isEmpty
+//                                           ? 'user id required'
+//                                           : null,
+//                                 ),
+//
+//                                 const SizedBox(height: 15),
+//
+//                                 /// Password
+//                                 Obx(
+//                                   () => GainerTextField(
+//                                     label: 'Enter your password',
+//                                     controller: controller.passwordCtrl,
+//                                     isPass: !controller.isPasswordVisible.value,
+//                                     prefixIcon: const Icon(Icons.lock),
+//                                     suffixIcon: IconButton(
+//                                       icon: Icon(
+//                                         controller.isPasswordVisible.value
+//                                             ? Icons.visibility_off
+//                                             : Icons.visibility,
+//                                       ),
+//                                       onPressed: controller.togglePassword,
+//                                     ),
+//                                     onChanged: (val) {
+//                                       String filteredValue = val.replaceAll(
+//                                           RegExp(
+//                                               r'[^a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:,.<>?/|]'),
+//                                           ''); // Removes invalid characters
+//
+//                                       if (val != filteredValue) {
+//                                         controller.passwordCtrl.value =
+//                                             TextEditingValue(
+//                                           text: filteredValue,
+//                                           selection: TextSelection.collapsed(
+//                                               offset: filteredValue.length),
+//                                         );
+//                                       }
+//                                     },
+//                                     validator: (value) {
+//                                       if (value == null || value.isEmpty) {
+//                                         return 'Please enter your password';
+//                                       }
+//                                       return null;
+//                                     },
+//                                   ),
+//                                 ),
+//
+//                                 /// Remember Me
+//                                 Row(
+//                                   children: [
+//                                     Obx(
+//                                       () => Checkbox(
+//                                         activeColor: GainerColors.primary,
+//                                         value: controller.rememberMe.value,
+//                                         onChanged: (_) =>
+//                                             controller.toggleRemember(),
+//                                       ),
+//                                     ),
+//                                     const Text('Remember Me'),
+//                                   ],
+//                                 ),
+//
+//                                 /// Login Button
+//                                 Obx(() => GainerPrimaryButton(
+//                                       title: 'Login',
+//                                       isLoading: controller.isLoading.value,
+//                                       onPressed: controller.login,
+//                                     )),
+//                                 SizedBox(height: size.height * .03),
+//                               ],
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               );
+//             },
+//           ),
+//           // Loading Indicator
+//           GainerAppLoader(isLoading: controller.isLoading),
+//         ],
+//       ),
+//     );
+//   }
+// }
