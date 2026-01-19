@@ -7,5 +7,8 @@ class GainerImages {
   static const String gainerSplashBanner = 'assets/gainer_images/gainer_splash_banner.png';
   static const String partWithCar = 'assets/gainer_images/parts_with_car.png';
 
+  static const String scsCircle = 'assets/gainer_images/scs_circle_logo.png';
+
+
 
 }

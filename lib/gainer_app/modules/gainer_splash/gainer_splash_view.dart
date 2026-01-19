@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/constants/gainer_image.dart';
 import 'package:get/get.dart';
-import '../../../gainer/screens/constant_image_path.dart';
 import '../../core/constants/gainer_color.dart';
 import 'gainer_splash_controller.dart';
 

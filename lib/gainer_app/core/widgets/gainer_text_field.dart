@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../constants/gainer_color.dart';
-
 class GainerTextField extends StatelessWidget {
   final TextEditingController controller;
   final bool isPass;
@@ -30,6 +29,15 @@ class GainerTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: prefixIcon,
+        // prefixIcon: const Icon(Icons.lock),
+        // suffixIcon: IconButton(
+        //   icon: Icon(
+        //     controller.isPasswordVisible.value
+        //         ? Icons.visibility
+        //         : Icons.visibility_off,
+        //   ),
+        //   onPressed: controller.togglePassword,
+        // ),
         suffixIcon: suffixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

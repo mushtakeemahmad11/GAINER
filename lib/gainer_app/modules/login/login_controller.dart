@@ -15,9 +15,8 @@ class LoginController extends GetxController {
   var rememberMe = false.obs;
   var isPasswordVisible = false.obs;
   var isLoading = false.obs;
-  // Rx<String?> errMsg = Rx<String?>(null);
-  final errMsg = RxnString();
 
+  final errMsg = RxnString();
 
   void toggleRemember() => rememberMe.toggle();
 
@@ -46,7 +45,7 @@ class LoginController extends GetxController {
         final userData = response['data'];
         final user = UserModel.fromJson2(userData);
         await _storeDetails(user, userid, password);
-        Get.offAllNamed(Routes.HOME);
+        Get.offAllNamed(Routes.APPSWITCHER);
       } else {
         errMsg.value = response['message'];
       }
