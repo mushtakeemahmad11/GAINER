@@ -6,6 +6,7 @@ class GainerSplashController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    print("on Ready screen");
     _checkLogin();
   }
 

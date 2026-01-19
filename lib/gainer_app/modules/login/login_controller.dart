@@ -6,6 +6,7 @@ import '../../../gainer/apis_functionality/firebase_notification_service.dart';
 import '../../../gainer/model/user_model.dart';
 import '../../core/Services/auth_service.dart';
 import '../../routes/app_routes.dart';
+import '../internet_connectivity/no_internet_controller.dart';
 
 class LoginController extends GetxController {
   final GlobalKey<FormState> loginKey = GlobalKey<FormState>();
@@ -32,6 +33,10 @@ class LoginController extends GetxController {
     if (loginKey.currentState!.validate()) {
       final userid = userIdCtrl.text.trim();
       final password = passwordCtrl.text.trim();
+      if (!Get.find<NoInternetController>().isConnected.value) {
+        Get.toNamed(Routes.NOINTERNETVIEW);
+        return;
+      }
       //request call for DeviceToken
       String deviceToken =
           await NotificationServices().getFirebaseMessagingToken() ??

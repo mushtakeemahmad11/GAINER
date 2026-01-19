@@ -2,14 +2,21 @@ import 'dart:convert';
 import 'package:gainer/gainer/model/user_model.dart';
 import 'package:gainer/gainer_app/modules/main_screen/models/location_data_model.dart';
 import 'package:get/get.dart';
+import '../../../dealer_monitoring/screens/dm_main_screen.dart';
 import '../../../gainer/apis_functionality/api_service.dart';
 import '../../../gainer/apis_functionality/firebase_db_creation.dart';
 import '../../core/Services/auth_service.dart';
+import '../../routes/app_routes.dart';
+import '../internet_connectivity/no_internet_controller.dart';
 
 class AppSwitcherController extends GetxController {
   var userName = ''.obs;
   var notificationCount = 3.obs;
   var isLoading = false.obs;
+  // for notified app update
+  RxString oldVersion = '1.0.1'.obs;
+  RxString newVersion = ''.obs;
+  RxBool isAppUpdated = true.obs;
   // Rx<String?> errorMsg = Rx<String?>(null);
   RxnString errMsg = RxnString(null);
 
@@ -23,6 +30,13 @@ class AppSwitcherController extends GetxController {
   // Observable Map that holds the location data(location:locationID)
   var locationIdMap = <String, String>{}.obs;
   final RxString stockData = ''.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _getLocation();
+  }
+
   Rxn<LocationDataModel> selectedStock = Rxn<LocationDataModel>();
   void updateStockDetails(String selectedLocationID) {
     final foundStock = locationDataList.firstWhere(
@@ -38,6 +52,30 @@ class AppSwitcherController extends GetxController {
     // setStringData('brandID', foundStock.brandId.toString());
   }
 
+  void onModuleTap(String moduleName) {
+    // if (!Get.find<ConnectivityController>().isConnected.value) {
+    //   Get.to(() => NoInternetScreen());
+    //   return;
+    // }
+    if (!Get.find<NoInternetController>().isConnected.value) {
+      Get.toNamed(Routes.NOINTERNETVIEW);
+      return;
+    }
+
+    switch (moduleName.toLowerCase()) {
+      case 'gainer':
+        Get.toNamed(Routes.GAINERSPLASH);
+        // Get.toNamed(Routes.GAINERMAINVIEW);
+        break;
+      case 'sims':
+        Get.to(() => DMMainScreen());
+        break;
+      // case 'scanapp':
+      //   Get.to(() => ScanappSplashScreen());
+      //   break;
+    }
+  }
+
   LocationDataModel? getStock() => selectedStock.value;
 
   // //stock data according to location
@@ -47,16 +85,6 @@ class AppSwitcherController extends GetxController {
 
   // final Rxn<int> selectedLocationId = Rxn<int>();
 
-  // for notified app update
-  RxString oldVersion = '1.0.1'.obs;
-  RxString newVersion = ''.obs;
-  RxBool isAppUpdated = true.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-    _getLocation();
-  }
   // void _init() {
   //   checkSession();
   //   // fetchVersionFromFirestore();
@@ -116,10 +144,10 @@ class AppSwitcherController extends GetxController {
       final response = await ApiService().getLocation(tCode);
       locationDataList.clear();
       if (response['success']) {
-        final data1 = jsonDecode(response['data']) as List;
-        print("getLocation: $data1");
+        final data = jsonDecode(response['data']) as List;
+        print("getLocation: $data");
         final locationsData =
-            data1.map((e) => LocationDataModel.fromJson(e)).toList();
+            data.map((e) => LocationDataModel.fromJson(e)).toList();
         locationDataList.assignAll(locationsData);
 
         for (var items in locationDataList) {
@@ -135,6 +163,12 @@ class AppSwitcherController extends GetxController {
         selectedLocation.value = locationIdMap.keys.first;
         //update stock details by default 0 index
         updateStockDetails(locationIdMap.values.first);
+
+        await AuthService.saveBDL(
+          locationsData.first.brandId.toString(),
+          locationsData.first.dealerId.toString(),
+          locationsData.first.locationId.toString(),
+        );
 
         // // locationID and StockVal in key value
         // stockValMap.value = {

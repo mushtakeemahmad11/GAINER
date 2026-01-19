@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:gainer/gainer_app/core/services/auth_service.dart';
 import 'package:gainer/gainer_app/modules/app_switcher_view/app_switcher_controller.dart';
+import 'package:gainer/gainer_app/modules/internet_connectivity/no_internet_controller.dart';
 import 'package:gainer/gainer_app/modules/navbar/home_view/models/stage_model.dart';
 import 'package:get/get.dart';
 import '../../../../gainer/apis_functionality/api_service.dart';
 import '../../../../gainer/controllers/notification_controller.dart';
+import '../../../routes/app_routes.dart';
 import '../../main_screen/models/action_item_model.dart';
 import 'models/stage_action_config.dart';
 
@@ -22,13 +25,9 @@ class HomeController extends GetxController {
   ///After location changed from dropdown
   void onChangeLocation(String location) {
     final locationId = appSwitcherController.locationIdMap[location];
-    selectedLocation.value = location;
     selectedLocationId.value = locationId;
-    if (locationId != null) {
-      log('Selected location id: $locationId');
-      getBuyerDetails(locationId);
-      appSwitcherController.updateStockDetails(locationId);
-    }
+    getBuyerDetails(locationId!);
+    appSwitcherController.updateStockDetails(locationId);
   }
 
   ///FIND LOCATION WORK
@@ -287,12 +286,10 @@ class HomeController extends GetxController {
     required bool isBuyer,
   }) {
     final allowedStages = isBuyer ? buyerStageMap : sellerStageMap;
-
     return stages
         .where((stage) => allowedStages.keys.contains(stage.stage))
         .map((stage) {
       final config = stageConfigMap[stage.stage];
-
       final stageName = allowedStages[stage.stage] ?? '';
       // final partCount = stage.partsCount > 0
       //     ? '${stage.partsCount} orders | ₹ ${stage.val}L'
@@ -304,9 +301,9 @@ class HomeController extends GetxController {
         // subtitle: partCount,
         subtitle: '${stage.partsCount} orders | ₹${stage.val}L',
         status: 'Pending since Jan 10, 2025',
-        iconColor: isBuyer
-            ? (config?.buyerColor ?? Colors.blue)
-            : (config?.sellerColor ?? Colors.green),
+        iconColor: isBuyer ? Colors.blue : Colors.green,
+        // ? (config?.buyerColor ?? Colors.blue)
+        // : (config?.sellerColor ?? Colors.green),
         actionKey: stage.stage,
       );
     }).toList();
@@ -339,6 +336,11 @@ class HomeController extends GetxController {
     // for notification fetch
     // final stockDetails = appSwitcherController.getStock();
     // String? locationId = stockDetails?.locationId.toString() ?? '';
+
+    if (!Get.find<NoInternetController>().isConnected.value) {
+      Get.toNamed(Routes.NOINTERNETVIEW);
+      return;
+    }
     isStageDataLoad.value = true;
     final response = await ApiService().getBuyerValues(locationId);
     isStageDataLoad.value = false;
@@ -348,6 +350,8 @@ class HomeController extends GetxController {
 
       setStageData(stages);
       funBalance.value = stageList.first.walletBalance.toInt().toString();
+      await AuthService.saveLocationId(locationId);
+      print("Location ID: $locationId");
       print("Fund avl for order ${funBalance.value}");
       print("Stock Date ${appSwitcherController.stockData.value}");
       // print("data from stageList.value: ${stageList[0].}");
@@ -366,6 +370,7 @@ class HomeController extends GetxController {
 
       // setState(() {});
     } else {}
+
     await _notificationController.fetchNotifications(locationId);
   }
 

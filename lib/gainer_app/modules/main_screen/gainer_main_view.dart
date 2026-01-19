@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer/controllers/notification_controller.dart';
+import 'package:gainer/gainer_app/core/Services/auth_service.dart';
 import 'package:gainer/gainer_app/core/constants/gainer_image.dart';
 import 'package:get/get.dart';
 import '../../../gainer/screens/notification_screen.dart';
-import '../../../gainer/shared_preferences/shared_preferences_get_data.dart';
 import '../../core/constants/gainer_color.dart';
 import 'gainer_main_controller.dart';
 
@@ -35,17 +35,17 @@ class GainerMainView extends GetView<GainerMainController> {
               largeSize: 25,
               child: IconButton(
                   onPressed: () async {
-                    // final locationId = c;
-                    String selectedLocationID = '';
-                    await getStringData("selectedLocationID");
-                    if (selectedLocationID.isEmpty) {
+                    final locationId = await AuthService.getLocationId();
+                    // String selectedLocationID = '';
+                    // await getStringData("selectedLocationID");
+                    if (locationId.isEmpty) {
                       Get.snackbar('Warning', 'problem in fetch location',
                           snackPosition: SnackPosition.BOTTOM,
                           backgroundColor: GainerColors.primary,
                           colorText: GainerColors.white);
                     } else {
                       Get.to(() => NotificationScreen(
-                            selectedLocationID: selectedLocationID,
+                            selectedLocationID: locationId,
                           ));
                     }
                   },

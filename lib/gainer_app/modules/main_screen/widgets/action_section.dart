@@ -17,6 +17,7 @@ class ActionColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Items: ${items[0].title}");
     return Expanded(
       child: Card(
         margin: EdgeInsets.zero,

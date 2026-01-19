@@ -17,9 +17,9 @@ class LoginView extends GetView<LoginController> {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
 
     return Scaffold(
-      backgroundColor: GainerColors.background,
-      body: SafeArea(
-        child: Stack(
+        backgroundColor: GainerColors.background,
+        body: SafeArea(
+            child: Stack(
           children: [
             // Scrollable content
             CustomScrollView(
@@ -96,16 +96,16 @@ class LoginView extends GetView<LoginController> {
                                 label: 'Enter your user id',
                                 prefixIcon: const Icon(Icons.person),
                                 validator: (value) =>
-                                (value == null || value.trim().isEmpty)
-                                    ? 'user id required'
-                                    : null,
+                                    (value == null || value.trim().isEmpty)
+                                        ? 'user id required'
+                                        : null,
                               ),
 
                               const SizedBox(height: 14),
 
                               /// Password
                               Obx(
-                                    () => GainerTextField(
+                                () => GainerTextField(
                                   label: 'Enter your password',
                                   controller: controller.passwordCtrl,
                                   isPass: !controller.isPasswordVisible.value,
@@ -127,11 +127,11 @@ class LoginView extends GetView<LoginController> {
                                     if (val != filteredValue) {
                                       controller.passwordCtrl.value =
                                           TextEditingValue(
-                                            text: filteredValue,
-                                            selection: TextSelection.collapsed(
-                                              offset: filteredValue.length,
-                                            ),
-                                          );
+                                        text: filteredValue,
+                                        selection: TextSelection.collapsed(
+                                          offset: filteredValue.length,
+                                        ),
+                                      );
                                     }
                                   },
                                   validator: (value) {
@@ -149,7 +149,7 @@ class LoginView extends GetView<LoginController> {
                               Row(
                                 children: [
                                   Obx(
-                                        () => Checkbox(
+                                    () => Checkbox(
                                       activeColor: GainerColors.primary,
                                       value: controller.rememberMe.value,
                                       onChanged: (_) =>
@@ -164,7 +164,7 @@ class LoginView extends GetView<LoginController> {
 
                               /// Login Button
                               Obx(
-                                    () => GainerPrimaryButton(
+                                () => GainerPrimaryButton(
                                   title: 'Login',
                                   isLoading: controller.isLoading.value,
                                   onPressed: controller.login,
@@ -186,7 +186,7 @@ class LoginView extends GetView<LoginController> {
             GainerAppLoader(isLoading: controller.isLoading),
           ],
         )));
-        return Scaffold(
+    return Scaffold(
       // backgroundColor: const Color(0xFFE6F5F4),
       backgroundColor: GainerColors.background,
       body: Stack(

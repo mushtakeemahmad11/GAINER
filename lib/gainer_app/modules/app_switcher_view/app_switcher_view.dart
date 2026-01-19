@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/core/utils/dm_images.dart';
-import 'package:gainer/dealer_monitoring/screens/dm_main_screen.dart';
 import 'package:get/get.dart';
 import '../../../gainer/utility/download_utils.dart';
 import '../../../gainer/widget/reusable_elevated_button.dart';
 import '../../core/Services/auth_service.dart';
 import '../../core/constants/gainer_image.dart';
 import '../../core/constants/gainer_color.dart';
-import '../../routes/app_routes.dart';
 import 'app_switcher_controller.dart';
 
 class AppSwitcherView extends GetView<AppSwitcherController> {
@@ -41,17 +39,21 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _appCard(
-                      logo: GainerImages.gLogo,
-                      title: 'Gainer',
-                      subTitle: 'Dead Stock Liquidation',
-                      onTap: () => Get.toNamed(Routes.GAINERMAINVIEW)),
+                    logo: GainerImages.gLogo,
+                    title: 'Gainer',
+                    subTitle: 'Dead Stock Liquidation',
+                    // onTap: () => Get.toNamed(Routes.GAINERMAINVIEW)
+                  ),
                   _appCard(
                     logo: DMImages.simsLogo,
                     title: 'SIMS',
                     subTitle: 'Smart Inventory  Management System',
-                    onTap: () => Get.to(() => DMMainScreen()),
+                    // onTap: () => Get.to(() => DMMainScreen(),
                   ),
+
                   Spacer(),
+
+                  ///Temp logout btn
                   IconButton(
                       onPressed: () {
                         AuthService.logout('Manually');
@@ -176,7 +178,7 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
     required String logo,
     required String title,
     required String subTitle,
-    required VoidCallback onTap,
+    // required VoidCallback onTap,
   }) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -189,7 +191,8 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
         ),
         subtitle: Text(subTitle),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: onTap,
+        // onTap: onTap,
+        onTap: () => controller.onModuleTap(title),
       ),
     );
   }

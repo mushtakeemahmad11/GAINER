@@ -16,6 +16,57 @@ class GainerSplashView extends GetView<GainerSplashController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+
+            ///space on Top
+            const Spacer(),
+
+            /// Sparecare Logo
+            Image.asset(
+              GainerImages.scsBlackLogo,
+              height: 100,
+            ),
+            const SizedBox(height: 10),
+
+            /// Welcoming With App Name
+            const Text(
+              'Welcome to \nGainer Application',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            ///Banner Image
+            Image.asset(
+              GainerImages.gainerSplashBanner2,
+              // height: 100,
+              width: size.width - 20,
+            ),
+            const SizedBox(height: 20),
+
+            ///Quotes Text
+            const Text(
+              'Unlocking Value \nEnabling Collaboration',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const Spacer(),
+          ],
+        ),
+      ),
+    );
+    return Scaffold(
+      backgroundColor: GainerColors.background,
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
             const Spacer(),
 
             /// App Logo

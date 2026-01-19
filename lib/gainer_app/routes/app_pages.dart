@@ -118,10 +118,9 @@ class AppPages {
     ),
     GetPage(
       name: Routes.GAINERSPLASH,
-// page: () => const SplashScreen(),
       page: () => const GainerSplashView(),
-      transition: Transition.rightToLeft,
       binding: GainerSplashBinding(),
+      transition: Transition.rightToLeft,
     ),
     GetPage(
       name: Routes.NOINTERNETVIEW,

@@ -16,7 +16,7 @@ abstract class Routes {
   static const APPSWITCHER = '/app-switcher-view';
 // static const HOME = '/home';
 static const DMSPLASH = '/dm-splash';
-static const GAINERSPLASH = '/gainer-splash';
+static const GAINERSPLASH = '/gainer/splash';
 static const NOINTERNETVIEW = '/no-internet-view';
 
 

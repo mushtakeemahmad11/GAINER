@@ -125,7 +125,8 @@ class AuthService {
       String brandId, String dealerId, String locationId) async {
     await _storage.write(key: _brandId, value: brandId);
     await _storage.write(key: _dealerId, value: dealerId);
-    await _storage.write(key: _locationId, value: locationId);
+    await saveLocationId(locationId);
+    // await _storage.write(key: _locationId, value: locationId);
   }
 
   static Future<String> getBrandId() async {
@@ -134,6 +135,11 @@ class AuthService {
 
   static Future<String> getDealerId() async {
     return await _storage.read(key: _dealerId) ?? '';
+  }
+
+  //save locationId
+  static Future<void> saveLocationId(String locationId) async {
+    await _storage.write(key: _locationId, value: locationId);
   }
 
   static Future<String> getLocationId() async {

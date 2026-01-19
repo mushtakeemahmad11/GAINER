@@ -29,17 +29,18 @@ class HomeView extends StatelessWidget {
             children: [
               /// Location Dropdown
               SizedBox(height: 45, child: LocationDropdown(c: controller)),
-
               const SizedBox(height: 6),
 
               /// Search Part Text Field
               Padding(
                 padding: const EdgeInsets.only(left: 12.0),
-                child: const Text("Search your Part",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        decoration: TextDecoration.underline)),
+                child: const Text(
+                  "Search your Part",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      decoration: TextDecoration.underline),
+                ),
               ),
               const SizedBox(height: 2),
               SizedBox(
@@ -54,11 +55,12 @@ class HomeView extends StatelessWidget {
                   onChanged: controller.onSearchChanged,
                 ),
               ),
+              const SizedBox(height: 4),
               const BalanceCard(),
 
               /// SCS Logo
-              // Center(child: Image.asset(AppImages.scsBlackLinear, height: 80)),
-              const SizedBox(height: 2),
+              Center(child: Image.asset(AppImages.scsBlackLinear, height: 80)),
+             /* const SizedBox(height: 2),
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -83,11 +85,10 @@ class HomeView extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
+              ),*/
               const SizedBox(height: 2),
 
-              const SizedBox(height: 6),
-
+              // Icon(Icons.in),
               /// Actions as buyer/Seller
               Center(
                 child: Card(
