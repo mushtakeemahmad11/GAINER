@@ -65,7 +65,6 @@ class AppSwitcherController extends GetxController {
     switch (moduleName.toLowerCase()) {
       case 'gainer':
         Get.toNamed(Routes.GAINERSPLASH);
-        // Get.toNamed(Routes.GAINERMAINVIEW);
         break;
       case 'sims':
         Get.to(() => DMMainScreen());

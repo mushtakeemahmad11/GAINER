@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/services/auth_service.dart';
 import 'package:gainer/gainer_app/modules/app_switcher_view/app_switcher_controller.dart';
 import 'package:gainer/gainer_app/modules/internet_connectivity/no_internet_controller.dart';
-import 'package:gainer/gainer_app/modules/navbar/home_view/models/stage_model.dart';
+import 'package:gainer/gainer_app/modules/bottom_navbar/home_view/models/stage_model.dart';
 import 'package:get/get.dart';
 import '../../../../gainer/apis_functionality/api_service.dart';
 import '../../../../gainer/controllers/notification_controller.dart';
@@ -209,31 +209,30 @@ class HomeController extends GetxController {
 
   void onActionTap(String actionKey) {
     log('Tap on: $actionKey');
-    return;
     switch (actionKey) {
-      case 'orderPlaced':
-        Get.toNamed('/buyer/orders');
+      case 'OrderPlaced':
+        Get.toNamed(Routes.ORDERPLACED);
         break;
 
-      case 'updatePo':
-        Get.toNamed('/buyer/update-po');
-        break;
-
-      case 'partReceipt':
-        Get.toNamed('/buyer/part-receipt');
-        break;
-
-      case 'orderReceived':
-        Get.toNamed('/seller/orders');
-        break;
-
-      case 'manifestation':
-        Get.toNamed('/seller/manifestation');
-        break;
-
-      case 'dispatchDetails':
-        Get.toNamed('/seller/dispatch');
-        break;
+      // case 'updatePo':
+      //   Get.toNamed('/buyer/update-po');
+      //   break;
+      //
+      // case 'partReceipt':
+      //   Get.toNamed('/buyer/part-receipt');
+      //   break;
+      //
+      // case 'orderReceived':
+      //   Get.toNamed('/seller/orders');
+      //   break;
+      //
+      // case 'manifestation':
+      //   Get.toNamed('/seller/manifestation');
+      //   break;
+      //
+      // case 'dispatchDetails':
+      //   Get.toNamed('/seller/dispatch');
+      //   break;
 
       default:
         break;

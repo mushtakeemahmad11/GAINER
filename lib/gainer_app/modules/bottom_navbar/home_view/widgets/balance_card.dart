@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/constants/gainer_color.dart';
 import 'package:gainer/gainer_app/modules/app_switcher_view/app_switcher_controller.dart';
-import 'package:gainer/gainer_app/modules/navbar/home_view/home_controller.dart';
+import 'package:gainer/gainer_app/modules/bottom_navbar/home_view/home_controller.dart';
 import 'package:get/get.dart';
 
 class BalanceCard extends StatelessWidget {

@@ -16,7 +16,6 @@ class GainerSplashView extends GetView<GainerSplashController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-
             ///space on Top
             const Spacer(),
 
@@ -57,47 +56,6 @@ class GainerSplashView extends GetView<GainerSplashController> {
             ),
 
             const Spacer(),
-          ],
-        ),
-      ),
-    );
-    return Scaffold(
-      backgroundColor: GainerColors.background,
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Spacer(),
-
-            /// App Logo
-            Image.asset(
-              GainerImages.scsBlackLogo,
-              height: 100,
-            ),
-            const SizedBox(height: 40),
-            Image.asset(GainerImages.partWithCar,
-                height: size.height * .25), //gainerSplashBanner
-
-            const SizedBox(height: 40),
-
-            // /// App Name
-            const Text(
-              'Welcome to \nGainer Application',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            const Spacer(),
-
-            // const Padding(
-            //   padding: EdgeInsets.only(bottom: 24),
-            //   child: CircularProgressIndicator(),
-            // ),
           ],
         ),
       ),

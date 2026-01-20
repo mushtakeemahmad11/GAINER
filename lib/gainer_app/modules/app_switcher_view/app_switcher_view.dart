@@ -14,123 +14,125 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: GainerColors.background,
-      appBar: AppBar(
-        backgroundColor: GainerColors.primary,
-        elevation: 0,
-        title: Obx(
-          () => Text(
-            'Hi, ${controller.userName.value}',
-            style: const TextStyle(fontSize: 18),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        backgroundColor: GainerColors.background,
+        appBar: AppBar(
+          backgroundColor: GainerColors.primary,
+          elevation: 0,
+          title: Obx(
+            () => Text(
+              'Hi, ${controller.userName.value}',
+              style: const TextStyle(fontSize: 18),
+            ),
           ),
         ),
-      ),
-      body: Obx(() {
-        // if (controller.isLoading.value) {
-        //   return const Center(child: CircularProgressIndicator());
-        // }
+        body: Obx(() {
+          // if (controller.isLoading.value) {
+          //   return const Center(child: CircularProgressIndicator());
+          // }
 
-        return Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _appCard(
-                    logo: GainerImages.gLogo,
-                    title: 'Gainer',
-                    subTitle: 'Dead Stock Liquidation',
-                    // onTap: () => Get.toNamed(Routes.GAINERMAINVIEW)
-                  ),
-                  _appCard(
-                    logo: DMImages.simsLogo,
-                    title: 'SIMS',
-                    subTitle: 'Smart Inventory  Management System',
-                    // onTap: () => Get.to(() => DMMainScreen(),
-                  ),
-
-                  Spacer(),
-
-                  ///Temp logout btn
-                  IconButton(
-                      onPressed: () {
-                        AuthService.logout('Manually');
-                      },
-                      icon: Icon(
-                        Icons.logout,
-                        color: Colors.teal,
-                      )),
-
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Text(
-                      "Version: ${controller.oldVersion.value}",
-                      style: const TextStyle(color: Colors.black54),
+          return Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _appCard(
+                      logo: GainerImages.gLogo,
+                      title: 'Gainer',
+                      subTitle: 'Dead Stock Liquidation',
+                      // onTap: () => Get.toNamed(Routes.GAINERMAINVIEW)
                     ),
-                  ),
-                  // _appCard(icon: Icons.logout, title: 'Logout', onTap: () {}),
-
-                  /*/// Dashboard Cards
-                  Row(
-                    children: [
-                      _dashboardCard(
-                        title: 'Orders',
-                        value: '128',
-                        icon: Icons.shopping_cart,
-                      ),
-                      const SizedBox(width: 12),
-                      _dashboardCard(
-                        title: 'Revenue',
-                        value: '₹52K',
-                        icon: Icons.currency_rupee,
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  const Text(
-                    'Quick Actions',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                    _appCard(
+                      logo: DMImages.simsLogo,
+                      title: 'SIMS',
+                      subTitle: 'Smart Inventory  Management System',
+                      // onTap: () => Get.to(() => DMMainScreen(),
                     ),
-                  ),
+                    Spacer(),
 
-                  const SizedBox(height: 12),
-                  _actionTile(
-                    icon: Icons.person,
-                    title: 'Profile',
-                    onTap: () {},
-                  ),
-                  _actionTile(
-                    icon: Icons.settings,
-                    title: 'Settings',
-                    onTap: () {},
-                  ),
-                  _actionTile(
-                    icon: Icons.logout,
-                    title: 'Logout',
-                    onTap: controller.logout,
-                  ),*/
-                ],
+                    ///Temp logout btn
+                    IconButton(
+                        onPressed: () {
+                          AuthService.logout('Manually');
+                        },
+                        icon: Icon(
+                          Icons.logout,
+                          color: Colors.teal,
+                        )),
+
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        "Version: ${controller.oldVersion.value}",
+                        style: const TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                    // _appCard(icon: Icons.logout, title: 'Logout', onTap: () {}),
+
+                    /*/// Dashboard Cards
+                    Row(
+                      children: [
+                        _dashboardCard(
+                          title: 'Orders',
+                          value: '128',
+                          icon: Icons.shopping_cart,
+                        ),
+                        const SizedBox(width: 12),
+                        _dashboardCard(
+                          title: 'Revenue',
+                          value: '₹52K',
+                          icon: Icons.currency_rupee,
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    const Text(
+                      'Quick Actions',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+                    _actionTile(
+                      icon: Icons.person,
+                      title: 'Profile',
+                      onTap: () {},
+                    ),
+                    _actionTile(
+                      icon: Icons.settings,
+                      title: 'Settings',
+                      onTap: () {},
+                    ),
+                    _actionTile(
+                      icon: Icons.logout,
+                      title: 'Logout',
+                      onTap: controller.logout,
+                    ),*/
+                  ],
+                ),
               ),
-            ),
-            Obx(() {
-              if (controller.isAppUpdated.value) return const SizedBox.shrink();
-              return Container(color: Colors.black26);
-            }),
-            Obx(() {
-              if (controller.isAppUpdated.value) return const SizedBox.shrink();
-              return Align(
-                  alignment: Alignment.bottomRight,
-                  child: _updateAppCard(size));
-            }),
-          ],
-        );
-      }),
+              Obx(() {
+                if (controller.isAppUpdated.value) return const SizedBox.shrink();
+                return Container(color: Colors.black26);
+              }),
+              Obx(() {
+                if (controller.isAppUpdated.value) return const SizedBox.shrink();
+                return Align(
+                    alignment: Alignment.bottomRight,
+                    child: _updateAppCard(size));
+              }),
+            ],
+          );
+        }),
+      ),
     );
   }
 

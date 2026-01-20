@@ -22,7 +22,7 @@ class AppImages {
   static String openingScreenImg = 'assets/images/opening_screen_img.png';
   // static String openingScreenImg = 'assets/images/scsLogo.png';
 
-  static String orderPlaced = 'assets/images/order_placed.png';
+  static String orderPlaced = 'assets/images/order_placed_view.png';
 
 
   static const String loginBanner = 'assets/images/login_banner.png';

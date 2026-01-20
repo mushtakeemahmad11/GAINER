@@ -1,7 +1,7 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/modules/app_switcher_view/app_switcher_controller.dart';
-import 'package:gainer/gainer_app/modules/navbar/home_view/home_controller.dart';
+import 'package:gainer/gainer_app/modules/bottom_navbar/home_view/home_controller.dart';
 import 'package:get/get.dart';
 import '../../../../core/constants/gainer_color.dart';
 

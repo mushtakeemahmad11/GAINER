@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gainer/gainer_app/modules/navbar/home_view/home_controller.dart';
+import 'package:gainer/gainer_app/modules/bottom_navbar/home_view/home_controller.dart';
 import 'package:get/get.dart';
 
 import '../models/action_item_model.dart';

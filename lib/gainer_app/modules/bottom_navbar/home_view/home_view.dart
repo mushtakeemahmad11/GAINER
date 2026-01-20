@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/modules/main_screen/widgets/action_section.dart';
-import 'package:gainer/gainer_app/modules/navbar/home_view/widgets/balance_card.dart';
-import 'package:gainer/gainer_app/modules/navbar/home_view/widgets/location_dropdown.dart';
+import 'package:gainer/gainer_app/modules/bottom_navbar/home_view/widgets/balance_card.dart';
+import 'package:gainer/gainer_app/modules/bottom_navbar/home_view/widgets/location_dropdown.dart';
 import 'package:get/get.dart';
 import '../../../../gainer/screens/constant_image_path.dart';
 import '../../../core/widgets/gainer_text_form_field.dart';
@@ -43,24 +43,21 @@ class HomeView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 2),
-              SizedBox(
-                height: 45,
-                child: GainerTextFormField(
-                  label: "Enter part number",
-                  controller: controller.searchController,
-                  suffixIcon: IconButton(
-                    onPressed: controller.onSearchPressed,
-                    icon: Icon(Icons.search),
-                  ),
-                  onChanged: controller.onSearchChanged,
+              GainerTextFormField(
+                label: "Enter part number",
+                controller: controller.searchController,
+                suffixIcon: IconButton(
+                  onPressed: controller.onSearchPressed,
+                  icon: Icon(Icons.search),
                 ),
+                onChanged: controller.onSearchChanged,
               ),
               const SizedBox(height: 4),
               const BalanceCard(),
 
               /// SCS Logo
               Center(child: Image.asset(AppImages.scsBlackLinear, height: 80)),
-             /* const SizedBox(height: 2),
+              /* const SizedBox(height: 2),
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

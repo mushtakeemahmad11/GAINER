@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer/controllers/check_internet/connectivity_controller.dart';
-import 'package:gainer/gainer_app/modules/navbar/home_view/home_view.dart';
+import 'package:gainer/gainer_app/modules/bottom_navbar/home_view/home_view.dart';
 import 'package:get/get.dart';
 import '../../../gainer/controllers/check_internet/no_internet_screen.dart';
 import '../../../testing/example_screen.dart';
