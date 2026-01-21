@@ -10,7 +10,6 @@ import '../../../../gainer/apis_functionality/api_service.dart';
 import '../../../../gainer/controllers/notification_controller.dart';
 import '../../../routes/app_routes.dart';
 import '../../main_screen/models/action_item_model.dart';
-import 'models/stage_action_config.dart';
 
 class HomeController extends GetxController {
   AppSwitcherController appSwitcherController =
@@ -268,44 +267,87 @@ class HomeController extends GetxController {
 
   final RxList<ActionItem> buyerActions = <ActionItem>[].obs;
   final RxList<ActionItem> sellerActions = <ActionItem>[].obs;
-  static const Map<String, String> buyerStageMap = {
-    'OrderPlaced': 'Order Placed',
-    'PoUpdation': 'Update Po Details',
-    'PartsReceipt': 'Part Receipt',
+  // static const Map<String, String> buyerStageMap = {
+  //   'OrderPlaced': 'Order Placed',
+  //   'PoUpdation': 'Update Po Details',
+  //   'PartsReceipt': 'Part Receipt',
+  // };
+  //
+  // static const Map<String, String> sellerStageMap = {
+  //   'OrderDue': 'Order Received',
+  //   'Manifestation': 'Manifestation',
+  //   'DispatchDetail': 'Dispatched Details',
+  // };
+  static const Map<String, Map<String, dynamic>> buyerStageMap = {
+    'OrderPlaced': {
+      'title': 'Order Placed',
+      'icon': Icons.shopping_cart,
+    },
+    'PoUpdation': {
+      'title': 'Update Po Details',
+      'icon': Icons.update,
+    },
+    'PartsReceipt': {
+      'title': 'Part Receipt',
+      'icon': Icons.inventory,
+    },
   };
-
-  static const Map<String, String> sellerStageMap = {
-    'OrderDue': 'Order Received',
-    'Manifestation': 'Manifestation',
-    'DispatchDetail': 'Dispatched Details',
+  static const Map<String, Map<String, dynamic>> sellerStageMap = {
+    'OrderDue': {
+      'title': 'Order Received',
+      'icon': Icons.call_received,
+    },
+    'Manifestation': {
+      'title': 'Manifestation',
+      'icon': Icons.manage_history,
+    },
+    'DispatchDetail': {
+      'title': 'Dispatched Details',
+      'icon': Icons.local_shipping,
+    },
   };
 
   List<ActionItem> _buildActions(
     List<StageModel> stages, {
     required bool isBuyer,
   }) {
+    // final allowedStages = isBuyer ? buyerStageMap : sellerStageMap;
     final allowedStages = isBuyer ? buyerStageMap : sellerStageMap;
+
     return stages
         .where((stage) => allowedStages.keys.contains(stage.stage))
         .map((stage) {
-      final config = stageConfigMap[stage.stage];
-      final stageName = allowedStages[stage.stage] ?? '';
-      // final partCount = stage.partsCount > 0
-      //     ? '${stage.partsCount} orders | ₹ ${stage.val}L'
-      //     : '-';
+      final config = allowedStages[stage.stage];
       return ActionItem(
-        icon: config?.icon ?? Icons.info,
-        // title: stage.stage,
-        title: stageName,
-        // subtitle: partCount,
+        icon: config?['icon'] ?? Icons.question_mark,
+        title: config?['title'] ?? "",
         subtitle: '${stage.partsCount} orders | ₹${stage.val}L',
         status: 'Pending since Jan 10, 2025',
         iconColor: isBuyer ? Colors.blue : Colors.green,
-        // ? (config?.buyerColor ?? Colors.blue)
-        // : (config?.sellerColor ?? Colors.green),
         actionKey: stage.stage,
       );
     }).toList();
+    // return stages
+    //     .where((stage) => allowedStages.keys.contains(stage.stage))
+    //     .map((stage) {
+    //   final config = stageConfigMap[stage.stage];
+    //   final stageName = allowedStages[stage.stage] ?? '';
+    //   // final partCount = stage.partsCount > 0
+    //   //     ? '${stage.partsCount} orders | ₹ ${stage.val}L'
+    //   //     : '-';
+    //   return ActionItem(
+    //     icon: config?.icon ?? Icons.info,
+    //     // title: stage.stage,
+    //     title: stageName,
+    //     // subtitle: partCount,
+    //     subtitle: '${stage.partsCount} orders | ₹${stage.val}L',
+    //     status: 'Pending since Jan 10, 2025',
+    //     iconColor: isBuyer ? Colors.blue : Colors.green,
+    //     // ? (config?.buyerColor ?? Colors.blue)
+    //     // : (config?.sellerColor ?? Colors.green),
+    //     actionKey: stage.stage,
+    //   );
+    // }).toList();
   }
 
   void setStageData(List<StageModel> stages) {

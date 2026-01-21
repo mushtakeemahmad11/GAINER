@@ -28,7 +28,7 @@ class ActionColumn extends StatelessWidget {
               child: Text(
                 title,
                 style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     color: Colors.white,
                     fontWeight: FontWeight.bold),
               ),

@@ -18,6 +18,7 @@ class GainerMainView extends GetView<GainerMainController> {
       backgroundColor: GainerColors.background,
       appBar: AppBar(
         backgroundColor: GainerColors.primary,
+        automaticallyImplyLeading: false,
         title: const Text('Home'),
         actions: [
           Obx(() {

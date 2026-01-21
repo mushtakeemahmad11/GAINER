@@ -3,6 +3,7 @@ import 'package:gainer/gainer_app/core/constants/gainer_color.dart';
 import 'package:gainer/gainer_app/modules/app_switcher_view/app_switcher_controller.dart';
 import 'package:gainer/gainer_app/modules/bottom_navbar/home_view/home_controller.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class BalanceCard extends StatelessWidget {
   const BalanceCard({super.key});
@@ -37,10 +38,13 @@ class BalanceCard extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Fund Balance"),
+                        Text(
+                          "Fund Balance",
+                          style: TextStyle(fontSize: 14),
+                        ),
                         Text("₹ ${c.funBalance.value}",
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
+                                fontSize: 16, fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ],
@@ -48,7 +52,10 @@ class BalanceCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text("Last Stock Update"),
+                    Text(
+                      "Last Stock Update",
+                      style: TextStyle(fontSize: 14),
+                    ),
                     // Text(controller.getStock()!.stockDate ?? '',
                     Text(controller.stockData.value,
                         style: TextStyle(

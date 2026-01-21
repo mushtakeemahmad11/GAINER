@@ -54,6 +54,8 @@ class GainerTextFormField extends StatelessWidget {
         isDense: true,
         labelText: label,
         hintText: hint,
+        labelStyle: TextStyle(fontSize: 14),
+        hintStyle: TextStyle(fontSize: 14),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         filled: true,

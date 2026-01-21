@@ -37,14 +37,13 @@ class HomeView extends StatelessWidget {
                 child: const Text(
                   "Search your Part",
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 14,
                       decoration: TextDecoration.underline),
                 ),
               ),
               const SizedBox(height: 2),
               GainerTextFormField(
-                label: "Enter part number",
+                hint: "Enter part number",
                 controller: controller.searchController,
                 suffixIcon: IconButton(
                   onPressed: controller.onSearchPressed,
@@ -99,7 +98,7 @@ class HomeView extends StatelessWidget {
                         child: Text(
                           "What would you like to do today?",
                           style: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 18),
+                              fontWeight: FontWeight.w500, fontSize: 16),
                         ),
                       ),
                       Skeletonizer(
