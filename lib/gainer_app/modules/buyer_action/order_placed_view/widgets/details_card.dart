@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/gainer_color.dart';
 import '../../../../core/widgets/discount_widget/discount_flag.dart';
-import '../order_placed_model.dart';
+import '../models/order_placed_model.dart';
 
-
-class PartCard extends StatelessWidget {
+class DetailsCard extends StatelessWidget {
+  final bool isPart;
   final OrderPlacedModel order;
   final VoidCallback onRemove;
 
-  const PartCard({
+  const DetailsCard({
     super.key,
+    required this.isPart,
     required this.order,
     required this.onRemove,
   });
@@ -24,25 +25,40 @@ class PartCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _label('Seller Details:'),
           _row(
-            left: _bold(order.dealerName),
+            left: _label(isPart ? 'Part Details' : 'Seller Details:'),
             right: _keyValue('Ordered Date', order.requestDate),
           ),
           _row(
-            left: _bold(order.sellerLocation),
+            left: _scrollBold(isPart ? order.partNumber : order.dealerName),
             right: _keyValue('Ordered Qty', order.qty.toString()),
           ),
-          _priceRow(order, size),
+          _bold(isPart ? order.partDesc : order.sellerLocation),
+          // _scrollBold(isPart ? order.partDesc : order.sellerLocation),
+          _priceRow(),
           _remarksRow(size),
         ],
+        // children: [
+        //   _label(isPart ? 'Part Details' : 'Seller Details:'),
+        //   _row(
+        //     left: _scrollBold(isPart ? order.partNumber : order.dealerName),
+        //     right: _keyValue('Ordered Date', order.requestDate),
+        //   ),
+        //   _row(
+        //     left: _scrollBold(isPart ? order.partDesc : order.sellerLocation),
+        //     // left: _bold(isPart ? order.partDesc : order.sellerLocation),
+        //     right: _keyValue('Ordered Qty', order.qty.toString()),
+        //   ),
+        //   _priceRow(),
+        //   _remarksRow(size),
+        // ],
       ),
     );
   }
 
   /// UI Pieces ↓↓↓
 
-  Widget _priceRow(OrderPlacedModel order, Size size) {
+  Widget _priceRow() {
     return Row(
       children: [
         _label('MRP:'),
@@ -74,14 +90,27 @@ class PartCard extends StatelessWidget {
     return Row(
       children: [
         _label('Remarks: '),
-        SizedBox(
-          width: size.width * .55,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: _bold(order.remarks),
-          ),
-        ),
+        _scrollBold(order.remarks),
+        // SizedBox(
+        //   width: size.width * .55,
+        //   child: SingleChildScrollView(
+        //     scrollDirection: Axis.horizontal,
+        //     child: _bold('${order.remarks}'),
+        //   ),
+        // ),
       ],
+    );
+  }
+
+  Widget _scrollBold(String? text) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: _bold(text),
+        ),
+      ),
     );
   }
 
@@ -98,10 +127,19 @@ class PartCard extends StatelessWidget {
       Text(text ?? '', style: const TextStyle(fontSize: 12));
 
   Widget _bold(String? text) => Text(
-    text ?? '',
-    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-  );
+        text ?? '',
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+      );
 
+  Widget _remarks(String? text, Size size) => SizedBox(
+        width: size.width - size.width * .5,
+        child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Text(
+              text ?? '',
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            )),
+      );
   Widget _keyValue(String key, String? value) {
     return Row(
       children: [
@@ -112,22 +150,22 @@ class PartCard extends StatelessWidget {
   }
 
   Widget _strikeText(String text) => Text(
-    text,
-    style: const TextStyle(
-      fontSize: 12,
-      decoration: TextDecoration.lineThrough,
-      fontWeight: FontWeight.bold,
-    ),
-  );
+        text,
+        style: const TextStyle(
+          fontSize: 12,
+          decoration: TextDecoration.lineThrough,
+          fontWeight: FontWeight.bold,
+        ),
+      );
 
   Widget _priceText(String text) => Text(
-    text,
-    style: TextStyle(
-      fontSize: 14,
-      color: GainerColors.textPrimary,
-      fontWeight: FontWeight.bold,
-    ),
-  );
+        text,
+        style: TextStyle(
+          fontSize: 14,
+          color: GainerColors.textPrimary,
+          fontWeight: FontWeight.bold,
+        ),
+      );
 
   Widget _discountChip(String text) {
     return Container(
@@ -139,7 +177,7 @@ class PartCard extends StatelessWidget {
       child: Text(
         text,
         style:
-        const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
     );
   }

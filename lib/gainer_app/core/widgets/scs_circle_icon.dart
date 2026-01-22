@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-
 import '../constants/gainer_image.dart';
 
 class ScsCircleIcon extends StatelessWidget {

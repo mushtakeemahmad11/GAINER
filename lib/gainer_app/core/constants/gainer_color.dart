@@ -13,7 +13,6 @@ class GainerColors {
   static const Color background = Color(0xFFE6F5F4);
   static const Color background2 = Color(0xFFF2F7F6);
 
-
   static const Color textPrimary = Color(0xFF23675C);
   static const Color maroon = Color(0xFFAF0A1B);
   static const Color maroon2 = Color(0xFF8C0613);
@@ -23,6 +22,7 @@ class GainerColors {
 
   static const Color error = Colors.red;
   static const Color white = Colors.white;
+  static const Color lightWhite = Colors.white70;
 
   static const Color border = Colors.black38;
 

@@ -1,4 +1,4 @@
-import '../order_placed_model.dart';
+import 'order_placed_model.dart';
 
 class GroupedPartModel {
   final String partNumber;

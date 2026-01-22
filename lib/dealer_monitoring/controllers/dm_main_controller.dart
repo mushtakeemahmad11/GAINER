@@ -113,6 +113,7 @@ class DMMainController extends GetxController {
     _locationController.updateStockDetails(int.parse(locationId));
     int tCode = await getIntData("tCode");
     final response = await api.getUserRole(userId: tCode);
+    print("Role: $response");
     if (response['success']) {
       setStringData("userRole", response['role'] ?? "NotDefine");
     }

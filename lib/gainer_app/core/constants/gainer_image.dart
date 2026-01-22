@@ -8,9 +8,15 @@ class GainerImages {
   // static const String simsLogo = 'assets/gainer_images/sims_logo.png';
   static const String gLogo = 'assets/gainer_images/gainer_logo.png';
   static const String scsBlackLogo = 'assets/gainer_images/scs_black_logo.png';
-  static const String gainerSplashBanner = 'assets/gainer_images/gainer_splash_banner.png';
-  static const String gainerSplashBanner2 = 'assets/gainer_images/gainer_splash_banner2.jpeg';
+  static const String gainerSplashBanner =
+      'assets/gainer_images/gainer_splash_banner.png';
+  static const String gainerSplashBanner2 =
+      'assets/gainer_images/gainer_splash_banner2.jpeg';
   static const String partWithCar = 'assets/gainer_images/parts_with_car.png';
 
   static const String scsCircle = 'assets/gainer_images/scs_circle_logo.png';
+  static String decisionMaking = 'assets/gainer_images/decision_making.png';
+  static String deleteIcon = 'assets/gainer_images/delete.png';
+  static String cameraIcon = 'assets/gainer_images/camera.png';
+  static String galleryIcon = 'assets/gainer_images/gallery.png';
 }
