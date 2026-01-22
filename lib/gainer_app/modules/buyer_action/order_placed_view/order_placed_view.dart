@@ -44,8 +44,7 @@ class OrderPlacedView extends GetView<OrderPlacedController> {
                         hint: 'Search by part number',
                         controller: controller.searchController,
                         onChanged: (value) {
-                          // String filteredValue =
-                          // await ControllerUtils.partNumberValidation(value);
+                          // String filteredValue = await ControllerUtils.partNumberValidation(value);
                           String filteredValue = value
                               .replaceAll(RegExp(r'[^a-zA-Z0-9-/]'), '')
                               .toUpperCase();
