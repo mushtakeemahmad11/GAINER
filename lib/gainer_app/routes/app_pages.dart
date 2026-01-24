@@ -1,10 +1,12 @@
 import 'package:gainer/dealer_monitoring/screens/dm_splash_screen.dart';
-import 'package:gainer/gainer_app/modules/buyer_action/order_placed_view/order_placed_binding.dart';
+import 'package:gainer/gainer_app/modules/action_as_buyer/order_placed_view/order_placed_binding.dart';
 import 'package:gainer/gainer_app/modules/gainer_splash/gainer_splash_view.dart';
 import 'package:gainer/gainer_app/modules/internet_connectivity/no_internet_binding.dart';
 import 'package:gainer/gainer_app/modules/internet_connectivity/no_internet_view.dart';
 import 'package:get/get.dart';
-import '../modules/buyer_action/order_placed_view/order_placed_view.dart';
+import '../modules/action_as_buyer/order_placed_view/order_placed_view.dart';
+import '../modules/action_as_buyer/update_po_view/update_po_binding.dart';
+import '../modules/action_as_buyer/update_po_view/update_po_view.dart';
 import '../modules/gainer_splash/gainer_splash_binding.dart';
 import '../modules/login/login_binding.dart';
 import '../modules/login/login_view.dart';
@@ -68,11 +70,21 @@ class AppPages {
     //   binding: HomeBinding(),
     // ),
 
+    ///Buyer
     GetPage(
       name: Routes.ORDERPLACED,
       page: () => OrderPlacedView(),
       binding: OrderPlacedBinding(),
     ),
+
+    GetPage(
+      name: Routes.UPDATEPO,
+      page: () => UpdatePoView(),
+      binding: UpdatePoBinding(),
+    ),
+
+
+    ///Seller
 
 //Temp screen
     GetPage(name: Routes.ORDERS, page: () => const OrdersScreen()),

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gainer/gainer_app/core/constants/gainer_image.dart';
 import 'package:get/get.dart';
 import 'package:gainer/gainer/widget/reusable_elevated_button.dart';
-
-import '../../../gainer/screens/constant_image_path.dart';
 import '../../../main.dart';
 
 class GainerDialog {

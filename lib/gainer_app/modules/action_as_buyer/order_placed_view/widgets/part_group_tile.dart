@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gainer/gainer_app/modules/buyer_action/order_placed_view/widgets/expansion_tile_header.dart';
-import 'package:gainer/gainer_app/modules/buyer_action/order_placed_view/widgets/details_card.dart';
+import 'package:gainer/gainer_app/modules/action_as_buyer/order_placed_view/widgets/expansion_tile_header.dart';
+import 'package:gainer/gainer_app/modules/action_as_buyer/order_placed_view/widgets/details_card.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import '../../../../core/constants/gainer_color.dart';

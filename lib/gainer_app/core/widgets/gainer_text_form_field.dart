@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../constants/gainer_color.dart';
 
 class GainerTextFormField extends StatelessWidget {
@@ -11,6 +12,7 @@ class GainerTextFormField extends StatelessWidget {
   final bool obscureText;
   final bool readOnly;
   final int maxLines;
+  final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   final void Function()? onTap;
@@ -29,6 +31,7 @@ class GainerTextFormField extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.onTap,
+    this.inputFormatters,
   });
 
   OutlineInputBorder _border(Color color) {
@@ -49,8 +52,9 @@ class GainerTextFormField extends StatelessWidget {
       validator: validator,
       onChanged: onChanged,
       onTap: onTap,
+      inputFormatters: inputFormatters,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(vertical: 5,horizontal: 8),
+        contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
         isDense: true,
         labelText: label,
         hintText: hint,

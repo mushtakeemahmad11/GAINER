@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/constants/gainer_image.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_app_loader.dart';
-import 'package:gainer/gainer_app/core/widgets/gainer_text_field.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_text_form_field.dart';
 import 'package:get/get.dart';
-import 'package:googleapis/admob/v1.dart';
 import '../../../gainer/screens/constant_image_path.dart';
 import '../../core/constants/gainer_color.dart';
 import '../../core/widgets/error_text.dart';
-import '../../core/widgets/gainer_primary_button.dart';
 import 'login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
@@ -303,14 +300,9 @@ class LoginView extends GetView<LoginController> {
                                   ///Error msg
                                   // CustomErrorMsg(text: 'text'),
                                   Obx(() {
-                                    final err = controller.errMsg.value;
-                                    return err != null
-                                        ? Text(
-                                            controller.errMsg.value ?? "",
-                                            style: TextStyle(
-                                                color: GainerColors.error,
-                                                fontSize: 14),
-                                          )
+                                    final err = controller.errMsg;
+                                    return err.value != null
+                                        ? AppErrorText(error: controller.errMsg)
                                         : SizedBox.shrink();
                                   }),
                                   const SizedBox(height: 20),

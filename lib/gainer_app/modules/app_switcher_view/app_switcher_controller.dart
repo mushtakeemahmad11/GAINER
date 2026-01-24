@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:gainer/gainer/model/user_model.dart';
 import 'package:gainer/gainer_app/modules/main_screen/models/location_data_model.dart';
 import 'package:get/get.dart';
@@ -14,10 +16,9 @@ class AppSwitcherController extends GetxController {
   var notificationCount = 3.obs;
   var isLoading = false.obs;
   // for notified app update
-  RxString oldVersion = '1.0.1'.obs;
+  RxString oldVersion = '1.0.2'.obs;
   RxString newVersion = ''.obs;
   RxBool isAppUpdated = true.obs;
-  // Rx<String?> errorMsg = Rx<String?>(null);
   RxnString errMsg = RxnString(null);
 
   // Data list with full structure for store all location which got according to tCode
@@ -34,6 +35,7 @@ class AppSwitcherController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _fetchVersionFromFirestore();
     _getLocation();
   }
 
@@ -215,6 +217,22 @@ class AppSwitcherController extends GetxController {
       }
     } catch (e) {
       errMsg.value = 'Error fetching locations';
+    }
+  }
+
+  Future<void> _fetchVersionFromFirestore() async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('update')
+          .doc('tel-e-scope')
+          .get();
+
+      if (doc.exists) {
+        newVersion.value = doc['versionName'];
+        isAppUpdated.value = oldVersion.value == newVersion.value;
+      }
+    } catch (e) {
+      debugPrint('Version fetch error: $e');
     }
   }
 

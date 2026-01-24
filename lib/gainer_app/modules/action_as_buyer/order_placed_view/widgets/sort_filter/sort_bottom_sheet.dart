@@ -4,6 +4,7 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../../../../core/widgets/gainer_sort_tile.dart';
 import '../../order_placed_controller.dart';
 
 void showSortBottomSheet(BuildContext context) {
@@ -41,7 +42,7 @@ void showSortBottomSheet(BuildContext context) {
           /// Options
           Obx(() => Column(
                 children: [
-                  _SortTile(
+                  SortTile(
                     title: "Part wise",
                     selected: controller.groupType.value == GroupType.part,
                     onTap: () {
@@ -49,7 +50,7 @@ void showSortBottomSheet(BuildContext context) {
                       Get.back();
                     },
                   ),
-                  _SortTile(
+                  SortTile(
                     title: "Seller wise",
                     selected: controller.groupType.value == GroupType.seller,
                     onTap: () {
@@ -63,28 +64,4 @@ void showSortBottomSheet(BuildContext context) {
       );
     },
   );
-}
-
-class _SortTile extends StatelessWidget {
-  final String title;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _SortTile({
-    required this.title,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        selected ? Icons.check : null,
-        color: Colors.green,
-      ),
-      title: Text(title),
-      onTap: onTap,
-    );
-  }
 }

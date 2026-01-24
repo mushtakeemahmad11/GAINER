@@ -461,7 +461,6 @@ class ApiService {
       // print("response: PO : $jsonData");
       // get data as json string from json data
       final data = jsonData['d'];
-      print("response: $jsonData");
       if (response.statusCode == 200) {
         if (data.isNotEmpty) {
           if (jsonDecode(data)[0]['Status'] == "Error") {

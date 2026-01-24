@@ -81,63 +81,87 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: GainerColors.background,
-      body: Stack(
-        children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              return SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: constraints.maxHeight,
-                  ),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(height: 20),
+    Size size = MediaQuery.of(context).size;
+    return SafeArea(
+      top: false,
+      bottom: true,
+      child: Scaffold(
+        backgroundColor: GainerColors.background,
+        body: Stack(
+          children: [
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // const SizedBox(height: 20),
 
-                        /// Top Image (natural height)
-                        Image.asset(
-                          AppImages.loginBanner,
-                        ),
+                          /// Top Image (natural height)
+                          Image.asset(
+                            AppImages.loginBanner,
+                            width: size.width,
+                            height: size.height * .5,
+                            fit: BoxFit.cover,
+                          ),
 
-                        // const SizedBox(height: 10),
-                        // const Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              AppImages.appLogo,
-                              height: 50,
+                          // const SizedBox(height: 10),
+                          // const Spacer(),
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  AppImages.appLogo,
+                                  height: 30,
+                                ),
+                                const SizedBox(width: 10),
+                                const Text(
+                                  'Tel-e-scope',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'Tel-e-scope',
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        // const SizedBox(height: 20),
-                        const Spacer(),
-                        // Image.asset(
-                        //   Constants.scsBlack,
-                        //   height: 100,
-                        // ),
-                        // const SizedBox(height: 12),
-                        /// THIS TAKES REMAINING HEIGHT
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
+                          ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.center,
+                          //   children: [
+                          //     Image.asset(
+                          //       AppImages.appLogo,
+                          //       height: 50,
+                          //     ),
+                          //     const SizedBox(width: 10),
+                          //     const Text(
+                          //       'Tel-e-scope',
+                          //       style: TextStyle(
+                          //         fontSize: 25,
+                          //         fontWeight: FontWeight.bold,
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
+                          // const SizedBox(height: 20),
+                          // const Spacer(),
+                          // Image.asset(
+                          //   Constants.scsBlack,
+                          //   height: 100,
+                          // ),
+                          // const SizedBox(height: 12),
+                          /// THIS TAKES REMAINING HEIGHT
+                          Container(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             decoration: BoxDecoration(
                               color: Color(0xFFBBE4E1),
-                              borderRadius:
-                                  BorderRadius.vertical(top: Radius.circular(30)),
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(30)),
                               // border: Border.symmetric(horizontal: BorderSide(color: Colors.black26))
                             ),
                             child: Form(
@@ -149,23 +173,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   SizedBox(height: 10),
                                   Image.asset(
                                     AppImages.scsBlack,
-                                    height: 100,
+                                    height: 60,
                                   ),
-                                  // const Text(
-                                  //   'Welcome Back',
-                                  //   style: TextStyle(
-                                  //     fontSize: 30,
-                                  //     fontWeight: FontWeight.bold
-                                  //   ),
+                                  // Image.asset(
+                                  //   AppImages.scsBlack,
+                                  //   height: 100,
                                   // ),
-                                  // const Text(
-                                  //   'Enter your details below',
-                                  //   style: TextStyle(
-                                  //     fontSize: 18,
-                                  //   ),
-                                  // ),
-                                  // const Text("Login",style: TextStyle(fontSize: 22)),
-
                                   ///Error msg
                                   Obx(() {
                                     final err = loginControllers.errorMsg.value;
@@ -173,7 +186,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ? Text(
                                             err,
                                             style: TextStyle(
-                                                color: Colors.red, fontSize: 14),
+                                                color: Colors.red,
+                                                fontSize: 14),
                                           )
                                         : SizedBox.shrink();
                                   }),
@@ -229,11 +243,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                             // color: AppColor.primary,
                                             color: const Color(0xFF2C9AA0),
                                           ),
-                                          onPressed:
-                                              loginControllers.toggleObscureText,
+                                          onPressed: loginControllers
+                                              .toggleObscureText,
                                         ),
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                         ),
                                         fillColor: Colors.white,
                                         filled: true,
@@ -272,7 +287,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       Obx(
                                         () => Checkbox(
                                           activeColor: const Color(0xFF2C9AA0),
-                                          value: loginControllers.rememberMe.value,
+                                          value:
+                                              loginControllers.rememberMe.value,
                                           onChanged: (value) => loginControllers
                                               .updateRemember(value ?? false),
                                         ),
@@ -285,55 +301,58 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                   /// Login Button
                                   SizedBox(
-                                      width: double.infinity,
-                                      height: 50,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color(0xFF2C9AA0),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(14),
-                                          ),
+                                    width: double.infinity,
+                                    height: 50,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            const Color(0xFF2C9AA0),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(14),
                                         ),
-                                        onPressed: () {
-                                          if (_formKey.currentState!.validate()) {
-                                            if (!loginControllers.isLoading.value) {
-                                              _login();
-                                            }
+                                      ),
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          if (!loginControllers
+                                              .isLoading.value) {
+                                            _login();
                                           }
-                                        },
-                                        // onPressed: controller.isLoading.value
-                                        //     ? null
-                                        //     : controller.login,
-                                        child: Text(
-                                                'Login',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
+                                        }
+                                      },
+                                      // onPressed: controller.isLoading.value
+                                      //     ? null
+                                      //     : controller.login,
+                                      child: Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
-                                  SizedBox(height: mq.height*.03),
+                                  ),
+                                  SizedBox(height: mq.height * .03),
                                   // const SizedBox(height: 20),
                                   // const SizedBox(height: 80),
                                 ],
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
+                );
+              },
+            ),
 
-          // Loading Indicator
-          Obx(() => loginControllers.isLoading.value
-              ? customCircularProgressIndicator()
-              : const SizedBox.shrink()),
-        ],
+            // Loading Indicator
+            Obx(() => loginControllers.isLoading.value
+                ? customCircularProgressIndicator()
+                : const SizedBox.shrink()),
+          ],
+        ),
       ),
     );
 

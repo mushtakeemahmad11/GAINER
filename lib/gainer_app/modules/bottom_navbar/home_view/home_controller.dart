@@ -213,9 +213,9 @@ class HomeController extends GetxController {
         Get.toNamed(Routes.ORDERPLACED);
         break;
 
-      // case 'updatePo':
-      //   Get.toNamed('/buyer/update-po');
-      //   break;
+      case 'PoUpdation':
+        Get.toNamed(Routes.UPDATEPO);
+        break;
       //
       // case 'partReceipt':
       //   Get.toNamed('/buyer/part-receipt');

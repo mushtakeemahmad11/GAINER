@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gainer/gainer_app/modules/buyer_action/order_placed_view/widgets/sort_filter/sort_bottom_sheet.dart';
+import 'package:gainer/gainer_app/modules/action_as_buyer/order_placed_view/widgets/sort_filter/sort_bottom_sheet.dart';
 
 import '../../../../../core/constants/gainer_color.dart';
 
@@ -35,26 +35,26 @@ class BottomSortFilterBar extends StatelessWidget {
               ),
             ),
           ),
-          VerticalDivider(width: 1),
+          // VerticalDivider(width: 1),
           Expanded(
             child: InkWell(
-              onTap: () {
-                // showSortBottomSheet(context);
-                print('Tap on Filter');
-              },
+              // onTap: () {
+              //   // showSortBottomSheet(context);
+              //   print('Tap on Filter');
+              // },
               child: SizedBox.expand(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.filter_alt_outlined,
-                      color: Colors.black,
-                    ),
-                    SizedBox(width: 6),
-                    Text("FILTER"),
-                  ],
-                ),
-              ),
+                  // child: Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: const [
+                  //     Icon(
+                  //       Icons.filter_alt_outlined,
+                  //       color: Colors.black,
+                  //     ),
+                  //     SizedBox(width: 6),
+                  //     Text("FILTER"),
+                  //   ],
+                  // ),
+                  ),
             ),
           ),
         ],

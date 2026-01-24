@@ -32,80 +32,88 @@ class AppLauncherScreen extends StatelessWidget {
       // backgroundColor: Colors.white,
       backgroundColor: GainerColors.background,
       appBar: AppBar(
-        title: const Text("App Switcher"),
-        centerTitle: true,
+        // title: const Text("App Switcher"),
+        title: Obx(
+          () => Text(
+            'Hi, ${controller.userName.value}',
+            style: const TextStyle(fontSize: 18),
+          ),
+        ),
+        // centerTitle: true,
         backgroundColor: Colors.teal,
       ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                const Text(
-                  "Choose which module you want to open",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black54),
-                  textAlign: TextAlign.center,
-                ),
-                // const SizedBox(height: 30),
-                // _buildAppCard(
-                //   title: "Gainer",
-                //   subtitle: "Business Performance Dashboard",
-                //   icon: Icons.insights,
-                //   color: Colors.deepPurple,
-                //   onTap: () => controller.gotoScreen("gainer"),
-                // ),
-                _appCard(
-                  logo: GainerImages.gLogo,
-                  title: "Gainer",
-                  subTitle: "Dead Stock Liquidation",
-                  onTap: () => controller.gotoScreen("gainer"),
-                ),
-                // const SizedBox(height: 10),
-                _appCard(
-                  logo: DMImages.simsLogo,
-                  title: "SIMS",
-                  subTitle: "Smart Inventory Management System",
-                  onTap: () => controller.gotoScreen("sims"),
-                ),
-
-                // _buildAppCard(
-                //   title: "SIMS",
-                //   subtitle: "Smart Inventory Management System",
-                //   icon: Icons.inventory,
-                //   color: Colors.indigo,
-                //   onTap: () => controller.gotoScreen("sims"),
-                // ),
-                const Spacer(),
-                // Obx(() {
-                //   if (!controller.isAppUpdated.value) {
-                //     return const SizedBox.shrink();
-                //   }
-                //   return _updateCard();
-                // }),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Text(
-                    "Version: ${controller.oldVersion.value}",
-                    style: const TextStyle(color: Colors.black54),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  // const Text(
+                  //   "Choose which module you want to open",
+                  //   style: TextStyle(
+                  //       fontSize: 18,
+                  //       fontWeight: FontWeight.bold,
+                  //       color: Colors.black54),
+                  //   textAlign: TextAlign.center,
+                  // ),
+                  // const SizedBox(height: 30),
+                  // _buildAppCard(
+                  //   title: "Gainer",
+                  //   subtitle: "Business Performance Dashboard",
+                  //   icon: Icons.insights,
+                  //   color: Colors.deepPurple,
+                  //   onTap: () => controller.gotoScreen("gainer"),
+                  // ),
+                  _appCard(
+                    logo: GainerImages.gLogo,
+                    title: "Gainer",
+                    subTitle: "Dead Stock Liquidation",
+                    onTap: () => controller.gotoScreen("gainer"),
                   ),
-                ),
-              ],
+                  // const SizedBox(height: 10),
+                  _appCard(
+                    logo: DMImages.simsLogo,
+                    title: "SIMS",
+                    subTitle: "Smart Inventory Management System",
+                    onTap: () => controller.gotoScreen("sims"),
+                  ),
+
+                  // _buildAppCard(
+                  //   title: "SIMS",
+                  //   subtitle: "Smart Inventory Management System",
+                  //   icon: Icons.inventory,
+                  //   color: Colors.indigo,
+                  //   onTap: () => controller.gotoScreen("sims"),
+                  // ),
+                  const Spacer(),
+                  // Obx(() {
+                  //   if (!controller.isAppUpdated.value) {
+                  //     return const SizedBox.shrink();
+                  //   }
+                  //   return _updateCard();
+                  // }),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      "Version: ${controller.oldVersion.value}",
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Obx(() {
-            if (controller.isAppUpdated.value) return const SizedBox.shrink();
-            return Container(color: Colors.black26);
-          }),
-          Obx(() {
-            if (controller.isAppUpdated.value) return const SizedBox.shrink();
-            return Align(
-                alignment: Alignment.bottomRight, child: _updateCard(size));
-          }),
-        ],
+            Obx(() {
+              if (controller.isAppUpdated.value) return const SizedBox.shrink();
+              return Container(color: Colors.black26);
+            }),
+            Obx(() {
+              if (controller.isAppUpdated.value) return const SizedBox.shrink();
+              return Align(
+                  alignment: Alignment.bottomRight, child: _updateCard(size));
+            }),
+          ],
+        ),
       ),
     );
   }
@@ -411,9 +419,10 @@ class AppLauncherScreen extends StatelessWidget {
 class AppLauncherController extends GetxController with WidgetsBindingObserver {
   final LocationController locationController = Get.find();
 
-  RxString oldVersion = '1.0.1'.obs;
+  RxString oldVersion = '1.0.2'.obs;
   RxString newVersion = ''.obs;
   RxBool isAppUpdated = true.obs;
+  RxString userName = ''.obs;
 
   @override
   void onReady() {
@@ -422,7 +431,10 @@ class AppLauncherController extends GetxController with WidgetsBindingObserver {
     _init();
   }
 
-  void _init() {
+  Future<void> _init() async {
+    final fName = await getStringData('firstName') ?? "";
+    final lName = await getStringData('lastName') ?? "";
+    userName.value = '$fName $lName';
     checkSession();
     fetchVersionFromFirestore();
     navigateOnLaunch();

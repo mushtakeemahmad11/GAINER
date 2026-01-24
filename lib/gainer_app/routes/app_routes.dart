@@ -24,6 +24,10 @@ abstract class Routes {
 
   ///Gainer Buyer Routes
   static const ORDERPLACED = '/gainer/buyer/order-placed';
+  static const UPDATEPO = '/gainer/seller/update-po';
+
+
+  ///Gainer Buyer Routes
 
   ///Temp screen
   static const ORDERS = '/orders';

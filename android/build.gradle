@@ -12,7 +12,7 @@ buildscript {
         mavenCentral() // Central repository
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.13.1' // Replace with your required version
+        classpath 'com.android.tools.build:gradle:8.13.2' // Replace with your required version
         classpath 'com.google.gms:google-services:4.4.4' // Required Google Services plugin (firebase)
     }
 }

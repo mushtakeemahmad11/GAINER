@@ -102,39 +102,39 @@ class MyApp extends StatelessWidget {
     // Initialize screen size
     mq = MediaQuery.of(context).size;
 
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Tel-e-scope',
-      // Application theme
-      theme: ThemeData(
-        useMaterial3: true, // Enable Material 3 styling
-
-        // AppBar theme
-        appBarTheme: AppBarTheme(
-          backgroundColor: AppColor.primary,
-          foregroundColor: AppColor.white,
-        ),
-
-        // Icon theme
-        iconTheme: const IconThemeData(
-          color: AppColor.background, // Set icon color
-        ),
-
-        // Color scheme
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColor.primary,
-          primary: AppColor.primary,
-        ),
-      ),
-
-      // Initial screen (Splash Screen)
-      // home: const SplashScreen(), // only for Gainer
-
-      // initialRoute: AppPages.INITIAL,
-      // initialRoute: '/splash',
-      initialRoute: initialRoute,
-      getPages: AppPages.routes,
-    );
+    // return GetMaterialApp(
+    //   debugShowCheckedModeBanner: false,
+    //   title: 'Tel-e-scope',
+    //   // Application theme
+    //   theme: ThemeData(
+    //     useMaterial3: true, // Enable Material 3 styling
+    //
+    //     // AppBar theme
+    //     appBarTheme: AppBarTheme(
+    //       backgroundColor: AppColor.primary,
+    //       foregroundColor: AppColor.white,
+    //     ),
+    //
+    //     // Icon theme
+    //     iconTheme: const IconThemeData(
+    //       color: AppColor.background, // Set icon color
+    //     ),
+    //
+    //     // Color scheme
+    //     colorScheme: ColorScheme.fromSeed(
+    //       seedColor: AppColor.primary,
+    //       primary: AppColor.primary,
+    //     ),
+    //   ),
+    //
+    //   // Initial screen (Splash Screen)
+    //   // home: const SplashScreen(), // only for Gainer
+    //
+    //   // initialRoute: AppPages.INITIAL,
+    //   // initialRoute: '/splash',
+    //   initialRoute: initialRoute,
+    //   getPages: AppPages.routes,
+    // );
 
     return GetMaterialApp(
       // showPerformanceOverlay: true,

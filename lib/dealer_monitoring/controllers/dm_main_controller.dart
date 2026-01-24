@@ -7,6 +7,13 @@ import '../../gainer/shared_preferences/shared_preferences_set_data.dart';
 import '../core/services/api_services.dart';
 import '../core/utils/dm_images.dart';
 import '../core/utils/transform_value_ind.dart';
+import '../screens/gainer_stock_check/show_part_details.dart';
+import '../screens/order_information/order_info_screen.dart';
+import '../screens/part_stock_check/part_stock_check_screen.dart';
+import '../screens/sale_trend/sale_trend_screen.dart';
+import '../screens/scs_norms_view/scs_norms_screen.dart';
+import '../screens/substitution_check/substitution_check_screen.dart';
+import '../screens/vehicle_search/vehicle_search_screen.dart';
 
 class DMMainController extends GetxController {
   ApiServices api = ApiServices();
@@ -30,47 +37,56 @@ class DMMainController extends GetxController {
     {
       'img': DMImages.partStockCheck,
       'icon': Icons.inventory,
-      'label': 'Part Stock\nCheck'
+      'label': 'Part Stock\nCheck',
+      // 'screen': PartStockCheckScreen(),
     },
     {
       'img': DMImages.gLogo,
       'icon': Icons.inventory_2,
-      'label': 'Gainer Stock\nCheck'
+      'label': 'Gainer Stock\nCheck',
+      // 'screen': GainerStockCheck(),
     },
     {
       'img': DMImages.substitutionCheck,
       'icon': Icons.info,
-      'label': 'Substitution\nCheck'
+      'label': 'Substitution\nCheck',
+      // 'screen': SubstitutionCheckScreen(),
     },
     {
       'img': DMImages.ppniList,
       'icon': Icons.list_alt,
-      'label': 'PPNI List\nView'
+      'label': 'PPNI List\nView',
+      // 'screen' : SubstitutionCheckScreen(),
     },
     {
       'img': DMImages.vehicleSearch,
       'icon': Icons.directions_car,
-      'label': 'Vehicle\nSearch'
+      'label': 'Vehicle\nSearch',
+      // 'screen': VehicleSearchScreen(),
     },
     {
       'img': DMImages.saleTrend,
       'icon': Icons.show_chart,
-      'label': 'Sale Trend\nView'
+      'label': 'Sale Trend\nView',
+      // 'screen': SaleTrendScreen(),
     },
     {
       'img': DMImages.orderInfo,
       'icon': Icons.assignment,
-      'label': 'Order\nInformation'
+      'label': 'Order\nInformation',
+      // 'screen': OrderInfoScreen(),
     },
     {
       'img': DMImages.scsNorms,
       'icon': Icons.warehouse,
-      'label': 'SCS Norms\nView'
+      'label': 'SCS Norms\nView',
+      // 'screen': ScsNormsScreen(),
     },
     // {
     //   'img': ConstantImages.gainerListening,
     //   'icon': Icons.analytics,
     //   'label': 'My Gainer\nListing'
+    //   'screen' : GainerListingScreen(),
     // },
   ];
 
@@ -113,7 +129,6 @@ class DMMainController extends GetxController {
     _locationController.updateStockDetails(int.parse(locationId));
     int tCode = await getIntData("tCode");
     final response = await api.getUserRole(userId: tCode);
-    print("Role: $response");
     if (response['success']) {
       setStringData("userRole", response['role'] ?? "NotDefine");
     }
@@ -136,132 +151,84 @@ class DMMainController extends GetxController {
     fName.value = await getStringData('firstName');
     lName.value = await getStringData('lastName');
     photo.value = await getStringData('photo');
-
-    // fetchVersionFromFirestore();
   }
-
-  // Future<void> fetchVersionFromFirestore() async {
-  //   try {
-  //     DocumentSnapshot doc = await FirebaseFirestore.instance
-  //         .collection('update')
-  //         .doc('kVsb8EqMOS6n2XsfYJOs')
-  //         .get();
-  //
-  //     if (doc.exists) {
-  //       var version = doc['version'];
-  //       // check version if match then go forward otherwise show update
-  //       print("version of dealer monitoring: $version");
-  //       if (version == 1.1) {
-  //         // Get.off(() => DMMainScreen());
-  //       } else {
-  //         Get.dialog(
-  //           barrierDismissible: false,
-  //           AlertDialog(
-  //             shape: RoundedRectangleBorder(
-  //               borderRadius: BorderRadius.circular(16),
-  //             ),
-  //             backgroundColor: Colors.white,
-  //             title: Row(
-  //               children: [
-  //                 Icon(Icons.system_update, color: AppColor.primary, size: 28),
-  //                 const SizedBox(width: 8),
-  //                 const Text(
-  //                   'Update Available',
-  //                   style: TextStyle(
-  //                     fontSize: 20,
-  //                     fontWeight: FontWeight.bold,
-  //                     color: Colors.black87,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //             content: const Text(
-  //               'A newer version of the app is available.\n\nPlease update to continue.',
-  //               style: TextStyle(
-  //                 fontSize: 16,
-  //                 color: Colors.black54,
-  //                 height: 1.4,
-  //               ),
-  //             ),
-  //             actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-  //             actions: [
-  //               SizedBox(
-  //                 width: double.infinity,
-  //                 child: ElevatedButton(
-  //                   onPressed: () {
-  //                     //not working
-  //                     DownloadUtils.downloadApk(
-  //                       '1gyAJFveYfQ4c-EGPnXQqKTLBub3v8sAb',
-  //                     );
-  //                   },
-  //                   style: ElevatedButton.styleFrom(
-  //                     backgroundColor: AppColor.primary,
-  //                     padding: const EdgeInsets.symmetric(vertical: 14),
-  //                     shape: RoundedRectangleBorder(
-  //                       borderRadius: BorderRadius.circular(12),
-  //                     ),
-  //                   ),
-  //                   child: const Text(
-  //                     'Update Now',
-  //                     style: TextStyle(
-  //                       fontSize: 16,
-  //                       color: Colors.white,
-  //                       fontWeight: FontWeight.w600,
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //
-  //         // Get.dialog(
-  //         //   barrierDismissible: false,
-  //         //   AlertDialog(
-  //         //     title: const Text('Update Available'),
-  //         //     content: const Text(
-  //         //         'A newer version of the app is available. Please update to continue.'),
-  //         //     actions: [
-  //         //       TextButton(
-  //         //         onPressed: () async {
-  //         //           DownloadUtils.downloadApk(
-  //         //               '1gyAJFveYfQ4c-EGPnXQqKTLBub3v8sAb'
-  //         //             // "https://drive.google.com/file/d/1gyAJFveYfQ4c-EGPnXQqKTLBub3v8sAb/view?usp=sharing"
-  //         //           );
-  //         //         },
-  //         //         child: const Text('Update Now'),
-  //         //       ),
-  //         //     ],
-  //         //   ),
-  //         // );
-  //       }
-  //     } else {
-  //       print('Document does not exist');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching version: $e');
-  //   }
-  // }
 
   Future<void> goto(String label, int index) async {
-    if (label.startsWith("PPNI List")) {
-      String userRole = await getStringData("userRole");
-      // print("Label: $label, userRole::: $userRole");
-      if (userRole == 'General Manager' || userRole == 'CEO') {
-        // print("GOTO GeneralManagerScreen");
-        openScreen(10); // GeneralManagerScreen index
-      } else if (userRole == 'Spare Parts Manager') {
-        // print("GOTO WorkshopManagerScreen");
-        openScreen(11); // WorkshopManagerScreen index
-      } else if (userRole == "Workshop Advisor") {
-        // print("GOTO WorkshopAdvisorScreen");
-        openScreen(12); // WorkshopAdvisorScreen index
-      } else {
-        Get.snackbar('Access Denied', 'You are not authorized to access PPNI',
-            backgroundColor: DMAppColors.accent, colorText: Colors.black);
-      }
-    } else {
-      openScreen(index + 1);
+    final String userRole = await getStringData("userRole");
+
+    void showAccessDenied(String message) {
+      Get.closeCurrentSnackbar();
+      Get.snackbar(
+        'Access Denied',
+        message,
+        backgroundColor: DMAppColors.primaryShade,
+        colorText: Colors.black,
+      );
     }
+
+    // ----------- PPNI LIST -----------
+    if (label.startsWith("PPNI List")) {
+      switch (userRole) {
+        case 'General Manager':
+        case 'CEO':
+          openScreen(10);
+          return;
+
+        case 'Spare Parts Manager':
+          openScreen(11);
+          return;
+
+        case 'Workshop Advisor':
+          openScreen(12);
+          return;
+
+        default:
+          showAccessDenied('You are not authorized to access PPNI');
+          return;
+      }
+    }
+
+    // ----------- STOCK CHECKS -----------
+    if (label.startsWith("Part Stock") ||
+        label.startsWith("Gainer Stock") ||
+        label.startsWith("Substitution")) {
+      if (userRole == 'Sales Executive') {
+        openScreen(index + 1);
+      } else {
+        showAccessDenied('You are not authorized to access this');
+      }
+      return;
+    }
+
+    // ----------- DEFAULT -----------
+    openScreen(index + 1);
   }
+
+// Future<void> goto(String label, int index) async {
+  //   String userRole = await getStringData("userRole");
+  //   if (label.startsWith("PPNI List")) {
+  //     // print("Label: $label, userRole::: $userRole");
+  //     if (userRole == 'General Manager' || userRole == 'CEO') {
+  //       openScreen(10); // GeneralManagerScreen index
+  //     } else if (userRole == 'Spare Parts Manager') {
+  //       openScreen(11); // WorkshopManagerScreen index
+  //     } else if (userRole == "Workshop Advisor") {
+  //       openScreen(12); // WorkshopAdvisorScreen index
+  //     } else {
+  //       Get.snackbar('Access Denied', 'You are not authorized to access PPNI',
+  //           backgroundColor: DMAppColors.accent, colorText: Colors.black);
+  //     }
+  //   }
+  //   if (label.startsWith("part stock check") ||
+  //       label.startsWith("gainer stock check") ||
+  //       label.startsWith("substitution check")) {
+  //     if (userRole == 'Sales Executive') {
+  //     } else {
+  //       Get.snackbar('Access Denied', 'You are not authorized to access this',
+  //           backgroundColor: DMAppColors.accent, colorText: Colors.black);
+  //     }
+  //   } else {
+  //     openScreen(index + 1);
+  //   }
+  // }
 }

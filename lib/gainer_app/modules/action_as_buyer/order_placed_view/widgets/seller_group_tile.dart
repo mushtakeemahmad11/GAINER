@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gainer/gainer_app/modules/buyer_action/order_placed_view/widgets/expansion_tile_header.dart';
+import 'package:gainer/gainer_app/modules/action_as_buyer/order_placed_view/widgets/expansion_tile_header.dart';
 import '../../../../core/constants/gainer_color.dart';
 import '../models/grouped_seller_model.dart';
 import 'details_card.dart';

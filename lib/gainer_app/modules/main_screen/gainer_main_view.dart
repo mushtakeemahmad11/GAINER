@@ -13,7 +13,7 @@ class GainerMainView extends GetView<GainerMainController> {
   @override
   Widget build(BuildContext context) {
     final nc = Get.find<NotificationController>();
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: GainerColors.background,
       appBar: AppBar(
