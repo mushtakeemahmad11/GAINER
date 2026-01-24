@@ -3,6 +3,7 @@ import 'package:gainer/dealer_monitoring/core/theme/app_colors.dart';
 import 'package:gainer/dealer_monitoring/widgets/animated_drop_icon.dart';
 import 'package:get/get.dart';
 
+import '../../gainer/shared_preferences/shared_preferences_get_data.dart';
 import '../screens/substitution_check/substitution_check_screen.dart';
 
 class StockCardSaleTrend extends StatefulWidget {
@@ -149,20 +150,7 @@ class _StockCardSaleTrendState extends State<StockCardSaleTrend>
 
   Widget _buildSubstitutionText() {
     return GestureDetector(
-      onTap: () {
-        Get.to(
-            () => Scaffold(
-                  appBar: AppBar(
-                    title: Text("Substitution Check"),
-                  ),
-                  body: SafeArea(
-                    child: SubstitutionCheckScreen(),
-                  ),
-                ),
-            arguments: {
-              "partNumber": widget.infoMap["Part Number"],
-            });
-      },
+      onTap: onTapSubstitution,
       child: Text(
         "(Check Substitution)",
         style: TextStyle(color: Colors.teal),
@@ -170,44 +158,31 @@ class _StockCardSaleTrendState extends State<StockCardSaleTrend>
     );
   }
 
-  // Widget keyValRow(String key, String val) {
-  //   return Row(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Expanded(
-  //           child: Text(
-  //         key,
-  //         style: TextStyle(fontWeight: FontWeight.w500),
-  //       )),
-  //       Expanded(
-  //           child: Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //         children: [
-  //           Text(val),
-  //           if (val == "Y")
-  //             GestureDetector(
-  //               onTap: () {
-  //                 Get.to(
-  //                     () => Scaffold(
-  //                           appBar: AppBar(
-  //                             title: Text("Substitution Check"),
-  //                           ),
-  //                           body: SafeArea(
-  //                             child: SubstitutionCheckScreen(),
-  //                           ),
-  //                         ),
-  //                     arguments: {
-  //                       "partNumber": widget.infoMap["Part Number"],
-  //                     });
-  //               },
-  //               child: Text(
-  //                 "(Check Substitution)",
-  //                 style: TextStyle(color: Colors.teal),
-  //               ),
-  //             ),
-  //         ],
-  //       )),
-  //     ],
-  //   );
-  // }
+  Future<void> onTapSubstitution() async {
+    final String userRole = await getStringData("userRole");
+    if (userRole == 'Sales Executive') {
+      Get.to(
+        () => Scaffold(
+          appBar: AppBar(
+            title: Text("Substitution Check"),
+          ),
+          body: SafeArea(
+            child: SubstitutionCheckScreen(),
+          ),
+        ),
+        arguments: {
+          "partNumber": widget.infoMap["Part Number"],
+        },
+      );
+    } else {
+      if (Get.isSnackbarOpen) Get.closeAllSnackbars();
+      Get.closeCurrentSnackbar();
+      Get.snackbar(
+        'Access Denied',
+        'You are not authorized to access this',
+        backgroundColor: DMAppColors.primaryShade,
+        colorText: Colors.black,
+      );
+    }
+  }
 }

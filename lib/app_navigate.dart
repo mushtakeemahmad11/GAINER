@@ -257,7 +257,7 @@ class AppLauncherScreen extends StatelessWidget {
 //                             ),
 //                           ),
 //                           const Text(
-//                             'A newer version of the home is available.',
+//                             'A newer version of the App is available.',
 
 //                             style: TextStyle(
 //                               fontSize: 14,

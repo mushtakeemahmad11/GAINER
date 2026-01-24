@@ -157,7 +157,7 @@ class DMMainController extends GetxController {
     final String userRole = await getStringData("userRole");
 
     void showAccessDenied(String message) {
-      Get.closeCurrentSnackbar();
+      if (Get.isSnackbarOpen) Get.closeAllSnackbars();
       Get.snackbar(
         'Access Denied',
         message,
