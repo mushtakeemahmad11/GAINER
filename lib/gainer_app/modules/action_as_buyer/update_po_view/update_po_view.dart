@@ -24,28 +24,50 @@ class UpdatePoView extends GetView<UpdatePoController> {
           children: [
             const PoSearchBar(),
             Expanded(
-              child: Obx(() {
-                if (controller.isLoading.value) {
-                  return Skeletonizer(
-                    child: ListView.builder(
+              child: SingleChildScrollView(
+                child: Obx(() {
+                  if (controller.isLoading.value) {
+                    return Skeletonizer(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: 5,
+                        itemBuilder: (_, index) {
+                          return ExpansionTileSkeleton();
+                        },
+                      ),
+                    );
+                  }
+                  final err = controller.errorMsg;
+                  if (err.value != null && err.value!.isNotEmpty) {
+                    return AppErrorText(error: err);
+                  }
+                  if (controller.filteredList.isEmpty) {
+                    return const Center(child: Text("No Orders Found"));
+                  }
+
+                  if (controller.groupType.value == GroupType.part) {
+                    return ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 5,
+                      itemCount: controller.partGroups.length,
                       itemBuilder: (_, index) {
-                        return ExpansionTileSkeleton();
+                        return PoPartTile(
+                          group: controller.partGroups[index],
+                        );
                       },
-                    ),
+                    );
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: controller.sellerGroups.length,
+                    itemBuilder: (_, index) {
+                      return PoSellerTile(
+                        group: controller.sellerGroups[index],
+                      );
+                    },
                   );
-                }
-                final err = controller.errorMsg;
-                if (err.value != null && err.value!.isNotEmpty) {
-                  return AppErrorText(error: err);
-                }
-                if (controller.filteredList.isEmpty) {
-                  return const Center(child: Text("No Orders Found"));
-                }
-
-                if (controller.groupType.value == GroupType.part) {
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -56,28 +78,8 @@ class UpdatePoView extends GetView<UpdatePoController> {
                       );
                     },
                   );
-                }
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: controller.sellerGroups.length,
-                  itemBuilder: (_, index) {
-                    return PoSellerTile(
-                      group: controller.sellerGroups[index],
-                    );
-                  },
-                );
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: controller.partGroups.length,
-                  itemBuilder: (_, index) {
-                    return PoPartTile(
-                      group: controller.partGroups[index],
-                    );
-                  },
-                );
-              }),
+                }),
+              ),
             ),
           ],
         ),

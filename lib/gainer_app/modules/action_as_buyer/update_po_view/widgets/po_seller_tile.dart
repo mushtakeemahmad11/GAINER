@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gainer/gainer_app/modules/action_as_buyer/order_placed_view/widgets/expansion_tile_header.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/models/update_po_part_model.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/widgets/po_details_card.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/widgets/po_expansion_tile_header.dart';
@@ -42,7 +41,7 @@ class PoSellerTile extends StatelessWidget {
             priceWidget: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _strikeText('₹${group.totalMrp} ', true),
+                // _strikeText('₹${group.totalMrp} ', true),
                 _strikeText('₹${group.totalPrice}', false)
               ],
             ),
@@ -57,8 +56,6 @@ class PoSellerTile extends StatelessWidget {
                   const Divider(height: 1, color: Colors.black38),
               itemBuilder: (_, index) {
                 final item = group.items[index];
-                print(item.dealerName);
-                print(item.sellerLocation);
 
                 return PoDetailsCard(
                   isPart: true,

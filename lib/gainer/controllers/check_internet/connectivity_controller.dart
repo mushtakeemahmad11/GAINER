@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:gainer/gainer/widget/bottom_snack_bar.dart';
 import 'package:get/get.dart';
 
 class ConnectivityController extends GetxController {
@@ -14,8 +15,10 @@ class ConnectivityController extends GetxController {
   bool initialCheckDone = false; // Not observable, just local use
 
   @override
-  void onInit() {
-    super.onInit();
+  // void onInit() {
+  //   super.onInit();
+  void onReady() {
+    super.onReady();
     initConnectivity();
     _subscription = _connectivity.onConnectivityChanged
         .listen((List<ConnectivityResult> results) {
@@ -167,18 +170,20 @@ class ConnectivityController extends GetxController {
     lastSnackbar.value = message;
 
     // Get.closeCurrentSnackbar();
-    if (Get.isSnackbarOpen) {
-      Get.closeCurrentSnackbar();
-    }
-    Get.rawSnackbar(
-      messageText: Center(
-        child: Text(message, style: TextStyle(color: Colors.white)),
-      ),
-      backgroundColor: isError ? Color(0xFF303030) : Colors.green,
-      duration: longDuration ? Duration(hours: 1) : Duration(seconds: 3),
-      isDismissible: !longDuration,
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-    );
+    // if (Get.isSnackbarOpen) {
+    //   Get.closeCurrentSnackbar();
+    // }
+    SnackBarService.showError(message,
+        isError: isError, longDuration: longDuration);
+    // Get.rawSnackbar(
+    //   messageText: Center(
+    //     child: Text(message, style: TextStyle(color: Colors.white)),
+    //   ),
+    //   backgroundColor: isError ? Color(0xFF303030) : Colors.green,
+    //   duration: longDuration ? Duration(hours: 1) : Duration(seconds: 3),
+    //   isDismissible: !longDuration,
+    //   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+    // );
   }
 
   @override

@@ -121,9 +121,6 @@ class UpdatePoController extends GetxController {
       final totalMrp = items.fold<int>(0, (sum, i) => sum + (i.mrp).toInt());
       final totalPrice =
           items.fold<int>(0, (sum, i) => sum + (i.price).toInt());
-
-      print("ToTal Mrp: $totalMrp");
-      print("ToTal Price: $totalPrice");
       return UpdatePoSellerModel(
         sellerName: items.first.dealerName,
         location: items.first.sellerLocation,

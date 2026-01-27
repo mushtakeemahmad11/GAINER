@@ -434,6 +434,7 @@ class AppLauncherController extends GetxController with WidgetsBindingObserver {
   Future<void> _init() async {
     final fName = await getStringData('firstName') ?? "";
     final lName = await getStringData('lastName') ?? "";
+    print("names: $fName, $lName");
     userName.value = '$fName $lName';
     checkSession();
     fetchVersionFromFirestore();

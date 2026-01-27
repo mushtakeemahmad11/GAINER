@@ -83,7 +83,6 @@ class AppPages {
       binding: UpdatePoBinding(),
     ),
 
-
     ///Seller
 
 //Temp screen
