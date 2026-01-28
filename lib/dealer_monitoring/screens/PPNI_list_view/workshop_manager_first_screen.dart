@@ -14,7 +14,7 @@ import '../../core/utils/transform_value_ind.dart';
 import '../../widgets/bar_chart_widget.dart';
 import '../../widgets/head_bar.dart';
 import '../../widgets/ppni_value_box.dart';
-import '../../widgets/testing/refresh_indicator.dart';
+import '../../widgets/refresh_indicator.dart';
 import '../../widgets/title_icon_row.dart';
 
 class WorkshopManagerFirstScreen extends StatefulWidget {

@@ -151,83 +151,18 @@ class VehicleSearchController extends GetxController {
       } else {
         reset();
         // for vehicle search log
-        int tCode = await getIntData("tCode") ?? 0;
+        // int tCode = await getIntData("tCode") ?? 0;
+        // await Future.wait([
+        //   api.vehicleSearchLog(
+        //     vehicleNumber: vehicleNumber.value?.trim() ?? "",
+        //     userId: tCode.toString(),
+        //   ),
+        //   loadNextPage(),
+        // ]);
         isLoading(true);
-        await Future.wait([
-          api.vehicleSearchLog(
-            vehicleNumber: vehicleNumber.value?.trim() ?? "",
-            userId: tCode.toString(),
-          ),
-          loadNextPage(),
-        ]);
-        // await loadNextPage();
+        loadNextPage();
         isLoading(false);
       }
-      // else {
-      //   String dealerID = await getStringData("dealerID");
-      //   String locationId = await getStringData("selectedLocationID");
-      //
-      //   final val2 = selectedValue2.value;
-      //   String? jobCardStatus = (val2?.startsWith("Open") == true)
-      //       ? "Open"
-      //       : (val2?.startsWith("Close") == true)
-      //           ? "Close"
-      //           : null;
-      //
-      //   // Issued or not: "1" / "0" / null
-      //   final val1 = selectedValue1.value;
-      //   String? issuedOrNot = (val1?.startsWith("Part issued") == true)
-      //       ? "1"
-      //       : (val1?.startsWith("Part not issued") == true)
-      //           ? "0"
-      //           : null;
-      //
-      //   // Non‐stockable flag: "Y" / "N" / null
-      //   // (Assuming you meant selectedValue3 for this; if it’s still selectedValue1, just replace val3 with val1)
-      //   final val3 = selectedValue3.value;
-      //   String? nonStockable = (val3 == "All time NS -Y")
-      //       ? "Y"
-      //       : (val3 == "All time NS -N")
-      //           ? "N"
-      //           : null;
-      //   isLoading.value = true;
-      //   final response = await api.fetchVehicleData(
-      //     dealerId: dealerID,
-      //     locationId: locationId,
-      //     vehicleNo: searchController.text,
-      //     issued: issuedOrNot,
-      //     jobCardStatus: jobCardStatus,
-      //     nonStockable: nonStockable,
-      //   );
-      //   isLoading.value = false;
-      //
-      //     print("data in getx $response");
-      //     if (response['success']) {
-      //       List<Map<String, dynamic>> data =
-      //           List<Map<String, dynamic>>.from(response['data']);
-      //       List<Map<String, dynamic>> score =
-      //           List<Map<String, dynamic>>.from(response['score']);
-      //       // vehicleData.assignAll(data);
-      //       // vehicleData.value = data['JobCards'];
-      //       print("dataaa: $data");
-      //       vehicleData.value = data.cast<Map<String, dynamic>>();
-      //       scoreData.value = score.cast<Map<String, dynamic>>();
-      //
-      //       final formatedData = groupByJobCard(data);
-      //       // final formatedData = data;
-      //       // To replace all entries:
-      //       print(
-      //           "foramttted:   $formatedData, ${data.length} ${data.isNotEmpty}");
-      //       groupedData.assignAll(formatedData);
-      //
-      //       if (formatedData.isEmpty && data.isNotEmpty) {
-      //         isCardStatusOther.value = "No vehicle found";
-      //       }
-      //     } else {
-      //       print("Error: ${response['message']}");
-      //       errorMsg.value = response['message'];
-      //     }
-      // }
     }
   }
 
@@ -236,6 +171,7 @@ class VehicleSearchController extends GetxController {
   Future<void> loadNextPage() async {
     dealerId = await getStringData("dealerID");
     locationId = await getStringData("selectedLocationID");
+    int tCode = await getIntData("tCode");
     final val2 = selectedValue2.value;
     String? jobCardStatus = (val2?.startsWith("Open") == true)
         ? "Open"
@@ -262,6 +198,7 @@ class VehicleSearchController extends GetxController {
     errorMsg.value = null;
     isMoreLoading(true);
     final response = await api.fetchVehicleData(
+      userId: tCode.toString(),
       dealerId: dealerId!,
       locationId: locationId!,
       vehicleNo: vehicleNumber.value ?? "",

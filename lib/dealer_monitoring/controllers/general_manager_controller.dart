@@ -57,10 +57,9 @@ class GeneralManagerController extends GetxController {
       {String? monthYear, String? title}) async {
     lakhsTitle.value =
         title != null ? "Location wise PPNI breakdown - $title" : "";
-    // title != null ? " Data for $title" : "";
     String dealerId = _locationController.stockDetails['DealerID'].toString();
-    // String locationId =
-    //     _locationController.stockDetails['LocationID'].toString();
+    String locationId =
+        _locationController.stockDetails['LocationID'].toString();
     // String selectedLocationID = await getStringData("selectedLocationID");
     final val1 = selectedPartNature.value;
     String? nonStockable = (val1 == "All time NS -Y")
@@ -74,9 +73,6 @@ class GeneralManagerController extends GetxController {
         : val2 == "Open"
             ? "Open"
             : null;
-    // // print(
-    //     "DealerId: $dealerId, isNonStockable: $nonStockable,isJobCard: ${selectedStatus.value}");
-    // tableData.clear();
     int tCode = await getIntData("tCode");
     bool checkInt = await checkInternet();
     if (!checkInt) {
@@ -88,6 +84,7 @@ class GeneralManagerController extends GetxController {
       final responses = await Future.wait([
         api.fetchPPNIValuesByDealer(
           dealerId: dealerId,
+          locationId: locationId,
           nonStockable: nonStockable,
           jobCardStatus: cardStatus,
           monthDate: monthYear,

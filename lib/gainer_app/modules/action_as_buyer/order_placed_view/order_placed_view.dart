@@ -32,58 +32,60 @@ class OrderPlacedView extends GetView<OrderPlacedController> {
       body: SafeArea(
         child: Stack(
           children: [
-            SingleChildScrollView(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-                child: Column(
-                  children: [
-                    _searchBar(),
-                    Obx(() {
-                      if (controller.isLoading.value) {
-                        return Skeletonizer(
-                          child: ListView.builder(
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+              child: Column(
+                children: [
+                  _searchBar(),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Obx(() {
+                        if (controller.isLoading.value) {
+                          return Skeletonizer(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: 5,
+                              itemBuilder: (_, index) {
+                                return ExpansionTileSkeleton();
+                              },
+                            ),
+                          );
+                        }
+                        final err = controller.errorMsg;
+                        if (err.value != null && err.value!.isNotEmpty) {
+                          return AppErrorText(error: err);
+                        }
+                        if (controller.filteredList.isEmpty) {
+                          return const Center(child: Text("No Orders Found"));
+                        }
+                        if (controller.groupType.value == GroupType.part) {
+                          return ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 5,
+                            itemCount: controller.partGroups.length,
                             itemBuilder: (_, index) {
-                              return ExpansionTileSkeleton();
+                              return PartGroupTile(
+                                group: controller.partGroups[index],
+                              );
                             },
-                          ),
-                        );
-                      }
-                      final err = controller.errorMsg;
-                      if (err.value != null && err.value!.isNotEmpty) {
-                        return AppErrorText(error: err);
-                      }
-                      if (controller.filteredList.isEmpty) {
-                        return const Center(child: Text("No Orders Found"));
-                      }
-                      if (controller.groupType.value == GroupType.part) {
+                          );
+                        }
                         return ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: controller.partGroups.length,
+                          itemCount: controller.sellerGroups.length,
                           itemBuilder: (_, index) {
-                            return PartGroupTile(
-                              group: controller.partGroups[index],
+                            return SellerGroupTile(
+                              group: controller.sellerGroups[index],
                             );
                           },
                         );
-                      }
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: controller.sellerGroups.length,
-                        itemBuilder: (_, index) {
-                          return SellerGroupTile(
-                            group: controller.sellerGroups[index],
-                          );
-                        },
-                      );
-                    }),
-                  ],
-                ),
+                      }),
+                    ),
+                  ),
+                ],
               ),
             ),
             GainerAppLoader(isLoading: controller.dltIsLoading),

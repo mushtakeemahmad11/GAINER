@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gainer/app_navigate.dart';
 import 'package:gainer/gainer_app/core/constants/gainer_color.dart';
 import 'package:get/get.dart';
 // import '../../main.dart';
@@ -580,7 +579,9 @@ class _LoginScreenState extends State<LoginScreen> {
             .toList();
         loginControllers.isLoading.value = false;
         // Get.offAll(() => MainScreen());  // Only for Gainer
-        Get.offAll(() => AppLauncherScreen());
+        // Get.offAll(() => AppLauncherScreen());
+        Get.offAllNamed('/app-launching');
+
         // Get.offAll(() => const IntroScreen());
         FirebaseDB firebaseDB = FirebaseDB();
         await firebaseDB.storeDeviceToken(

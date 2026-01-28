@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/material.dart';
 import 'package:gainer/gainer/widget/bottom_snack_bar.dart';
 import 'package:get/get.dart';
 
@@ -169,21 +168,8 @@ class ConnectivityController extends GetxController {
     if (lastSnackbar.value == message) return; // avoid duplicate snackbar
     lastSnackbar.value = message;
 
-    // Get.closeCurrentSnackbar();
-    // if (Get.isSnackbarOpen) {
-    //   Get.closeCurrentSnackbar();
-    // }
     SnackBarService.showError(message,
         isError: isError, longDuration: longDuration);
-    // Get.rawSnackbar(
-    //   messageText: Center(
-    //     child: Text(message, style: TextStyle(color: Colors.white)),
-    //   ),
-    //   backgroundColor: isError ? Color(0xFF303030) : Colors.green,
-    //   duration: longDuration ? Duration(hours: 1) : Duration(seconds: 3),
-    //   isDismissible: !longDuration,
-    //   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-    // );
   }
 
   @override

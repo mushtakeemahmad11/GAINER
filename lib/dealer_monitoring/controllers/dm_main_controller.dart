@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gainer/dealer_monitoring/core/theme/app_colors.dart';
 import 'package:get/get.dart';
 import '../../gainer/controllers/home_screen_controller.dart';
 import '../../gainer/shared_preferences/shared_preferences_get_data.dart';
@@ -7,13 +6,7 @@ import '../../gainer/shared_preferences/shared_preferences_set_data.dart';
 import '../core/services/api_services.dart';
 import '../core/utils/dm_images.dart';
 import '../core/utils/transform_value_ind.dart';
-import '../screens/gainer_stock_check/show_part_details.dart';
-import '../screens/order_information/order_info_screen.dart';
-import '../screens/part_stock_check/part_stock_check_screen.dart';
-import '../screens/sale_trend/sale_trend_screen.dart';
-import '../screens/scs_norms_view/scs_norms_screen.dart';
-import '../screens/substitution_check/substitution_check_screen.dart';
-import '../screens/vehicle_search/vehicle_search_screen.dart';
+import '../widgets/access_denied_snackbar.dart';
 
 class DMMainController extends GetxController {
   ApiServices api = ApiServices();
@@ -130,7 +123,8 @@ class DMMainController extends GetxController {
     int tCode = await getIntData("tCode");
     final response = await api.getUserRole(userId: tCode);
     if (response['success']) {
-      setStringData("userRole", response['role'] ?? "NotDefine");
+      final role = response['role'].toLowerCase() ?? "NotDefine";
+      setStringData("userRole", role);
     }
 
     final dealerId = await getStringData("dealerID") ?? 0;
@@ -156,53 +150,103 @@ class DMMainController extends GetxController {
   Future<void> goto(String label, int index) async {
     final String userRole = await getStringData("userRole");
 
-    void showAccessDenied(String message) {
-      if (Get.isSnackbarOpen) Get.closeAllSnackbars();
-      Get.snackbar(
-        'Access Denied',
-        message,
-        backgroundColor: DMAppColors.primaryShade,
-        colorText: Colors.black,
-      );
-    }
-
-    // ----------- PPNI LIST -----------
+    // ---------------- PPNI ----------------
     if (label.startsWith("PPNI List")) {
       switch (userRole) {
-        case 'General Manager':
-        case 'CEO':
+        case 'general manager':
+        case 'ceo':
           openScreen(10);
           return;
 
-        case 'Spare Parts Manager':
+        case 'spare parts manager':
           openScreen(11);
           return;
 
-        case 'Workshop Advisor':
+        case 'workshop advisor':
           openScreen(12);
           return;
 
         default:
-          showAccessDenied('You are not authorized to access PPNI');
+          DealerSnackbar.showAccessDenied(
+              'You are not authorized to access PPNI');
           return;
       }
     }
 
-    // ----------- STOCK CHECKS -----------
-    if (label.startsWith("Part Stock") ||
-        label.startsWith("Gainer Stock") ||
-        label.startsWith("Substitution")) {
-      if (userRole == 'Sales Executive') {
+    // ---------------- SALES EXECUTIVE RULE ----------------
+    if (userRole == 'sales executive') {
+      if (label.startsWith("Part Stock") || label.startsWith("Substitution")) {
         openScreen(index + 1);
       } else {
-        showAccessDenied('You are not authorized to access this');
+        DealerSnackbar.showAccessDenied(
+            'Sales Executive can access only Part Stock and Substitution');
       }
       return;
     }
 
-    // ----------- DEFAULT -----------
+    // ---------------- ADVISOR RULE ----------------
+    if (userRole == 'workshop advisor') {
+      if (label.startsWith("Gainer Stock")) {
+        DealerSnackbar.showAccessDenied(
+            'Advisor cannot access Gainer Stock Check');
+        return;
+      }
+    }
+
+    // ---------------- DEFAULT ACCESS ----------------
     openScreen(index + 1);
   }
+
+// Future<void> goto(String label, int index) async {
+  //   final String userRole = await getStringData("userRole");
+  //
+  //   void showAccessDenied(String message) {
+  //     if (Get.isSnackbarOpen) Get.closeAllSnackbars();
+  //     Get.snackbar(
+  //       'Access Denied',
+  //       message,
+  //       backgroundColor: DMAppColors.primaryShade,
+  //       colorText: Colors.black,
+  //     );
+  //   }
+  //
+  //   // ----------- PPNI LIST -----------
+  //   if (label.startsWith("PPNI List")) {
+  //     switch (userRole) {
+  //       case 'General Manager':
+  //       case 'CEO':
+  //         openScreen(10);
+  //         return;
+  //
+  //       case 'Spare Parts Manager':
+  //         openScreen(11);
+  //         return;
+  //
+  //       case 'Workshop Advisor':
+  //         openScreen(12);
+  //         return;
+  //
+  //       default:
+  //         showAccessDenied('You are not authorized to access PPNI');
+  //         return;
+  //     }
+  //   }
+  //
+  //   // ----------- STOCK CHECKS -----------
+  //   if (label.startsWith("Part Stock") ||
+  //       label.startsWith("Gainer Stock") ||
+  //       label.startsWith("Substitution")) {
+  //     if (userRole == 'Sales Executive') {
+  //       openScreen(index + 1);
+  //     } else {
+  //       showAccessDenied('You are not authorized to access this');
+  //     }
+  //     return;
+  //   }
+  //
+  //   // ----------- DEFAULT -----------
+  //   openScreen(index + 1);
+  // }
 
 // Future<void> goto(String label, int index) async {
   //   String userRole = await getStringData("userRole");

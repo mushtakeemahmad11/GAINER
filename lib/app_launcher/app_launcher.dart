@@ -1,35 +1,30 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/core/utils/dm_images.dart';
-import 'package:gainer/dealer_monitoring/screens/dm_splash_screen.dart';
 import 'package:gainer/gainer/widget/reusable_elevated_button.dart';
 import 'package:gainer/gainer_app/core/constants/gainer_color.dart';
-import 'package:gainer/scanapp/screens/scanapp_splash_screen.dart';
 import 'package:get/get.dart';
-import 'gainer/apis_functionality/api_service.dart';
-import 'gainer/controllers/check_internet/connectivity_controller.dart';
-import 'gainer/controllers/check_internet/no_internet_screen.dart';
-import 'gainer/controllers/home_screen_controller.dart';
-import 'gainer/screens/colors.dart';
-import 'gainer/screens/login_screen.dart';
-import 'gainer/screens/splash_screen.dart';
-import 'gainer/shared_preferences/shared_preferences_get_data.dart';
-import 'gainer/shared_preferences/shared_preferences_remove_data.dart';
-import 'gainer/shared_preferences/shared_preferences_set_data.dart';
-import 'gainer/utility/check_session.dart';
-import 'gainer/utility/download_utils.dart';
-import 'gainer_app/core/constants/gainer_image.dart';
+import '../gainer/screens/colors.dart';
+import '../gainer/utility/download_utils.dart';
+import '../gainer_app/core/constants/gainer_image.dart';
+import 'app_launcher_controller.dart';
 
-class AppLauncherScreen extends StatelessWidget {
-  AppLauncherScreen({super.key});
-
-  final AppLauncherController controller = Get.find();
+// class AppLauncherScreen extends StatelessWidget {
+//   AppLauncherScreen({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     // final AppLauncherController controller = Get.find();
+//     final controller = Get.put(AppLauncherController());
+//
+//     // controller.init();
+//     final size = MediaQuery.of(context).size;
+class AppLauncherScreen extends GetView<AppLauncherController> {
+  const AppLauncherScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      // backgroundColor: Colors.white,
       backgroundColor: GainerColors.background,
       appBar: AppBar(
         // title: const Text("App Switcher"),
@@ -223,11 +218,7 @@ class AppLauncherScreen extends StatelessWidget {
 //                       color: Colors.indigo,
 //                       onTap: () => _c.gotoScreen("SIMS"),
 //                     ),
-//                     const SizedBox(height: 50),
-//                     ElevatedButton(
-//                       onPressed: () => Get.to(() => AppSwitcherScreen()),
-//                       child: Text("AppSwitcher"),
-//                     ),
+//
 //                   ],
 //                 ),
 //               ),
@@ -327,47 +318,6 @@ class AppLauncherScreen extends StatelessWidget {
     );
   }
 
-  // Widget _buildAppCard(
-  //     {required String title,
-  //     required String subtitle,
-  //     required IconData icon,
-  //     required Color color,
-  //     required VoidCallback onTap}) {
-  //   return GestureDetector(
-  //     onTap: onTap,
-  //     child: Card(
-  //       elevation: 6,
-  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-  //       child: Padding(
-  //         padding: const EdgeInsets.all(20.0),
-  //         child: Row(
-  //           children: [
-  //             CircleAvatar(
-  //               radius: 30,
-  //               backgroundColor: color.withAlpha(50),
-  //               child: Icon(icon, size: 30, color: color),
-  //             ),
-  //             const SizedBox(width: 20),
-  //             Expanded(
-  //               child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   Text(title,
-  //                       style: const TextStyle(
-  //                           fontSize: 18, fontWeight: FontWeight.bold)),
-  //                   const SizedBox(height: 4),
-  //                   Text(subtitle, style: const TextStyle(color: Colors.grey)),
-  //                 ],
-  //               ),
-  //             ),
-  //             const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget _updateCard(Size size) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 45),
@@ -416,123 +366,3 @@ class AppLauncherScreen extends StatelessWidget {
   }
 }
 
-class AppLauncherController extends GetxController with WidgetsBindingObserver {
-  final LocationController locationController = Get.find();
-
-  RxString oldVersion = '1.0.2'.obs;
-  RxString newVersion = ''.obs;
-  RxBool isAppUpdated = true.obs;
-  RxString userName = ''.obs;
-
-  @override
-  void onReady() {
-    super.onReady();
-    WidgetsBinding.instance.addObserver(this);
-    _init();
-  }
-
-  Future<void> _init() async {
-    final fName = await getStringData('firstName') ?? "";
-    final lName = await getStringData('lastName') ?? "";
-    print("names: $fName, $lName");
-    userName.value = '$fName $lName';
-    checkSession();
-    fetchVersionFromFirestore();
-    navigateOnLaunch();
-  }
-
-  @override
-  void onClose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.onClose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      checkSession();
-    }
-  }
-
-  Future<void> navigateOnLaunch() async {
-    final isLoggedIn = await getBoolData('isLogin') ?? false;
-
-    if (!isLoggedIn) {
-      Get.offAll(() => const LoginScreen());
-      return;
-    }
-
-    if (!Get.find<ConnectivityController>().isConnected.value) {
-      Get.to(() => NoInternetScreen());
-      return;
-    }
-
-    await locationController.getLocationUsingTCode();
-
-    if (locationController.errorMsg.value != null) {
-      Get.to(() => NoInternetScreen());
-    }
-  }
-
-  Future<void> fetchVersionFromFirestore() async {
-    try {
-      final doc = await FirebaseFirestore.instance
-          .collection('update')
-          .doc('tel-e-scope')
-          .get();
-
-      if (doc.exists) {
-        newVersion.value = doc['versionName'];
-        isAppUpdated.value = oldVersion.value == newVersion.value;
-      }
-    } catch (e) {
-      debugPrint('Version fetch error: $e');
-    }
-  }
-
-  Future<void> gotoScreen(String name) async {
-    if (!Get.find<ConnectivityController>().isConnected.value) {
-      Get.to(() => NoInternetScreen());
-      return;
-    }
-
-    switch (name) {
-      case 'gainer':
-        Get.to(
-          () => SplashScreen(),
-          transition: Transition.rightToLeft,
-        );
-        break;
-      case 'sims':
-        Get.to(
-          () => DMSplashScreen(),
-          transition: Transition.rightToLeft,
-        );
-        break;
-      case 'scanapp':
-        Get.to(() => ScanappSplashScreen());
-        break;
-    }
-  }
-
-  Future<void> checkSession() async {
-    final isLoggedIn = await getBoolData('isLogin') ?? false;
-
-    if (!isLoggedIn) return;
-
-    if (await isSessionExpired()) {
-      await ApiService().logoutContinue(
-        empId: (await getIntData("tCode")).toString(),
-        userId: (await getStringData('UserID')).toString(),
-        deviceToken: (await getStringData("deviceToken")).toString(),
-        logoutType: 'SessionExpired',
-      );
-
-      await setBoolData('isLogin', false);
-      await removeData('tCode');
-      await removeData('userProfile');
-
-      Get.offAll(() => const LoginScreen());
-    }
-  }
-}

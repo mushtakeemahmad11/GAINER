@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/core/theme/app_colors.dart';
 import 'package:gainer/dealer_monitoring/widgets/animated_drop_icon.dart';
 import 'package:get/get.dart';
-
-import '../../gainer/shared_preferences/shared_preferences_get_data.dart';
 import '../screens/substitution_check/substitution_check_screen.dart';
 
 class StockCardSaleTrend extends StatefulWidget {
@@ -159,30 +157,18 @@ class _StockCardSaleTrendState extends State<StockCardSaleTrend>
   }
 
   Future<void> onTapSubstitution() async {
-    final String userRole = await getStringData("userRole");
-    if (userRole == 'Sales Executive') {
-      Get.to(
-        () => Scaffold(
-          appBar: AppBar(
-            title: Text("Substitution Check"),
-          ),
-          body: SafeArea(
-            child: SubstitutionCheckScreen(),
-          ),
+    Get.to(
+      () => Scaffold(
+        appBar: AppBar(
+          title: Text("Substitution Check"),
         ),
-        arguments: {
-          "partNumber": widget.infoMap["Part Number"],
-        },
-      );
-    } else {
-      if (Get.isSnackbarOpen) Get.closeAllSnackbars();
-      Get.closeCurrentSnackbar();
-      Get.snackbar(
-        'Access Denied',
-        'You are not authorized to access this',
-        backgroundColor: DMAppColors.primaryShade,
-        colorText: Colors.black,
-      );
-    }
+        body: SafeArea(
+          child: SubstitutionCheckScreen(),
+        ),
+      ),
+      arguments: {
+        "partNumber": widget.infoMap["Part Number"],
+      },
+    );
   }
 }

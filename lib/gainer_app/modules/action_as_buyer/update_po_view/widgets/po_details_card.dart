@@ -76,7 +76,7 @@ class PoDetailsCard extends StatelessWidget {
             ),
             right: GainerQtyField(
               controller: accCtl,
-              label: 'Acc. Qty',
+              label: 'Acct. Qty',
               // enable: false,
             ),
           ),

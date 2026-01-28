@@ -212,28 +212,28 @@ class _DMMainScreenState extends State<DMMainScreen> {
 
   List<Widget> _drawerItems() {
     return [
-      _drawerTile(DMImages.partStockCheck, "Part Stock Check", 1),
-      _drawerTile(DMImages.gLogoW, "Gainer Stock Check", 2),
-      _drawerTile(DMImages.substitutionCheck, "Substitution Check", 3),
-      _drawerTile(DMImages.ppniList, "PPNI List", 4, isGoto: true),
-      _drawerTile(DMImages.vehicleSearch, "Vehicle Search", 5),
-      _drawerTile(DMImages.saleTrend, "Sale Trend", 6),
-      _drawerTile(DMImages.orderInfo, "Order info", 7),
-      _drawerTile(DMImages.scsNorms, "SCS Norms", 8),
+      _drawerTile(DMImages.partStockCheck, "Part Stock Check", 0),
+      _drawerTile(DMImages.gLogoW, "Gainer Stock Check", 1),
+      _drawerTile(DMImages.substitutionCheck, "Substitution Check", 2),
+      _drawerTile(DMImages.ppniList, "PPNI List", 3),
+      _drawerTile(DMImages.vehicleSearch, "Vehicle Search", 4),
+      _drawerTile(DMImages.saleTrend, "Sale Trend", 5),
+      _drawerTile(DMImages.orderInfo, "Order info", 6),
+      _drawerTile(DMImages.scsNorms, "SCS Norms", 7),
       // _drawerTile(ConstantImages.gainerListening, "My Gainer Listing", 9),
     ];
   }
 
-  Widget _drawerTile(String imageUrl, String title, int index,
-      {bool isGoto = false}) {
+  Widget _drawerTile(String imageUrl, String title, int index) {
     return CustomListTile(
       url: imageUrl,
       title: title,
       onTap: () {
         Get.back();
-        isGoto
-            ? dMMainController.goto(title, index)
-            : dMMainController.openScreen(index);
+        dMMainController.goto(title, index);
+        // isGoto
+        //     ? dMMainController.goto(title, index)
+        //     : dMMainController.openScreen(index);
       },
     );
   }

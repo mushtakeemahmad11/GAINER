@@ -2,17 +2,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gainer/app_navigate.dart';
+import 'package:gainer/app_launcher/app_launcher.dart';
 import 'package:get/get.dart';
+import 'app_launcher/app_launcher_binding.dart';
 import 'firebase_options.dart';
 import 'gainer/controllers/check_internet/connectivity_controller.dart';
 import 'gainer/controllers/home_screen_controller.dart';
 import 'gainer/controllers/notification_controller.dart';
 import 'gainer/screens/colors.dart';
-import 'gainer_app/core/Services/auth_service.dart';
+import 'gainer/screens/login_screen.dart';
+import 'gainer/shared_preferences/shared_preferences_get_data.dart';
 import 'gainer_app/modules/internet_connectivity/no_internet_controller.dart';
-import 'gainer_app/routes/app_pages.dart';
-import 'gainer_app/routes/app_routes.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
@@ -65,10 +65,10 @@ Future<void> main() async {
     permanent: true,
   );
 
-  Get.put<AppLauncherController>(
-    AppLauncherController(),
-    permanent: true,
-  );
+  // Get.put<AppLauncherController>(
+  //   AppLauncherController(),
+  //   permanent: true,
+  // );
 
   Get.put<NotificationController>(
     NotificationController(),
@@ -81,8 +81,11 @@ Future<void> main() async {
   // HttpOverrides.global = MyHttpOverrides();
 
   // final bool isLoggedIn = await AuthService.isLoggedIn();
-  final INITIAL =
-      await AuthService.isLoggedIn() ? Routes.APPSWITCHER : Routes.LOGIN;
+  final isLoggedIn = await getBoolData('isLogin') ?? false;
+  final INITIAL = isLoggedIn ? '/app-launching' : '/login';
+  // final INITIAL =
+  //     await AuthService.isLoggedIn() ? Routes.APPSWITCHER : Routes.LOGIN;
+
   print("initial: $INITIAL");
   runApp(MyApp(
     initialRoute: INITIAL,
@@ -102,39 +105,39 @@ class MyApp extends StatelessWidget {
     // Initialize screen size
     mq = MediaQuery.of(context).size;
 
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Tel-e-scope',
-      // Application theme
-      theme: ThemeData(
-        useMaterial3: true, // Enable Material 3 styling
-
-        // AppBar theme
-        appBarTheme: AppBarTheme(
-          backgroundColor: AppColor.primary,
-          foregroundColor: AppColor.white,
-        ),
-
-        // Icon theme
-        iconTheme: const IconThemeData(
-          color: AppColor.background, // Set icon color
-        ),
-
-        // Color scheme
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColor.primary,
-          primary: AppColor.primary,
-        ),
-      ),
-
-      // Initial screen (Splash Screen)
-      // home: const SplashScreen(), // only for Gainer
-
-      // initialRoute: AppPages.INITIAL,
-      // initialRoute: '/splash',
-      initialRoute: initialRoute,
-      getPages: AppPages.routes,
-    );
+    // return GetMaterialApp(
+    //   debugShowCheckedModeBanner: false,
+    //   title: 'Tel-e-scope',
+    //   // Application theme
+    //   theme: ThemeData(
+    //     useMaterial3: true, // Enable Material 3 styling
+    //
+    //     // AppBar theme
+    //     appBarTheme: AppBarTheme(
+    //       backgroundColor: AppColor.primary,
+    //       foregroundColor: AppColor.white,
+    //     ),
+    //
+    //     // Icon theme
+    //     iconTheme: const IconThemeData(
+    //       color: AppColor.background, // Set icon color
+    //     ),
+    //
+    //     // Color scheme
+    //     colorScheme: ColorScheme.fromSeed(
+    //       seedColor: AppColor.primary,
+    //       primary: AppColor.primary,
+    //     ),
+    //   ),
+    //
+    //   // Initial screen (Splash Screen)
+    //   // home: const SplashScreen(), // only for Gainer
+    //
+    //   // initialRoute: AppPages.INITIAL,
+    //   // initialRoute: '/splash',
+    //   initialRoute: initialRoute,
+    //   getPages: AppPages.routes,
+    // );
 
     return GetMaterialApp(
       // showPerformanceOverlay: true,
@@ -163,9 +166,26 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
-      // Initial screen (Splash Screen)
-      // home: const SplashScreen(), // only for Gainer
-      home: AppLauncherScreen(),
+      getPages: [
+        GetPage(
+          name: '/app-launching',
+          page: () => AppLauncherScreen(),
+          binding: AppLauncherBinding(),
+        ),
+        GetPage(
+          name: '/login',
+          page: () => LoginScreen(),
+        ),
+      ],
+      initialRoute: initialRoute,
+      unknownRoute: GetPage(
+        name: '/not-found',
+        page: () => const Scaffold(
+          body: Center(child: Text('Route not found')),
+        ),
+      ),
+
+      // home: AppLauncherScreen(),
     );
   }
 }
@@ -175,7 +195,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gainer/app_navigate.dart';
+import 'package:gainer/app_launcher.dart';
 import 'package:get/get.dart';
 import 'firebase_options.dart';
 import 'gainer/controllers/check_internet/connectivity_controller.dart';

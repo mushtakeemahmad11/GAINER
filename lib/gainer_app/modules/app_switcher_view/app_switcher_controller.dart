@@ -12,11 +12,11 @@ import '../../routes/app_routes.dart';
 import '../internet_connectivity/no_internet_controller.dart';
 
 class AppSwitcherController extends GetxController {
-  var userName = ''.obs;
+  RxString userName = ''.obs;
   var notificationCount = 3.obs;
   var isLoading = false.obs;
   // for notified app update
-  RxString oldVersion = '1.0.2'.obs;
+  RxString oldVersion = '1.0.3'.obs;
   RxString newVersion = ''.obs;
   RxBool isAppUpdated = true.obs;
   RxnString errMsg = RxnString(null);

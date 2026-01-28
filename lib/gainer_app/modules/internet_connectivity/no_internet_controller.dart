@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../gainer/widget/bottom_snack_bar.dart';
@@ -136,19 +135,6 @@ class NoInternetController extends GetxController {
     SnackBarService.showError(message,
         isError: isError, longDuration: longDuration);
 
-    // if (Get.isSnackbarOpen) {
-    //   Get.closeCurrentSnackbar();
-    // }
-    // // Get.closeCurrentSnackbar();
-    // Get.rawSnackbar(
-    //   messageText: Center(
-    //     child: Text(message, style: TextStyle(color: Colors.white)),
-    //   ),
-    //   backgroundColor: isError ? Color(0xFF303030) : Colors.green,
-    //   duration: longDuration ? Duration(hours: 1) : Duration(seconds: 3),
-    //   isDismissible: !longDuration,
-    //   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-    // );
   }
 
   @override

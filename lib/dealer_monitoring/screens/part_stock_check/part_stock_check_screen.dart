@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/widgets/head_bar.dart';
 import 'package:gainer/dealer_monitoring/widgets/blink_btn.dart';
 import 'package:get/get.dart';
-import '../../../gainer/screens/bottombar_screen/part_request/part_request.dart';
 import '../../../gainer/widget/error_msg.dart';
 import '../../../gainer/widget/suggestion_list.dart';
 import '../../controllers/part_stock_check_controller.dart';
@@ -11,7 +10,6 @@ import '../../widgets/elevated_button.dart';
 import '../../widgets/legend_bar.dart';
 import '../../widgets/part_stock_card.dart';
 import '../../widgets/search_bar.dart';
-import '../substitution_check/substitution_check_screen.dart';
 
 class PartStockCheckScreen extends StatefulWidget {
   const PartStockCheckScreen({super.key});
@@ -67,29 +65,6 @@ class _PartStockCheckScreenState extends State<PartStockCheckScreen> {
         formKey: _partStockCheckController.formKey,
         onChanged: (value) =>
             _partStockCheckController.fetchPartSuggestions(value),
-        // onChanged: (value) async {
-        //   // final controller =
-        //   //     _partStockCheckController.searchController;
-        //   // if (value.isEmpty) {
-        //   //   controller.clear();
-        //   // }
-        //   // // Convert to uppercase and update text
-        //   // String upperText = value.toUpperCase();
-        //   // controller.value = controller.value.copyWith(
-        //   //   text: upperText,
-        //   //   // selection: TextSelection.collapsed(offset: upperText.length),
-        //   // );
-        //   // // default async validation logic
-        //   // String filteredValue =
-        //   //     await ControllerUtils.partNumberValidation(value);
-        //   // if (filteredValue != value) {
-        //   //   controller.text = filteredValue;
-        //   //   controller.selection = TextSelection.fromPosition(
-        //   //     TextPosition(offset: filteredValue.length),
-        //   //   );
-        //   // }
-        //   _partStockCheckController.fetchPartSuggestions(value);
-        // },
       ),
     );
   }
@@ -156,70 +131,14 @@ class _PartStockCheckScreenState extends State<PartStockCheckScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Column(
               children: [
-                // if (_partStockCheckController.isSubstitute.value)
-                //   ReusableElevatedButton(
-                //     //   onPressed: () {
-                //     //     // _partStockCheckController.fromPartStock.value = true;
-                //     //     _dMMainController.openScreen(4);
-                //     //   },
-                //     onPressed: () {
-                //       Get.to(
-                //           () => Scaffold(
-                //                 appBar: AppBar(
-                //                   title: Text("Substitution Check"),
-                //                 ),
-                //                 // body:  SafeArea(child: GainerStockCheck())));
-                //                 // body:  SafeArea(child: PartRequestBody())));
-                //                 // body: SafeArea(child: SubstitutionBody(),),
-                //                 body: SafeArea(
-                //                   child: SubstitutionCheckScreen(),
-                //                 ),
-                //               ),
-                //           arguments: {
-                //             "partNumber": _partStockCheckController
-                //                 .searchController.text,
-                //           });
-                //     },
-                //     text: "Show Substitution Part Details",
-                //   ),
                 BlinkingButton(
-                  onPressed: () {
-                    Get.to(
-                      () => Scaffold(
-                        appBar: AppBar(
-                          title: Text("Substitution Check"),
-                        ),
-                        body: SafeArea(
-                          child: SubstitutionCheckScreen(),
-                        ),
-                      ),
-                      arguments: {
-                        "partNumber":
-                            _partStockCheckController.searchController.text,
-                      },
-                    );
-                  },
+                  onPressed: _partStockCheckController.onTapSubstitutionCheck,
                   text: "Check Substitution",
                   isBlink: _partStockCheckController.isSubstitute.value,
                 ),
                 SizedBox(height: 5),
                 ReusableElevatedButton(
-                  onPressed: () {
-                    // Get.to(()=>SafeArea(child: (GainerStockCheck())));
-                    Get.to(
-                        () => Scaffold(
-                              appBar: AppBar(title: Text("Gainer Stock Check")),
-                              body: SafeArea(child: PartRequestScreen()),
-                            ),
-                        arguments: {
-                          "partNumber":
-                              _partStockCheckController.searchController.text,
-                        });
-                    // _partRequestController.partStockPartNum.value =
-                    //     _partStockCheckController
-                    //         .searchController.text;
-                    // _dMMainController.openScreen(3);
-                  },
+                  onPressed: _partStockCheckController.onTapGainerStockCheck,
                   text: "Show Gainer Stock Details",
                 ),
               ],

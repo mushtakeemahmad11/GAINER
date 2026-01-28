@@ -13,7 +13,7 @@ import '../../../gainer/widget/error_msg.dart';
 import '../../../gainer/widget/reusable_dropdown.dart';
 import '../../controllers/general_manager_controller.dart';
 import '../../widgets/ppni_value_box.dart';
-import '../../widgets/testing/refresh_indicator.dart';
+import '../../widgets/refresh_indicator.dart';
 import '../../widgets/title_icon_row.dart';
 
 class GeneralManagerScreen extends StatefulWidget {

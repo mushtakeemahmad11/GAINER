@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/update_po_controller.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/widgets/po_details_card.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/widgets/po_expansion_tile_header.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/constants/gainer_color.dart';
 import '../models/grouped_part_model.dart';
@@ -14,7 +11,7 @@ class PoPartTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = Get.find<UpdatePoController>();
+    // final c = Get.find<UpdatePoController>();
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Container(

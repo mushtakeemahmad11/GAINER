@@ -252,6 +252,7 @@ class ApiServices {
 
   Future<Map<String, dynamic>> fetchPPNIValuesByDealer({
     required String dealerId,
+    required String locationId,
     required String? nonStockable,
     required String? jobCardStatus,
     required String userId,
@@ -260,6 +261,7 @@ class ApiServices {
     String url = '$baseUrl/ppni-l';
     final Map<String, dynamic> requestBody = {
       "dealerid": dealerId,
+      "locationid": locationId,
       "nonstockable": nonStockable, // should be "Y" or "N" or Null
       "jobcardstatus": jobCardStatus, // e.g., "Open" or Close or Null
       "month": monthDate, // e.g., date or Null
@@ -612,6 +614,7 @@ class ApiServices {
     required String dealerId,
     required String locationId,
     required String vehicleNo,
+    required String userId,
     String? jobCardStatus,
     String? issued,
     String? nonStockable,
@@ -619,6 +622,8 @@ class ApiServices {
     int limit = 10,
   }) async {
     String url = '$baseUrl/vehicle';
+
+    // String url = 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/dm/vehicle';
 
     final Map<String, dynamic> requestBody = {
       "dealerid": dealerId,
@@ -629,9 +634,10 @@ class ApiServices {
       "alltimestk": nonStockable,
       "pageno": page,
       "pagesize": limit,
+      "userId": userId,
     };
 
-
+    // print("Request Body for Vehicle: $requestBody");
     try {
       final response = await http
           .post(
@@ -640,7 +646,6 @@ class ApiServices {
             body: jsonEncode(requestBody),
           )
           .timeout(const Duration(seconds: 10));
-
       // print("🔹 Response Body Vehicle: ${response.body}");
 
       if (response.statusCode == 200) {

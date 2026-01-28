@@ -14,7 +14,7 @@ class LoginView extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    // final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
 
     // return Scaffold(
     //     backgroundColor: GainerColors.background,

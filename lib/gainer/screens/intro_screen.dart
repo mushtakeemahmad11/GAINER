@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../app_navigate.dart';
 import '../../main.dart';
 import '../shared_preferences/shared_preferences_get_data.dart';
 import '../shared_preferences/shared_preferences_set_data.dart';
@@ -44,7 +43,7 @@ class IntroScreenState extends State<IntroScreen> {
 
   // Skip the intro and go directly to the main screen
   _skipIntro() {
-    Get.offAll(() => AppLauncherScreen());
+    Get.offAllNamed('/app-launching');
   }
 
   // // Go to the next page

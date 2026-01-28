@@ -20,16 +20,6 @@ class PoSearchBar extends GetView<UpdatePoController> {
         suffixIcon: IconButton(
             onPressed: controller.clearSearchBar, icon: Icon(Icons.clear)),
       ),
-      // child: TextField(
-      //   onChanged: controller.onSearch,
-      //   decoration: InputDecoration(
-      //     hintText: "Search by Part no\\ Dealer Name",
-      //     // prefixIcon: const Icon(Icons.search),
-      //     border: OutlineInputBorder(
-      //       borderRadius: BorderRadius.circular(12),
-      //     ),
-      //   ),
-      // ),
     );
   }
 }

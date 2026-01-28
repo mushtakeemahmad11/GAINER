@@ -4,8 +4,11 @@ import 'package:gainer/gainer/shared_preferences/shared_preferences_get_data.dar
 import 'package:get/get.dart';
 import '../../gainer/apis_functionality/api_service.dart';
 import '../../gainer/controllers/check_internet/no_internet_screen.dart';
+import '../../gainer/screens/bottombar_screen/part_request/part_request.dart';
 import '../../gainer/screens/check_internet/check_internet_connectivity.dart';
 import '../core/utils/transform_value_ind.dart';
+import '../screens/substitution_check/substitution_check_screen.dart';
+import '../widgets/access_denied_snackbar.dart';
 
 class PartStockCheckController extends GetxController {
   ApiServices api = ApiServices();
@@ -193,6 +196,38 @@ class PartStockCheckController extends GetxController {
         partSuggestions.clear();
         errorMessage.value = response['message'];
       }
+    }
+  }
+
+  void onTapSubstitutionCheck() {
+    Get.to(
+      () => Scaffold(
+        appBar: AppBar(
+          title: Text("Substitution Check"),
+        ),
+        body: SafeArea(
+          child: SubstitutionCheckScreen(),
+        ),
+      ),
+      arguments: {
+        "partNumber": searchController.text,
+      },
+    );
+  }
+
+  Future<void> onTapGainerStockCheck() async {
+    final String userRole = await getStringData("userRole");
+    if (userRole == 'workshop advisor' || userRole == 'sales executive') {
+      DealerSnackbar.showAccessDenied('you cannot access Gainer Stock Check');
+    } else {
+      Get.to(
+          () => Scaffold(
+                appBar: AppBar(title: Text("Gainer Stock Check")),
+                body: SafeArea(child: PartRequestScreen()),
+              ),
+          arguments: {
+            "partNumber": searchController.text,
+          });
     }
   }
 }
