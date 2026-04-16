@@ -1,0 +1,241 @@
+import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:gainer/dealer_monitoring/core/services/api_services.dart';
+import 'package:gainer/gainer_app/modules/main_view/models/location_data_model.dart';
+import 'package:get/get.dart';
+import '../gainer_app/core/Services/auth_service.dart';
+import '../gainer_app/core/services/fcm_service/firebase_db_creation.dart';
+import '../gainer_app/core/services/fcm_service/firebase_notification_service.dart';
+import '../gainer_app/core/services/gainer_api_service.dart';
+import '../gainer_app/modules/internet_connectivity/no_internet_controller.dart';
+import '../gainer_app/modules/login/model/user_model.dart';
+import '../gainer_app/routes/app_routes.dart';
+
+class AppSwitcherController extends GetxController with WidgetsBindingObserver {
+  RxString userName = ''.obs;
+  var notificationCount = 3.obs;
+  var isLoading = false.obs;
+
+  /// for notified app update
+  RxString oldVersion = '1.0.4'.obs;
+  RxString newVersion = ''.obs;
+  RxBool isAppUpdated = true.obs;
+
+  RxnString errMsg = RxnString(null);
+  Rx<String?> selectedLocation = Rx<String?>(null);
+  Rx<String?> selectedLocationId = Rx<String?>(null);
+
+  RxList<LocationDataModel> locationDataList = <LocationDataModel>[].obs;
+  // Observable Map that holds the location data(location:locationID)
+  var locationIdMap = <String, String>{}.obs;
+  final RxString stockData = ''.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    appSwitcherInitWork();
+  }
+
+  Future<void> appSwitcherInitWork() async {
+    try {
+      await Future.wait([
+        _checkSession(),
+        _checkAppAccess(),
+        _fetchVersionFromFirestore(),
+        getLocation(),
+        _fcmInit(),
+      ]);
+    } catch (e, s) {
+      debugPrint("Init error: $e");
+      debugPrintStack(stackTrace: s);
+    }
+  }
+
+  // make instance of Notification class
+  // final NotificationServices _notificationServices = NotificationServices();
+
+  Rxn<LocationDataModel> selectedStock = Rxn<LocationDataModel>();
+  void updateStockDetails(String selectedLocationID) {
+    final foundStock = locationDataList
+        .firstWhere((e) => e.locationId.toString() == selectedLocationID);
+    selectedStock.value = foundStock;
+    stockData.value = foundStock.stockDate ?? '';
+
+    // Example usage
+    // setStringData('selectedLocationID', foundStock.locationId.toString());
+    // setStringData('dealerID', foundStock.dealerId.toString());
+    // setStringData('brandID', foundStock.brandId.toString());
+  }
+
+  void onModuleTap(String moduleName) {
+    if (!Get.find<NoInternetController>().isConnected.value) {
+      Get.toNamed(Routes.NOINTERNETVIEW);
+      return;
+    }
+
+    switch (moduleName.toLowerCase()) {
+      case 'gainer':
+        Get.toNamed(Routes.GAINERSPLASH);
+        break;
+      case 'sims':
+        Get.toNamed(Routes.DMSPLASH);
+        break;
+      // case 'scanapp':
+      //   Get.to(() => ScanappSplashScreen());
+      //   // Get.to(() => ScanAppOldSplashScreen());
+      //   break;
+    }
+  }
+
+  LocationDataModel? getStock() => selectedStock.value;
+
+  Future<void> getLocation() async {
+    try {
+      UserModel? user = await AuthService.getUser();
+
+      if (user == null) {
+        errMsg.value =
+            'Something went wrong while fetching user details.\nPlease login again';
+        return;
+      }
+
+      userName.value = "${user.firstName} ${user.lastName}";
+      int userTCode = user.userTCode;
+
+      // Fetch locations
+      await getLocationUsingTCode(userTCode.toString());
+
+      // 🔒 SAFETY CHECK (MOST IMPORTANT)
+      if (locationDataList.isEmpty) {
+        errMsg.value = 'No location found Please login again';
+        return;
+      }
+
+      // Safe access
+      final dealerId = locationDataList.first.dealerId;
+
+      final List<String> locationsId =
+          locationDataList.map((item) => item.locationId.toString()).toList();
+
+      await getUSerRole();
+      String? userId = await AuthService.getUserId();
+      await FirebaseDbCreation.storeDeviceToken(
+        tCode: userTCode.toString(),
+        userId: userId,
+        dealerId: dealerId.toString(),
+        locationIds: locationsId,
+      );
+    } catch (e, stack) {
+      // 🔒 GLOBAL SAFETY (App Store & Play Store friendly)
+      errMsg.value = 'Unexpected error occurred. Please try again.';
+      debugPrint('GetLocation Error: $e');
+      debugPrintStack(stackTrace: stack);
+    }
+  }
+
+  Future<void> getUSerRole() async {
+    String tCode = await AuthService.getTCode();
+    final response = await ApiServices().getUserRole(userId: tCode);
+    if (response['success']) {
+      final role = response['role'].toLowerCase() ?? "NotDefine";
+      await AuthService.saveUserRole(role);
+      // setStringData("userRole", role);
+    }
+  }
+
+  Future<void> getLocationUsingTCode(String tCode) async {
+    try {
+      final response = await GainerApiService().getLocation(tCode);
+      locationDataList.clear();
+      if (response['success']) {
+        final data = jsonDecode(response['data']) as List;
+        final locationsData =
+            data.map((e) => LocationDataModel.fromJson(e)).toList();
+        locationDataList.assignAll(locationsData);
+
+        // for (var items in locationDataList) {
+        //   print("${items.location}: ${items.locationId}");
+        // }
+
+        ///LocationsId and locations fro dropdown
+        locationIdMap.value = {
+          for (var item in locationDataList)
+            item.location: item.locationId.toString()
+        };
+        selectedLocation.value = locationIdMap.keys.first;
+        //update stock details by default 0 index
+        updateStockDetails(locationIdMap.values.first);
+
+        await AuthService.saveBDLId(
+          locationsData.first.brandId.toString(),
+          locationsData.first.dealerId.toString(),
+          locationsData.first.locationId.toString(),
+        );
+
+        await AuthService.saveBDL(
+          locationsData.first.brand.toString(),
+          locationsData.first.dealer.toString(),
+          locationsData.first.location.toString(),
+        );
+      } else {
+        errMsg.value = response['message'];
+      }
+    } catch (e) {
+      errMsg.value = 'Error fetching locations';
+    }
+  }
+
+  Future<void> _fetchVersionFromFirestore() async {
+    final response = await GainerApiService().fetchAppVersion();
+
+    // if (response['success']) {
+    //   final data = response['data'];
+    //   newVersion.value = data['Version'];
+    //   isAppUpdated.value = oldVersion.value == newVersion.value;
+    // } else {
+    //   debugPrint(response['message']);
+    // }
+
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('update')
+          .doc('tel-e-scope')
+          .get();
+
+      if (doc.exists) {
+        newVersion.value = doc['versionName'];
+        isAppUpdated.value = oldVersion.value == newVersion.value;
+      }
+    } catch (e) {
+      debugPrint('Version fetch error: $e');
+    }
+  }
+
+  final RxMap<String, dynamic> appAccess = <String, dynamic>{}.obs;
+  Future<void> _checkAppAccess() async {
+    final tCode = await AuthService.getTCode();
+    final response = await GainerApiService().getAppAccess(tCode);
+    if (response['success']) {
+      final data = response['data'];
+      appAccess.assignAll(data);
+    } else {
+      debugPrint(response['message']);
+    }
+  }
+
+  Future<void> _checkSession() async {
+    final session = await AuthService.checkSessionExpired();
+    if (session) await AuthService.logout('SessionExpired');
+  }
+
+  Future<void> _fcmInit() async {
+    await NotificationServiceNEW.init();
+    // await LocalNotificationService.init();
+    // await FCMService.init();
+    // await NotificationServicesNEW.getFirebaseMessagingToken();
+    // await NotificationServicesNEW.init();
+    // await NotificationServices.requestNotificationPermission();
+    // await NotificationServices().firebaseInit();
+  }
+}
