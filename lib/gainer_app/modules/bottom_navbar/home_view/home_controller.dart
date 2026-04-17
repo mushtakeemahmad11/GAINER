@@ -389,7 +389,6 @@ class HomeController extends GetxController {
       isStageDataLoad.value = false;
       if (response['success']) {
         final List data = jsonDecode(response['data']);
-        print("stages: $data");
         final stages = data.map((e) => StageModel.fromJson(e)).toList();
         setStageData(stages);
         funBalance.value = stageList.first.walletBalance.toInt().toString();
@@ -625,7 +624,6 @@ class HomeController extends GetxController {
   void onNotificationTap(NotificationModel n) async {
     // String route = n.data['moduleRoute'];
     String route = n.moduleRoute;
-    print("Route: $route, ${n.isRead}");
     Get.offNamed(route);
     await GainerApiService().readNotification(n.id);
     // FirebaseDbCreation.markRead(n.id);

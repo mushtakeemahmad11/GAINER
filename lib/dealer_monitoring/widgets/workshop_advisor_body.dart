@@ -531,8 +531,10 @@ class _WorkshopAdvisorBodyState extends State<WorkshopAdvisorBody> {
         options: advisorList.map((item) => item['Advisor'].toString()).toList(),
         onChanged: (val) {
           if (val != null) {
-            _controller.selectedAdvisor.value = val;
-            _fetchApiData();
+            if (_controller.selectedAdvisor.value != val) {
+              _controller.selectedAdvisor.value = val;
+              _fetchApiData();
+            }
           }
         },
         selectedValue: _controller.selectedAdvisor.value,

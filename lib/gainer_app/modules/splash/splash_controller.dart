@@ -16,7 +16,7 @@ class AuthController extends GetxController {
     if (isLoggedIn) {
     // if (true) {
       // Get.offAllNamed('/app_switcher_view');
-      print("You are isLoggedIn: $isLoggedIn");
+
       Get.offAllNamed(Routes.APPSWITCHER);
     } else {
       // Get.offAllNamed('/login');

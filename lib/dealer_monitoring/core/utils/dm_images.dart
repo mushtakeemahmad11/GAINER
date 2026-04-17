@@ -2,7 +2,6 @@ class DMImages{
 
   static String openingScreenImg = 'assets/dm_images/opening_screen_img.png';
 
-
   static String binLocation = 'assets/dm_images/bin_location.png';
   static String partStockCheck = 'assets/dm_images/stock_check.png';
   static String gLogo = 'assets/dm_images/gainer_logo.png';
@@ -18,5 +17,5 @@ class DMImages{
   static String jobCardOpen = 'assets/dm_images/job_card_open.png';
   static String jobCardClose = 'assets/dm_images/job_card_close.png';
 
-  static const String simsLogo = 'assets/gainer_images/sims_logo.png';
+  static const String simsLogo = 'assets/dm_images/sims_logo.png';
 }

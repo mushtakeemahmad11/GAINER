@@ -47,7 +47,6 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
         _fcmInit(),
       ]);
     } catch (e, s) {
-      debugPrint("Init error: $e");
       debugPrintStack(stackTrace: s);
     }
   }
@@ -129,7 +128,6 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
     } catch (e, stack) {
       // 🔒 GLOBAL SAFETY (App Store & Play Store friendly)
       errMsg.value = 'Unexpected error occurred. Please try again.';
-      debugPrint('GetLocation Error: $e');
       debugPrintStack(stackTrace: stack);
     }
   }
@@ -219,8 +217,6 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
     if (response['success']) {
       final data = response['data'];
       appAccess.assignAll(data);
-    } else {
-      debugPrint(response['message']);
     }
   }
 

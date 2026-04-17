@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_primary_button.dart';
 import 'package:get/get.dart';
 import '../../../main.dart';
-import '../constants/gainer_color.dart';
 import '../constants/gainer_image.dart';
 import '../utils/url_launch_utils.dart';
 
@@ -145,23 +144,23 @@ class GainerDialog {
     );
   }
 
-  /// 🔹 Remarks PopUp
-  static Future<void> getRemarksPopUp(
-      String title, List<Widget> columnChildren) {
-    return Get.dialog(
-      AlertDialog(
-        title: Text(title),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: columnChildren,
-        ),
-        actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text("Close")),
-        ],
-      ),
-    );
-  }
+  // /// 🔹 Remarks PopUp
+  // static Future<void> getRemarksPopUp(
+  //     String title, List<Widget> columnChildren) {
+  //   return Get.dialog(
+  //     AlertDialog(
+  //       title: Text(title),
+  //       content: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: columnChildren,
+  //       ),
+  //       actions: [
+  //         TextButton(onPressed: () => Get.back(), child: const Text("Close")),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   /// 🔹 Invoice Download PopUp
   static Future<void> invoiceDownloadPopUp(
@@ -315,127 +314,127 @@ class GainerDialog {
   }
 
   /// 🔹 Auto-Close PopUp
-  static Future<void> lowFund(String balance) {
-    return _showDialog(
-      // autoClose: true,
-      content: Container(
-        padding: const EdgeInsets.all(20),
-        // decoration: BoxDecoration(
-        //   borderRadius: BorderRadius.circular(20),
-        //   color: GainerColors.primary,
-        //   // gradient: const LinearGradient(
-        //   //   colors: [Color(0xff1f2937), Color(0xff111827)],
-        //   //   begin: Alignment.topLeft,
-        //   //   end: Alignment.bottomRight,
-        //   // ),
-        //   boxShadow: [
-        //     BoxShadow(
-        //       color: Colors.black.withOpacity(0.4),
-        //       blurRadius: 20,
-        //       offset: const Offset(0, 10),
-        //     )
-        //   ],
-        // ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.red.withOpacity(.15),
-              ),
-              child: const Icon(
-                Icons.account_balance_wallet_outlined,
-                // color: Colors.redAccent,
-                color: GainerColors.secondary,
-                size: 34,
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              "Low Balance",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "Your wallet balance is low.\nCurrent Balance: ₹$balance",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey.shade300,
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Row(
-            //   children: [
-            //     Expanded(
-            //       child: OutlinedButton(
-            //         style: OutlinedButton.styleFrom(
-            //           foregroundColor: Colors.white70,
-            //           side: BorderSide(color: Colors.white24),
-            //           shape: RoundedRectangleBorder(
-            //             borderRadius: BorderRadius.circular(10),
-            //           ),
-            //         ),
-            //         onPressed: Get.back,
-            //         child: const Text("Later"),
-            //       ),
-            //     ),
-            //     const SizedBox(width: 10),
-            //     Expanded(
-            //       child: ElevatedButton(
-            //         style: ElevatedButton.styleFrom(
-            //           backgroundColor: Colors.orangeAccent,
-            //           shape: RoundedRectangleBorder(
-            //             borderRadius: BorderRadius.circular(10),
-            //           ),
-            //         ),
-            //         onPressed: () {
-            //           // Navigate to Add Funds
-            //         },
-            //         child: const Text("Add Funds"),
-            //       ),
-            //     ),
-            //   ],
-            // )
-          ],
-        ),
-      ),
-      actions: [
-        Expanded(
-          child: OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              foregroundColor: Colors.white70,
-              side: BorderSide(color: Colors.white24),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            onPressed: Get.back,
-            child: const Text("Later"),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orangeAccent,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            onPressed: () {
-              // Navigate to Add Funds
-            },
-            child: const Text("Add Funds"),
-          ),
-        ),
-      ],
-    );
-  }
+  // static Future<void> lowFund(String balance) {
+  //   return _showDialog(
+  //     // autoClose: true,
+  //     content: Container(
+  //       padding: const EdgeInsets.all(20),
+  //       // decoration: BoxDecoration(
+  //       //   borderRadius: BorderRadius.circular(20),
+  //       //   color: GainerColors.primary,
+  //       //   // gradient: const LinearGradient(
+  //       //   //   colors: [Color(0xff1f2937), Color(0xff111827)],
+  //       //   //   begin: Alignment.topLeft,
+  //       //   //   end: Alignment.bottomRight,
+  //       //   // ),
+  //       //   boxShadow: [
+  //       //     BoxShadow(
+  //       //       color: Colors.black.withOpacity(0.4),
+  //       //       blurRadius: 20,
+  //       //       offset: const Offset(0, 10),
+  //       //     )
+  //       //   ],
+  //       // ),
+  //       child: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: [
+  //           Container(
+  //             padding: const EdgeInsets.all(14),
+  //             decoration: BoxDecoration(
+  //               shape: BoxShape.circle,
+  //               color: Colors.red.withOpacity(.15),
+  //             ),
+  //             child: const Icon(
+  //               Icons.account_balance_wallet_outlined,
+  //               // color: Colors.redAccent,
+  //               color: GainerColors.secondary,
+  //               size: 34,
+  //             ),
+  //           ),
+  //           const SizedBox(height: 16),
+  //           const Text(
+  //             "Low Balance",
+  //             style: TextStyle(
+  //               fontSize: 20,
+  //               fontWeight: FontWeight.bold,
+  //               color: Colors.white,
+  //             ),
+  //           ),
+  //           const SizedBox(height: 10),
+  //           Text(
+  //             "Your wallet balance is low.\nCurrent Balance: ₹$balance",
+  //             textAlign: TextAlign.center,
+  //             style: TextStyle(
+  //               color: Colors.grey.shade300,
+  //               fontSize: 14,
+  //             ),
+  //           ),
+  //           const SizedBox(height: 20),
+  //           // Row(
+  //           //   children: [
+  //           //     Expanded(
+  //           //       child: OutlinedButton(
+  //           //         style: OutlinedButton.styleFrom(
+  //           //           foregroundColor: Colors.white70,
+  //           //           side: BorderSide(color: Colors.white24),
+  //           //           shape: RoundedRectangleBorder(
+  //           //             borderRadius: BorderRadius.circular(10),
+  //           //           ),
+  //           //         ),
+  //           //         onPressed: Get.back,
+  //           //         child: const Text("Later"),
+  //           //       ),
+  //           //     ),
+  //           //     const SizedBox(width: 10),
+  //           //     Expanded(
+  //           //       child: ElevatedButton(
+  //           //         style: ElevatedButton.styleFrom(
+  //           //           backgroundColor: Colors.orangeAccent,
+  //           //           shape: RoundedRectangleBorder(
+  //           //             borderRadius: BorderRadius.circular(10),
+  //           //           ),
+  //           //         ),
+  //           //         onPressed: () {
+  //           //           // Navigate to Add Funds
+  //           //         },
+  //           //         child: const Text("Add Funds"),
+  //           //       ),
+  //           //     ),
+  //           //   ],
+  //           // )
+  //         ],
+  //       ),
+  //     ),
+  //     actions: [
+  //       Expanded(
+  //         child: OutlinedButton(
+  //           style: OutlinedButton.styleFrom(
+  //             foregroundColor: Colors.white70,
+  //             side: BorderSide(color: Colors.white24),
+  //             shape: RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.circular(10),
+  //             ),
+  //           ),
+  //           onPressed: Get.back,
+  //           child: const Text("Later"),
+  //         ),
+  //       ),
+  //       const SizedBox(width: 10),
+  //       Expanded(
+  //         child: ElevatedButton(
+  //           style: ElevatedButton.styleFrom(
+  //             backgroundColor: Colors.orangeAccent,
+  //             shape: RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.circular(10),
+  //             ),
+  //           ),
+  //           onPressed: () {
+  //             // Navigate to Add Funds
+  //           },
+  //           child: const Text("Add Funds"),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }

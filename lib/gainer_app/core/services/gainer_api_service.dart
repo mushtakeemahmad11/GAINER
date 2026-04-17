@@ -575,7 +575,6 @@ class GainerApiService {
 
       // convert response into json data
       final jsonData = jsonDecode(response.body);
-      print("JsonData:: $jsonData");
       // get data as json string from json data
       final data = jsonData['d'];
       if (response.statusCode == 200) {
@@ -716,7 +715,6 @@ class GainerApiService {
       //     }));
       // convert response into json data
       final jsonData = jsonDecode(response.body);
-      print("JsonData: $jsonData");
       // get data as json string from json data
       final data = jsonData['d'];
       if (response.statusCode == 200) {

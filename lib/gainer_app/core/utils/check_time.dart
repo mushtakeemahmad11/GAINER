@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 class CheckTime {
@@ -36,7 +35,6 @@ class CheckTime {
 
       return DateTime.now().difference(parsedDate).inHours >= 48;
     } catch (e) {
-      debugPrint('Date parse error: $e | input: $rawDate');
       return false;
     }
   }

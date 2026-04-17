@@ -146,13 +146,10 @@ class ORFilterSheet extends GetView<OrderReceivedController> {
     switch (title) {
       case 'Dealer':
         return controller.tempDealers.isNotEmpty;
-        return controller.appliedDealers.isNotEmpty;
       case 'Location':
         return controller.tempLocations.isNotEmpty;
-        return controller.appliedLocations.isNotEmpty;
       case 'Part No':
         return controller.tempPartNos.isNotEmpty;
-        return controller.appliedPartNos.isNotEmpty;
 
       default:
         return false;
@@ -203,7 +200,6 @@ class ORFilterSheet extends GetView<OrderReceivedController> {
 
   /// RIGHT SIDE FILTER LIST
   Widget _rightFilterContent() {
-    print(controller.appliedDealers.isEmpty);
     return Expanded(
       child: Obx(() {
         return ListView(

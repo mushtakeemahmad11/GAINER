@@ -14,7 +14,6 @@ class NotificationService {
 
     // 🔹 Foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("Foreground Notification: ${message.data}");
     });
 
     // 🔹 Background Tap
@@ -32,7 +31,7 @@ class NotificationService {
   }
 
   static Future<void> handleBackgroundMessage(RemoteMessage message) async {
-    print("Background Message: ${message.data}");
+
   }
 
   static Future<void> handleNotificationTap(RemoteMessage message) async {
