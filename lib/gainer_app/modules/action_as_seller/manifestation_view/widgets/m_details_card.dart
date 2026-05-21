@@ -26,7 +26,7 @@ class MDetailsCard extends GetView<ManifestationController> {
     // final remCtrl = TextEditingController();
 
     return Container(
-      decoration: _gradientDecoration(),
+      decoration: GainerColors.gradientDecoration,
       padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,17 +120,4 @@ class MDetailsCard extends GetView<ManifestationController> {
         text ?? '',
         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
       );
-
-  BoxDecoration _gradientDecoration() {
-    return const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment(0.94, 0.97),
-        end: Alignment(2.94, -0.47),
-        colors: [
-          Color.fromRGBO(213, 221, 249, 0.5),
-          Color.fromRGBO(223, 247, 246, 0.2),
-        ],
-      ),
-    );
-  }
 }

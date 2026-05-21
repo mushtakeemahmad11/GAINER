@@ -124,6 +124,7 @@ class _PartStockCheckScreenState extends State<PartStockCheckScreen> {
                 "Reserved for Vehicle": checkDoubleInt(reserveForVehicle),
                 "Group Stock": checkDoubleInt(grpStock),
               },
+
               locations: _partStockCheckController.locationsList,
             ),
           ),

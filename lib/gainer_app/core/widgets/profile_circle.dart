@@ -15,8 +15,7 @@ class ProfileCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? imageUrl =
-    (apiImg != null && apiImg!.isNotEmpty)
+    final String? imageUrl = (apiImg != null && apiImg!.isNotEmpty)
         ? 'https://scope.sparecare.in/Upload/Employee/$apiImg'
         : null;
 
@@ -42,17 +41,25 @@ class ProfileCircle extends StatelessWidget {
     }
 
     if (imageUrl != null) {
-      return Image.network(
-        imageUrl,
-        fit: BoxFit.cover,
-        loadingBuilder: (_, child, progress) {
-          if (progress == null) return child;
-          return const Center(child: CircularProgressIndicator(strokeWidth: 2));
-        },
-        errorBuilder: (_, __, ___) {
-          return Image.asset(GainerImages.profile, fit: BoxFit.cover);
-        },
-      );
+      try {
+        return Image.network(
+          imageUrl,
+          fit: BoxFit.cover,
+          loadingBuilder: (_, child, progress) {
+            if (progress == null) return child;
+            return const Center(
+                child: CircularProgressIndicator(strokeWidth: 2));
+          },
+          errorBuilder: (_, __, ___) {
+            return Image.asset(GainerImages.profile, fit: BoxFit.cover);
+          },
+        );
+      } catch (e) {
+        return Image.asset(
+          GainerImages.profile,
+          fit: BoxFit.cover,
+        );
+      }
     }
 
     return Image.asset(

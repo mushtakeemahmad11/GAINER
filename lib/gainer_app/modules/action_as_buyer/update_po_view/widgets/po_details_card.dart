@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gainer/gainer_app/core/constants/gainer_color.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_text_form_field.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/models/update_po_model.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/update_po_controller.dart';
@@ -24,15 +25,17 @@ class PoDetailsCard extends GetView<UpdatePoController> {
     final reqCtl = TextEditingController(text: order.qty.toString());
     final avlCtl =
         TextEditingController(text: order.sellerFreeStock.toInt().toString());
+    print("stockkkk: ${order.sellerStockQty}, ${order.sellerLatestStock}");
 
     return Container(
-      decoration: _gradientDecoration(),
+      decoration: GainerColors.gradientDecoration,
       padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: Column(
@@ -40,72 +43,153 @@ class PoDetailsCard extends GetView<UpdatePoController> {
                   children: [
                     _label(isPart ? 'Part Details' : 'Seller Details:'),
                     _bold(isPart ? order.partNumber : order.dealerName),
+                  ],
+                ),
+              ),
+              Row(
+                children: [
+                  GainerQtyField(
+                    controller: reqCtl,
+                    label: 'Req. Qty',
+                    enable: false,
+                  ),
+                  const SizedBox(width: 5),
+                  GainerQtyField(
+                    controller: avlCtl,
+                    label: 'Avl. Qty',
+                    enable: false,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            spacing: 10,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child:
                           _bold(isPart ? order.partDesc : order.sellerLocation),
                     ),
+                    // ScrollableTextWidget(textWidget: _bold(isPart ? order.partDesc : '${order.sellerLocation} hello this side is ma who are you hello this side is ma who are you')),
                     PoUpdationMrp(order: order),
                   ],
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(
-                    children: [
-                      GainerQtyField(
-                        controller: reqCtl,
-                        label: 'Req. Qty',
-                        enable: false,
-                      ),
-                      const SizedBox(width: 5),
-                      GainerQtyField(
-                        controller: avlCtl,
-                        label: 'Avl. Qty',
-                        enable: false,
-                      ),
-                    ],
+              GainerQtyField(
+                controller: order.accCtrl,
+                label: 'Cnf. Qty',
+                // onChanged: (val) => controller.onChangedAcctQty(
+                //     val, accCtl, order, context),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  QtyLimitFormatter(
+                    maxReqQty: order.dispatchQty.toInt(),
+                    maxAvlQty: order.sellerFreeStock.toInt(),
+                    context: context,
                   ),
-                  const SizedBox(height: 5),
-                  GainerQtyField(
-                    controller: order.accCtrl,
-                    label: 'Cnf. Qty',
-                    // onChanged: (val) => controller.onChangedAcctQty(
-                    //     val, accCtl, order, context),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      QtyLimitFormatter(
-                        maxReqQty: order.dispatchQty.toInt(),
-                        maxAvlQty: order.sellerFreeStock.toInt(),
-                        context: context,
-                      ),
-                    ],
-                  ),
-                  // _bold('${order.orderFor} Order'),
                 ],
               ),
             ],
           ),
-          Column(
+          Row(
             children: [
-              Row(
-                children: [
-                  _label("Buyers's Remarks: "),
-                  _scrollBold(order.remarks),
-                  const SizedBox(width: 5),
-                  _bold('${order.orderFor} Order'),
-                ],
-              ),
-              Row(
-                children: [
-                  _label("Seller's Remarks: "),
-                  _scrollBold(order.requestAcceptRemarks),
-                ],
-              )
+              _label("Buyers's Remarks: "),
+              _scrollBold(order.remarks),
+              const SizedBox(width: 5),
+              _bold('${order.orderFor} Order'),
+            ],
+          ),
+          Row(
+            children: [
+              _label("Seller's Remarks: "),
+              _scrollBold(order.requestAcceptRemarks),
             ],
           ),
           PoUpdationBtnRow(order: order, accCtrl: order.accCtrl),
+
+          // SizedBox(height: 100),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     Expanded(
+          //       child: Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           _label(isPart ? 'Part Details' : 'Seller Details:'),
+          //           _bold(isPart ? order.partNumber : order.dealerName),
+          //           SingleChildScrollView(
+          //             scrollDirection: Axis.horizontal,
+          //             child:
+          //                 _bold(isPart ? order.partDesc : order.sellerLocation),
+          //           ),
+          //           PoUpdationMrp(order: order),
+          //         ],
+          //       ),
+          //     ),
+          //     Column(
+          //       crossAxisAlignment: CrossAxisAlignment.end,
+          //       children: [
+          //         Row(
+          //           children: [
+          //             GainerQtyField(
+          //               controller: reqCtl,
+          //               label: 'Req. Qty',
+          //               enable: false,
+          //             ),
+          //             const SizedBox(width: 5),
+          //             GainerQtyField(
+          //               controller: avlCtl,
+          //               label: 'Avl. Qty',
+          //               enable: false,
+          //             ),
+          //           ],
+          //         ),
+          //         const SizedBox(height: 5),
+          //         GainerQtyField(
+          //           controller: order.accCtrl,
+          //           label: 'Cnf. Qty',
+          //           // onChanged: (val) => controller.onChangedAcctQty(
+          //           //     val, accCtl, order, context),
+          //           inputFormatters: [
+          //             FilteringTextInputFormatter.digitsOnly,
+          //             QtyLimitFormatter(
+          //               maxReqQty: order.dispatchQty.toInt(),
+          //               maxAvlQty: order.sellerFreeStock.toInt(),
+          //               context: context,
+          //             ),
+          //           ],
+          //         ),
+          //         // _bold('${order.orderFor} Order'),
+          //       ],
+          //     ),
+          //   ],
+          // ),
+          // Column(
+          //   children: [
+          //     Row(
+          //       children: [
+          //         _label("Buyers's Remarks: "),
+          //         _scrollBold(order.remarks),
+          //         const SizedBox(width: 5),
+          //         _bold('${order.orderFor} Order'),
+          //       ],
+          //     ),
+          //     Row(
+          //       children: [
+          //         _label("Seller's Remarks: "),
+          //         _scrollBold(order.requestAcceptRemarks),
+          //       ],
+          //     )
+          //   ],
+          // ),
+          // PoUpdationBtnRow(order: order, accCtrl: order.accCtrl),
         ],
       ),
     );
@@ -377,18 +461,6 @@ class PoDetailsCard extends GetView<UpdatePoController> {
   //   );
   // }
 
-  BoxDecoration _gradientDecoration() {
-    return const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment(0.94, 0.97),
-        end: Alignment(2.94, -0.47),
-        colors: [
-          Color.fromRGBO(213, 221, 249, 0.5),
-          Color.fromRGBO(223, 247, 246, 0.2),
-        ],
-      ),
-    );
-  }
 }
 
 // Widget _discountChip(String text) {

@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import '../../../modules/notification_view/notification_controller.dart';
 import '../../Services/auth_service.dart';
 import '../../widgets/notification_permission_bottom_sheet.dart';
-
 
 class NotificationServiceNEW {
   static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
@@ -14,32 +16,83 @@ class NotificationServiceNEW {
 
   /// INIT (call in main)
   static Future<void> init() async {
-    await _requestPermission();
+    await requestPermission();
     await _initLocalNotification();
     _setupListeners();
   }
 
   /// PERMISSION
-  static Future<void> _requestPermission() async {
+  static Future<void> requestPermission() async {
     // await _messaging.requestPermission();
 
-    final settings = await _messaging.requestPermission();
+    final settings = await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
 
-    if (settings.authorizationStatus != AuthorizationStatus.authorized) {
-      NotificationPermission.showNotificationPermissionSheet();
+    /// Foreground notification (iOS)
+    await _messaging.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    ///check notification permission allowed or denied
+    bool requestPermission =
+        settings.authorizationStatus == AuthorizationStatus.denied;
+
+    if (requestPermission) {
+      Future.delayed(Duration.zero, () {
+        if (Get.context != null) {
+          NotificationPermission.showNotificationPermissionSheet();
+        }
+      });
     }
   }
 
   /// 🔑 TOKEN
   static Future<String?> getFirebaseMessagingToken() async {
     try {
-      final token = await _messaging.getToken();
+      // final token = await _messaging.getToken();
+      //
+      // if (token != null) {
+      //   AuthService.saveDeviceToken(token);
+      // }
+      //
+      // return token;
 
-      if (token != null) {
-        AuthService.saveDeviceToken(token);
+      /// 🍎 iOS: wait for APNs token
+      if (Platform.isIOS) {
+        return 'PlatFormIos';
+        String? apnsToken;
+        int retry = 0;
+
+        while (apnsToken == null && retry < 10) {
+          await Future.delayed(const Duration(seconds: 1));
+          apnsToken = await _messaging.getAPNSToken();
+          retry++;
+        }
+
+        if (apnsToken == null) {
+          print("❌ APNS token not available");
+          return null;
+        }
+
+        print("✅ APNS Token: $apnsToken");
+        AuthService.saveDeviceToken(apnsToken);
+        return apnsToken;
       }
 
-      return token;
+      /// 🤖 Android: directly works
+      String? fcmToken = await _messaging.getToken();
+
+      print("✅ FCM Token: $fcmToken");
+
+      if (fcmToken == null) return null;
+      AuthService.saveDeviceToken(fcmToken);
+
+      return fcmToken;
     } catch (e) {
       return null;
     }
@@ -269,7 +322,6 @@ class NotificationServiceNEW {
     }
   }
 }*/
-
 
 /*
 

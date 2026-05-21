@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:gainer/dealer_monitoring/core/services/api_services.dart';
+import 'package:gainer/dealer_monitoring/core/services/dm_api_services.dart';
 import 'package:gainer/gainer_app/modules/main_view/models/location_data_model.dart';
+import 'package:gainer/test/gainer_sims.dart';
 import 'package:get/get.dart';
 import '../gainer_app/core/Services/auth_service.dart';
 import '../gainer_app/core/services/fcm_service/firebase_db_creation.dart';
@@ -14,13 +16,13 @@ import '../gainer_app/routes/app_routes.dart';
 
 class AppSwitcherController extends GetxController with WidgetsBindingObserver {
   RxString userName = ''.obs;
-  var notificationCount = 3.obs;
-  var isLoading = false.obs;
 
   /// for notified app update
   RxString oldVersion = '1.0.4'.obs;
   RxString newVersion = ''.obs;
   RxBool isAppUpdated = true.obs;
+
+  RxBool isLoading = true.obs;
 
   RxnString errMsg = RxnString(null);
   Rx<String?> selectedLocation = Rx<String?>(null);
@@ -38,17 +40,19 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> appSwitcherInitWork() async {
+    isLoading.value = true;
     try {
       await Future.wait([
         _checkSession(),
         _checkAppAccess(),
         _fetchVersionFromFirestore(),
         getLocation(),
-        _fcmInit(),
+        _notificationPermission(),
       ]);
     } catch (e, s) {
       debugPrintStack(stackTrace: s);
     }
+    isLoading.value = false;
   }
 
   // make instance of Notification class
@@ -65,6 +69,7 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
     // setStringData('selectedLocationID', foundStock.locationId.toString());
     // setStringData('dealerID', foundStock.dealerId.toString());
     // setStringData('brandID', foundStock.brandId.toString());
+    // _getDirectReqAccess(selectedLocationID);
   }
 
   void onModuleTap(String moduleName) {
@@ -78,7 +83,11 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
         Get.toNamed(Routes.GAINERSPLASH);
         break;
       case 'sims':
-        Get.toNamed(Routes.DMSPLASH);
+        if (Platform.isIOS) {
+          Get.to(() => GainerSims());
+        } else {
+          Get.toNamed(Routes.DMSPLASH);
+        }
         break;
       // case 'scanapp':
       //   Get.to(() => ScanappSplashScreen());
@@ -87,8 +96,12 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  LocationDataModel? getStock() => selectedStock.value;
+  Future<void> _checkSession() async {
+    final session = await AuthService.checkSessionExpired();
+    if (session) await AuthService.logout('SessionExpired');
+  }
 
+  LocationDataModel? getStock() => selectedStock.value;
   Future<void> getLocation() async {
     try {
       UserModel? user = await AuthService.getUser();
@@ -107,7 +120,7 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
 
       // 🔒 SAFETY CHECK (MOST IMPORTANT)
       if (locationDataList.isEmpty) {
-        errMsg.value = 'No location found Please login again';
+        errMsg.value = 'No location found please restart again';
         return;
       }
 
@@ -134,11 +147,10 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
 
   Future<void> getUSerRole() async {
     String tCode = await AuthService.getTCode();
-    final response = await ApiServices().getUserRole(userId: tCode);
+    final response = await DMApiServices().getUserRole(userId: tCode);
     if (response['success']) {
       final role = response['role'].toLowerCase() ?? "NotDefine";
       await AuthService.saveUserRole(role);
-      // setStringData("userRole", role);
     }
   }
 
@@ -151,10 +163,6 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
         final locationsData =
             data.map((e) => LocationDataModel.fromJson(e)).toList();
         locationDataList.assignAll(locationsData);
-
-        // for (var items in locationDataList) {
-        //   print("${items.location}: ${items.locationId}");
-        // }
 
         ///LocationsId and locations fro dropdown
         locationIdMap.value = {
@@ -186,7 +194,7 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
 
   Future<void> _fetchVersionFromFirestore() async {
     final response = await GainerApiService().fetchAppVersion();
-
+    print("Version from API: $response");
     // if (response['success']) {
     //   final data = response['data'];
     //   newVersion.value = data['Version'];
@@ -202,6 +210,7 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
           .get();
 
       if (doc.exists) {
+        print("Version from Firebase: ${doc['versionName']}");
         newVersion.value = doc['versionName'];
         isAppUpdated.value = oldVersion.value == newVersion.value;
       }
@@ -220,12 +229,9 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  Future<void> _checkSession() async {
-    final session = await AuthService.checkSessionExpired();
-    if (session) await AuthService.logout('SessionExpired');
-  }
-
-  Future<void> _fcmInit() async {
+  Future<void> _notificationPermission() async {
+    NotificationServiceNEW.requestPermission();
+    return;
     await NotificationServiceNEW.init();
     // await LocalNotificationService.init();
     // await FCMService.init();
@@ -233,5 +239,20 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
     // await NotificationServicesNEW.init();
     // await NotificationServices.requestNotificationPermission();
     // await NotificationServices().firebaseInit();
+  }
+
+  // Future<void> _getDirectReqAccess(String locationId) async {
+  //   final response =
+  //       await GainerApiService().getDirectRequestAccess(locationId: locationId);
+  //   print("Response of _getDirectReqAccess ::: $response");
+  //   if (response['success']) {
+  //     final data = response['data'][0];
+  //     isAllowBuying.value = data['AllowBuying'];
+  //     isAllowSelling.value = data['AllowBuying'];
+  //   } else {}
+  // }
+
+  void logout() {
+    AuthService.logout('UserLogoutAppSwitcher');
   }
 }

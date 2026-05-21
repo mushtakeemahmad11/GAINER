@@ -27,34 +27,9 @@ class ExpansionTileHeader extends StatelessWidget {
             child: ScrollableTextWidget(textWidget: _titleText(title2)),
           ),
         ),
-        // Expanded(
-        //   child: Center(
-        //     child: SingleChildScrollView(
-        //       scrollDirection: Axis.horizontal,
-        //       child: Text(
-        //         title2,
-        //         style: TextStyle(
-        //           fontSize: 13,
-        //           fontWeight: FontWeight.bold,
-        //           color: GainerColors.textPrimary,
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
         _titleText('Qty: $title3'),
       ],
     );
-    // return Row(
-    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //   children: [
-    //     _titleText(title1),
-    //     Expanded(
-    //       child: _titleText(title2),
-    //     ),
-    //     _titleText('Qty: $title3'),
-    //   ],
-    // );
   }
 
   Widget _titleText(String text) {

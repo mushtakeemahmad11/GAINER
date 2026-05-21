@@ -24,6 +24,10 @@ class ScrollableTextWidgetState extends State<ScrollableTextWidget> {
         controller: _controller,
         scrollDirection: Axis.horizontal,
         child: widget.textWidget,
+        // child: Padding(
+        //   padding: EdgeInsets.all(Platform.isIOS ? 4.0 : 0),
+        //   child: widget.textWidget,
+        // ),
       ),
     );
   }

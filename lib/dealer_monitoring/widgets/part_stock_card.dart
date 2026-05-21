@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/core/theme/app_colors.dart';
 import 'package:gainer/dealer_monitoring/widgets/animated_drop_icon.dart';
+import 'package:gainer/gainer_app/core/widgets/scrollable_text_widget.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+
+import '../controllers/part_stock_check_controller.dart';
 
 class PartStockCard extends StatefulWidget {
   final bool isGroupStock;
@@ -216,17 +223,19 @@ class _PartStockCardState extends State<PartStockCard>
                     // Right column with values + toggle icon
                     Expanded(
                       child: widget.isGroupStock
-                          ? Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 2),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(lastTwoEntries.first.value.toString()),
-                                  Text("(for 60 days)   "),
-                                ],
-                              ),
-                            )
+                          // ? Padding(
+                          //     padding: const EdgeInsets.symmetric(vertical: 2),
+                          //     child: Row(
+                          //       mainAxisAlignment:
+                          //           MainAxisAlignment.spaceBetween,
+                          //       children: [
+                          //         Text(lastTwoEntries.first.value.toString()),
+                          //         const Text("(for 60 days)   "),
+                          //       ],
+                          //     ),
+                          //   )
+                          ? _vehicleDetails(
+                              lastTwoEntries.first.value.toString())
                           : Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -292,7 +301,7 @@ class _PartStockCardState extends State<PartStockCard>
                           children: [
                             Text(
                               lastTwoEntries.last.value.toString(),
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                             _buildIconBtn(isWhite: true)
                           ],
@@ -318,7 +327,7 @@ class _PartStockCardState extends State<PartStockCard>
                               decoration: BoxDecoration(
                                 color: getColor(stock['type'] ?? "null"),
                                 boxShadow: [
-                                  BoxShadow(
+                                  const BoxShadow(
                                     color: Colors.black45,
                                     blurRadius: 3,
                                     offset: Offset(0,
@@ -494,6 +503,37 @@ class _PartStockCardState extends State<PartStockCard>
       icon: AnimatedDropIcon(
         isTrue: showDetails,
         isWhite: isWhite,
+      ),
+    );
+  }
+
+  Widget _vehicleDetails(String reservedQty) {
+    final c = Get.find<PartStockCheckController>();
+    return ScrollableTextWidget(
+      textWidget: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        spacing: 10,
+        children: [
+          reservedQty == '0'
+              ? Text(reservedQty)
+              : GestureDetector(
+                  onTap: c.showReservedDetails,
+                  child: Row(
+                    spacing: 2,
+                    children: [
+                      Text(reservedQty),
+                      const Text(
+                        '(Show)',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+          const Text("(for 60 days)"),
+        ],
       ),
     );
   }

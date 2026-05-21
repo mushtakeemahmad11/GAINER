@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/services/auth_service.dart';
@@ -12,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../../../../app_switcher_view/app_switcher_controller.dart';
+import '../../../../test/gainer_sims.dart';
 import '../../../core/constants/gainer_image.dart';
 import '../../../core/services/gainer_api_service.dart';
 import '../../../routes/app_routes.dart';
@@ -66,8 +66,9 @@ class HomeController extends GetxController {
 
   SearchController searchController = SearchController();
 
-  final buyerActionsDummyData = [
-    ActionItem(
+  final actionsDummyData = List.generate(
+    4,
+    (_) => ActionItem(
       icon: Icons.shopping_cart,
       title: "Order Placed",
       subtitle: "6 orders | ₹10.13L",
@@ -75,26 +76,36 @@ class HomeController extends GetxController {
       iconColor: Colors.blue,
       actionKey: 'orderPlaced',
     ),
-    ActionItem(
-      icon: Icons.update,
-      title: "Update PO Details",
-      subtitle: "3 orders | ₹3.22L",
-      status: "Pending since Jan 10, 2025",
-      iconColor: Colors.blue,
-      actionKey: 'updatePo',
-    ),
-    ActionItem(
-      icon: Icons.inventory,
-      title: "Part Receipt",
-      subtitle: "8 orders | ₹13.45L",
-      status: "Pending since Jan 10, 2025",
-      iconColor: Colors.blue,
-      actionKey: 'partReceipt',
-    ),
-  ];
+  );
+
+  // final buyerActionsDummyDataTest = [
+  //   ActionItem(
+  //     icon: Icons.shopping_cart,
+  //     title: "Order Placed",
+  //     subtitle: "6 orders | ₹10.13L",
+  //     status: "Pending since Jan 10, 2025",
+  //     iconColor: Colors.blue,
+  //     actionKey: 'orderPlaced',
+  //   ),
+  //   ActionItem(
+  //     icon: Icons.update,
+  //     title: "Update PO Details",
+  //     subtitle: "3 orders | ₹3.22L",
+  //     status: "Pending since Jan 10, 2025",
+  //     iconColor: Colors.blue,
+  //     actionKey: 'updatePo',
+  //   ),
+  //   ActionItem(
+  //     icon: Icons.inventory,
+  //     title: "Part Receipt",
+  //     subtitle: "8 orders | ₹13.45L",
+  //     status: "Pending since Jan 10, 2025",
+  //     iconColor: Colors.blue,
+  //     actionKey: 'partReceipt',
+  //   ),
+  // ];
 
   Future<void> onActionTap(String actionKey) async {
-    log('Tap on: $actionKey');
     bool checkInt = await CheckInternet.checkInternet();
     if (!checkInt) {
       Get.toNamed(Routes.NOINTERNETVIEW);
@@ -123,7 +134,27 @@ class HomeController extends GetxController {
         break;
 
       case 'DispatchDetail':
+        if (Platform.isIOS) {
+          Get.to(() => GainerSims());
+          return;
+        }
         Get.toNamed(Routes.DISPATCHEDDETAILSVIEW);
+        break;
+
+      case 'DirectRequestSent':
+        if (Platform.isIOS) {
+          Get.to(() => GainerSims());
+          return;
+        }
+        Get.toNamed(Routes.DIRECTREQSENT);
+        break;
+
+      case 'DirectRequestReceived':
+        if (Platform.isIOS) {
+          Get.to(() => GainerSims());
+          return;
+        }
+        Get.toNamed(Routes.DIRECTREQRECEIVED);
         break;
 
       default:
@@ -131,10 +162,26 @@ class HomeController extends GetxController {
     }
   }
 
+  bool checkAllow(String title) {
+    if (title == 'Direct Req Sent') {
+      return isAllowBuying.value;
+    } else if (title == 'Direct Req Received') {
+      return isAllowSelling.value;
+    }
+    return true;
+  }
+
+  void getSnackBar() {
+    GainerBottomSheet.showSnackBar("You don't have permission to access this");
+  }
+
   RxString partSearchText = ''.obs;
   void onSearchPressed() {
     partSuggestions.clear();
-
+    if (Platform.isIOS) {
+      Get.to(() => GainerSims());
+      return;
+    }
     final rawText = searchController.text.trim();
     if (rawText.isEmpty) return;
 
@@ -179,40 +226,20 @@ class HomeController extends GetxController {
       await fetchPartSuggestions(query);
     });
   }
-  // Future<void> onSearchChanged(String text) async {
-  //   if (text.isEmpty) {
-  //     partSuggestions.clear();
-  //     return;
-  //   }
-  //
-  //   final query = getCurrentQuery(text);
-  //
-  //   // avoid duplicate API call
-  //   if (query == partSearchText.value) return;
-  //
-  //   partSearchText.value = query;
-  //
-  //   await fetchPartSuggestions(query);
-  // }
 
   Future<void> fetchPartSuggestions(String query) async {
     if (query.length < 3) {
       partSuggestions.clear();
       return;
     }
-
-    String brandId = await AuthService.getBrandId();
-    String locationId = await AuthService.getLocationId();
-    String tCode = await AuthService.getTCode();
+    //
+    // String brandId = await AuthService.getBrandId();
+    // String locationId = await AuthService.getLocationId();
+    // String tCode = await AuthService.getTCode();
 
     partSearchLoading.value = true;
 
-    final response = await GainerApiService().searchPart(
-      query,
-      brandId,
-      locationId,
-      tCode,
-    );
+    final response = await GainerApiService().searchPart(query);
 
     partSearchLoading.value = false;
 
@@ -253,18 +280,12 @@ class HomeController extends GetxController {
 
   final RxList<ActionItem> buyerActions = <ActionItem>[].obs;
   final RxList<ActionItem> sellerActions = <ActionItem>[].obs;
-  // static const Map<String, String> buyerStageMap = {
-  //   'OrderPlaced': 'Order Placed',
-  //   'PoUpdation': 'Update Po Details',
-  //   'PartsReceipt': 'Part Receipt',
-  // };
-  //
-  // static const Map<String, String> sellerStageMap = {
-  //   'OrderDue': 'Order Received',
-  //   'Manifestation': 'Manifestation',
-  //   'DispatchDetail': 'Dispatched Details',
-  // };
+
   static const Map<String, Map<String, dynamic>> buyerStageMap = {
+    'DirectRequestSent': {
+      'title': 'Direct Req Sent',
+      'icon': Icons.shopping_cart,
+    },
     'OrderPlaced': {
       'title': 'Order Placed',
       'icon': Icons.shopping_cart,
@@ -280,6 +301,10 @@ class HomeController extends GetxController {
   };
 
   static const Map<String, Map<String, dynamic>> sellerStageMap = {
+    'DirectRequestReceived': {
+      'title': 'Direct Req Received',
+      'icon': Icons.call_received,
+    },
     'OrderDue': {
       'title': 'Open Orders',
       // 'title': 'Order Received',
@@ -297,41 +322,19 @@ class HomeController extends GetxController {
 
   ///For a SEQUENCE of TITLE
   static const List<String> buyerStageOrder = [
+    'DirectRequestSent',
     'OrderPlaced',
     'PoUpdation',
     'PartsReceipt',
   ];
 
   static const List<String> sellerStageOrder = [
+    'DirectRequestReceived',
+    // 'DirectReqReceived',
     'OrderDue',
     'Manifestation',
     'DispatchDetail',
   ];
-
-  // List<ActionItem> _buildActions(
-  //   List<StageModel> stages, {
-  //   required bool isBuyer,
-  // }) {
-  //   // final allowedStages = isBuyer ? buyerStageMap : sellerStageMap;
-  //   final allowedStages = isBuyer ? buyerStageMap : sellerStageMap;
-  //   return stages
-  //       .where((stage) => allowedStages.keys.contains(stage.stage))
-  //       .map((stage) {
-  //     final config = allowedStages[stage.stage];
-  //     String pendingData = stage.stageDate.isNotEmpty
-  //         ? 'Pending since ${stage.stageDate}'
-  //         : 'Pending since Jan 10, 2025';
-  //     return ActionItem(
-  //       icon: config?['icon'] ?? Icons.question_mark,
-  //       title: config?['title'] ?? "",
-  //       subtitle: '${stage.partsCount} Nos | ₹${stage.val.toStringAsFixed(1)}L',
-  //       // status: 'Pending since Jan 10, 2025',
-  //       status: pendingData,
-  //       iconColor: isBuyer ? Colors.blue : Colors.green,
-  //       actionKey: stage.stage,
-  //     );
-  //   }).toList();
-  // }
 
   List<ActionItem> _buildActions(
     List<StageModel> stages, {
@@ -366,7 +369,7 @@ class HomeController extends GetxController {
 
   void setStageData(List<StageModel> stages) {
     stageList.assignAll(stages);
-
+    for (var st in stages) {}
     buyerActions.value = _buildActions(
       stageList,
       isBuyer: true,
@@ -390,9 +393,27 @@ class HomeController extends GetxController {
       if (response['success']) {
         final List data = jsonDecode(response['data']);
         final stages = data.map((e) => StageModel.fromJson(e)).toList();
+
+        // stages.add(StageModel(
+        //   stage: "DirectReqSent",
+        //   partsCount: 5,
+        //   val: 12500.50,
+        //   walletBalance: 3000.00,
+        //   fundBalance: 9500.50,
+        //   stageDate: "2026-05-12",
+        // ));
+        // stages.add(StageModel(
+        //   stage: "DirectReqReceived",
+        //   partsCount: 5,
+        //   val: 12500.50,
+        //   walletBalance: 3000.00,
+        //   fundBalance: 9500.50,
+        //   stageDate: "2026-05-12",
+        // ));
         setStageData(stages);
         funBalance.value = stageList.first.walletBalance.toInt().toString();
         appSwitcherController.updateStockDetails(locationId);
+        await _getDirectReqAccess(locationId);
         await AuthService.saveLocationId(locationId);
         await AuthService.saveLocation(location);
       } else {
@@ -407,11 +428,18 @@ class HomeController extends GetxController {
     }
   }
 
-  // @override
-  // void onClose() {
-  //   searchController.dispose();
-  //   super.onClose();
-  // }
+  RxBool isAllowBuying = false.obs;
+  RxBool isAllowSelling = false.obs;
+  Future<void> _getDirectReqAccess(String locationId) async {
+    final response =
+        await GainerApiService().getDirectRequestAccess(locationId: locationId);
+    print("Response of _getDirectReqAccess ::: $response");
+    if (response['success']) {
+      final data = response['data'][0];
+      isAllowBuying.value = data['AllowBuying'];
+      isAllowSelling.value = data['AllowBuying'];
+    } else {}
+  }
 
   //══════════════════════════════════════════════════════════════════════//
   ///Advertise list
@@ -422,24 +450,24 @@ class HomeController extends GetxController {
   final List<AdItemModel> ads = [
     AdItemModel(
       image: GainerImages.sliderBanner1,
-      title: '⚡ Limited Offer – Extra Wallet Credit',
-      onTap: () => debugPrint('Limited Offer'),
+      title: '⚡ Today – Profit Opportunity',
+      onTap: () => debugPrint('Profit Opportunity'),
     ),
     AdItemModel(
       image: GainerImages.sliderBanner2,
-      title: '🚚 Free Delivery Above ₹5000',
-      onTap: () => debugPrint('Free Delivery'),
+      title: '🚚 High Active Top Buyer',
+      onTap: () => debugPrint('Top Buyer'),
     ),
     AdItemModel(
       image: GainerImages.sliderBanner3,
-      title: '🔥 Hot Deals on Engine Parts',
-      onTap: () => debugPrint('Hot Deals'),
+      title: '🔥 Top Seller',
+      onTap: () => debugPrint('Top Seller'),
     ),
-    AdItemModel(
-      image: GainerImages.sliderBanner4,
-      title: '📦 Fast Dispatch Available',
-      onTap: () => debugPrint('Fast Dispatch'),
-    ),
+    // AdItemModel(
+    //   image: GainerImages.sliderBanner4,
+    //   title: '📦 Fast Dispatch Available',
+    //   onTap: () => debugPrint('Fast Dispatch'),
+    // ),
   ];
 
   //══════════════════════════════════════════════════════════════════════//
@@ -477,12 +505,6 @@ class HomeController extends GetxController {
       final String data = response['data'];
       trackErr(null);
       UrlLaunchUtils.openUrl(data);
-/*      // bool isUrlOpened = await launchURL(data);
-
-      if (isUrlOpened) {
-      } else {
-        trackErr('Unable to Track');
-      }*/
     } else {
       trackErr(response['message']);
     }
@@ -599,10 +621,6 @@ class HomeController extends GetxController {
     // });
   }
 
-  // String timeAgo(Timestamp ts) {
-  //   final now = DateTime.now();
-  //   final date = ts.toDate();
-  //   final diff = now.difference(date);
   String timeAgo(DateTime ts) {
     final now = DateTime.now();
     final date = ts;
@@ -628,18 +646,6 @@ class HomeController extends GetxController {
     await GainerApiService().readNotification(n.id);
     // FirebaseDbCreation.markRead(n.id);
   }
-
-  // void setNotification(Map<String, dynamic> message) {
-  //   fromNotification.value = true;
-  //   notificationData = message;
-  //   print("You are set notification Function");
-  // }
-  //
-  // void clearNotification() {
-  //   fromNotification.value = false;
-  //   notificationData = null;
-  //   print("You are clear notification function");
-  // }
 
   void logout() {
     AuthService.logout('UserLogoutGAINER');

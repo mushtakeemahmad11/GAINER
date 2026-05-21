@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'firebase_options.dart';
 import 'gainer_app/core/Services/auth_service.dart';
 import 'gainer_app/core/constants/gainer_color.dart';
+import 'gainer_app/core/services/fcm_service/firebase_notification_service.dart';
 import 'gainer_app/modules/internet_connectivity/no_internet_controller.dart';
 import 'gainer_app/modules/notification_view/notification_controller.dart';
 import 'gainer_app/routes/app_pages.dart';
@@ -111,7 +112,7 @@ Future<void> main() async {
   RemoteMessage? initialMessage =
       await FirebaseMessaging.instance.getInitialMessage();
 
-  // await NotificationServiceNEW.init();
+  await NotificationServiceNEW.init();
 
   /// ✅ ONLY NotificationController global
   Get.put(NotificationController(), permanent: true);

@@ -21,6 +21,7 @@ class InfoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      // dense: true,
       leading: CircleAvatar(
         // backgroundColor: Colors.teal.withOpacity(.1),
         backgroundColor: GainerColors.secondary,

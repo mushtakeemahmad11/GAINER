@@ -17,7 +17,6 @@ class GainerMainView extends GetView<GainerMainController> {
       },
       child: Scaffold(
         backgroundColor: GainerColors.background,
-
         appBar: GainerMainAppBarView(),
         body: Obx(
           () => IndexedStack(

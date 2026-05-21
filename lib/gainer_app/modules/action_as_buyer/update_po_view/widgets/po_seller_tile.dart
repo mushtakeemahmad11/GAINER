@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gainer/gainer_app/core/widgets/gainer_expansion_tile.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/models/update_po_seller_model.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/widgets/po_details_card.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/widgets/po_expansion_tile_header.dart';
@@ -12,7 +13,7 @@ class PoSellerTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool is48Complete = group.items.any(
-            (item) => CheckTime.is48HoursCompleted(item.sellerResponseDate ?? ''));
+        (item) => CheckTime.is48HoursCompleted(item.sellerResponseDate ?? ''));
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Container(
@@ -20,51 +21,78 @@ class PoSellerTile extends StatelessWidget {
           border: Border.all(color: GainerColors.border),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-        child: ExpansionTile(
-          tilePadding: const EdgeInsets.symmetric(horizontal: 10),
-          backgroundColor: GainerColors.lightWhite,
-          collapsedBackgroundColor: is48Complete?GainerColors.lightPink:GainerColors.lightWhite,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          collapsedShape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-
-          title: PoExpansionTileHeader(
-            title1: 'Pending Since',
-            subTitle1: group.highestDate,
-            title2: group.sellerName,
-            subTitle2: group.location,
-            title3: 'Total Price',
-            subTitle3: '₹${group.totalPrice}',
-          ),
-          children: [
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: group.items.length,
-              separatorBuilder: (_, __) =>
-                  const Divider(height: 1, color: Colors.black38),
-              itemBuilder: (_, index) {
-                final item = group.items[index];
-
-                return PoDetailsCard(
-                  isPart: true,
-                  order: item,
-                );
-              },
+        child: GainerExpansionTile(
+            is48Complete: is48Complete,
+            titleWidget: PoExpansionTileHeader(
+              title1: 'Pending Since',
+              subTitle1: group.highestDate,
+              title2: group.sellerName,
+              subTitle2: group.location,
+              title3: 'Total Price',
+              subTitle3: '₹${group.totalPrice}',
             ),
-          ],
-          // children: group.items
-          //     .map(
-          //       (order) => DetailsCard(
-          //         isPart: true,
-          //         order: order,
-          //         onRemove: () {
-          //           print(order.bigId);
-          //         },
-          //       ),
-          //     )
-          //     .toList(),
-        ),
+            bodyChildren: [
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: group.items.length,
+                separatorBuilder: (_, __) =>
+                    const Divider(height: 1, color: Colors.black38),
+                itemBuilder: (_, index) {
+                  final item = group.items[index];
+
+                  return PoDetailsCard(
+                    isPart: true,
+                    order: item,
+                  );
+                },
+              ),
+            ]),
+        // child: ExpansionTile(
+        //   tilePadding: const EdgeInsets.symmetric(horizontal: 10),
+        //   backgroundColor: GainerColors.lightWhite,
+        //   collapsedBackgroundColor: is48Complete?GainerColors.lightPink:GainerColors.lightWhite,
+        //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        //   collapsedShape:
+        //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        //
+        //   title: PoExpansionTileHeader(
+        //     title1: 'Pending Since',
+        //     subTitle1: group.highestDate,
+        //     title2: group.sellerName,
+        //     subTitle2: group.location,
+        //     title3: 'Total Price',
+        //     subTitle3: '₹${group.totalPrice}',
+        //   ),
+        //   children: [
+        //     ListView.separated(
+        //       shrinkWrap: true,
+        //       physics: const NeverScrollableScrollPhysics(),
+        //       itemCount: group.items.length,
+        //       separatorBuilder: (_, __) =>
+        //           const Divider(height: 1, color: Colors.black38),
+        //       itemBuilder: (_, index) {
+        //         final item = group.items[index];
+        //
+        //         return PoDetailsCard(
+        //           isPart: true,
+        //           order: item,
+        //         );
+        //       },
+        //     ),
+        //   ],
+        //   // children: group.items
+        //   //     .map(
+        //   //       (order) => DetailsCard(
+        //   //         isPart: true,
+        //   //         order: order,
+        //   //         onRemove: () {
+        //   //           print(order.bigId);
+        //   //         },
+        //   //       ),
+        //   //     )
+        //   //     .toList(),
+        // ),
       ),
     );
   }

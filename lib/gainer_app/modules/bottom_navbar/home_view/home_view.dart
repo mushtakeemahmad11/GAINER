@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/Services/auth_service.dart';
 import 'package:gainer/gainer_app/core/widgets/error_text.dart';
 import 'package:get/get.dart';
+import '../../../routes/app_routes.dart';
 import '../../main_view/widgets/action_section.dart';
 import 'home_controller.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -21,11 +22,10 @@ class HomeView extends GetView<HomeController> {
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        // padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
         child: Obx(() {
           bool isLoading = controller.isStageDataLoad.value;
           final error = controller.err;
-          final dummyData = controller.buyerActionsDummyData;
+          final dummyData = controller.actionsDummyData;
           final buyerData = controller.buyerActions;
           final sellerData = controller.sellerActions;
           return Skeletonizer(
@@ -43,7 +43,6 @@ class HomeView extends GetView<HomeController> {
                 // MarqueWidget(
                 //     fundBalance:
                 //         int.tryParse(controller.funBalance.value) ?? 0),
-
                 Center(
                   child: Card(
                     elevation: 4,

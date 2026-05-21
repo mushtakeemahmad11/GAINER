@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/utils/check_internet.dart';
 import 'package:get/get.dart';
 import '../../gainer_app/core/Services/auth_service.dart';
-import '../core/services/api_services.dart';
+import '../core/services/dm_api_services.dart';
 import '../widgets/no_internet_dialog.dart';
 
 class ScsNormsController extends GetxController {
-  ApiServices api = ApiServices();
+  DMApiServices api = DMApiServices();
   TextEditingController searchController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   // final LocationController _locationController = Get.put(LocationController());

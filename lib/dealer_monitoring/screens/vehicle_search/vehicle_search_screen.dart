@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_bottom_sheet.dart';
@@ -459,8 +460,10 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
                 : const Icon(Icons.close, color: Colors.red),
             part["Qty"],
             part["StockQty"],
-            // part["PPNI_Qty"],
-            part["GroupStock"],
+            // part["GroupStock"],
+            part['GroupStock'] <= 0
+                ? part["GroupStock"]
+                : _buildGrpStockDetails(part),
             part["category"],
             part["partdesc"],
             tv.formatDateToIndianDate(part["OrderDate"] ?? ""),
@@ -614,13 +617,13 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        textWidget(title, t),
-        textWidget(value, v),
+        _textWidget(title, t),
+        _textWidget(value, v),
       ],
     );
   }
 
-  Widget textWidget(String text, bool isRed) => Text(text,
+  Widget _textWidget(String text, bool isRed) => Text(text,
       style: TextStyle(color: isRed ? Colors.red : Colors.black, fontSize: 14));
 
   // Widget _buildJobCard(Map<String, dynamic> jobCard) {
@@ -850,6 +853,59 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
       },
       icon: Icon(Icons.edit_note),
       color: Colors.black,
+    );
+  }
+
+  Widget _buildGrpStockDetails(Map<String, dynamic> part) {
+    final int grpQty = part['GroupStock'];
+    final locationQtyJson = part['LocationQtyJson'];
+    if (locationQtyJson == null || locationQtyJson.isEmpty) {
+      return Center(child: Text('$grpQty'));
+    }
+    final List grpLocation = jsonDecode(part['LocationQtyJson']);
+    return Center(
+      child: PopupMenuButton(
+        child: Center(
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 2,
+            children: [
+              Text('$grpQty'),
+              const Text(
+                '(Show)',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+        itemBuilder: (context) => [
+          const PopupMenuItem(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Location", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text('  :  '),
+                Text("Qty", style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          ...grpLocation.map<PopupMenuEntry>((item) {
+            return PopupMenuItem(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(item['Location'] ?? ''),
+                  Text((item['Qty'] ?? 0).toInt().toString()),
+                ],
+              ),
+            );
+          }),
+        ],
+      ),
     );
   }
 

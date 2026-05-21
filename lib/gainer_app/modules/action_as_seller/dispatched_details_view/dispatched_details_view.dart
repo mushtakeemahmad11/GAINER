@@ -47,6 +47,8 @@ class DDView extends GetView<DDController> {
                   }
 
                   final groupData = controller.groupedList;
+                  print(controller.groupedList.length);
+                  print(controller.ddList.length);
 
                   return ListView.builder(
                     shrinkWrap: true,
@@ -57,7 +59,8 @@ class DDView extends GetView<DDController> {
                       final order = data['data'] as DDModel;
                       final count = data['count'] as int;
                       controller.initImages(order, count);
-                      return DDExpansionTile(order: order, count: count,index:index);
+                      return DDExpansionTile(
+                          order: order, count: count, index: index);
                     },
                   );
                 }),

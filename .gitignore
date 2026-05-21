@@ -4,4 +4,5 @@ build/
 *.aab
 android/.gradle/
 ios/Pods/
-lib/gainer_app/core/services/fcm_service/get_server_key.dart
+#lib/gainer_app/core/services/fcm_service/get_server_key.dart
+*.get_server_key.dart

@@ -2,13 +2,13 @@ import 'package:gainer/gainer_app/core/Services/auth_service.dart';
 import 'package:gainer/gainer_app/core/utils/check_internet.dart';
 import 'package:get/get.dart';
 import '../../app_switcher_view/app_switcher_controller.dart';
-import '../core/services/api_services.dart';
+import '../core/services/dm_api_services.dart';
 import '../core/utils/transform_graph_ppni_data.dart';
 import '../models/location_group_model.dart';
 import '../widgets/no_internet_dialog.dart';
 
 class GeneralManagerController extends GetxController {
-  ApiServices api = ApiServices();
+  DMApiServices api = DMApiServices();
   // final LocationController _locationController = Get.put(LocationController());
   final appSwitcherCtrl = Get.find<AppSwitcherController>();
   RxBool isLoading = false.obs;

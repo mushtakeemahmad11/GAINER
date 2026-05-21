@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:gainer/gainer_app/core/widgets/gainer_expansion_tile.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import '../../../../core/constants/gainer_color.dart';
@@ -35,30 +36,17 @@ class DDExpansionTile extends GetView<DDController> {
           border: Border.all(color: GainerColors.border),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-        child: ExpansionTile(
-          // key: ValueKey(controller.expandedIndex.value == index),
-          // initiallyExpanded: controller.expandedIndex.value == index,
-          // onExpansionChanged: (expanded) {
-          //   controller.toggle(index, expanded);
-          // },
-
-          tilePadding: const EdgeInsets.symmetric(horizontal: 10),
-          backgroundColor: GainerColors.lightWhite,
-          collapsedBackgroundColor:
-              is48Complete ? GainerColors.lightPink : GainerColors.lightWhite,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          collapsedShape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          title: DDExpansionTileHeader(
+        child: GainerExpansionTile(
+          titleWidget: DDExpansionTileHeader(
             title1: 'Pending Since',
             subTitle1: order.lrDate,
             title2: brand,
             subTitle2: location,
             title3: '₹ ${order.val.toInt()}',
           ),
-          children: [
+          bodyChildren: [
             Container(
-              decoration: _gradientDecoration(),
+              decoration: GainerColors.gradientDecoration,
               padding: const EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,25 +123,127 @@ class DDExpansionTile extends GetView<DDController> {
               ),
             ),
           ],
-          // children: [
-          //   _keyVal('LR No.: ', order.lrNumber),
-          //   _keyVal('LSP: ', order.lsp),
-          //   // ListView.separated(
-          //   //   shrinkWrap: true,
-          //   //   physics: const NeverScrollableScrollPhysics(),
-          //   //   itemCount: group.items.length,
-          //   //   separatorBuilder: (_, __) =>
-          //   //       const Divider(height: 1, color: Colors.black38),
-          //   //   itemBuilder: (_, index) {
-          //   //     final item = group.items[index];
-          //   //     return DDDetailsCard(
-          //   //       isPart: true,
-          //   //       order: item,
-          //   //     );
-          //   //   },
-          //   // ),
-          // ],
+          is48Complete: is48Complete,
         ),
+        // child: ExpansionTile(
+        //   // key: ValueKey(controller.expandedIndex.value == index),
+        //   // initiallyExpanded: controller.expandedIndex.value == index,
+        //   // onExpansionChanged: (expanded) {
+        //   //   controller.toggle(index, expanded);
+        //   // },
+        //
+        //   tilePadding: const EdgeInsets.symmetric(horizontal: 10),
+        //   backgroundColor: GainerColors.lightWhite,
+        //   collapsedBackgroundColor:
+        //       is48Complete ? GainerColors.lightPink : GainerColors.lightWhite,
+        //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        //   collapsedShape:
+        //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        //   title: DDExpansionTileHeader(
+        //     title1: 'Pending Since',
+        //     subTitle1: order.lrDate,
+        //     title2: brand,
+        //     subTitle2: location,
+        //     title3: '₹ ${order.val.toInt()}',
+        //   ),
+        //   children: [
+        //     Container(
+        //       decoration: _gradientDecoration(),
+        //       padding: const EdgeInsets.all(8),
+        //       child: Column(
+        //         crossAxisAlignment: CrossAxisAlignment.start,
+        //         children: [
+        //           Row(
+        //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //             children: [
+        //               Expanded(
+        //                 child: Column(
+        //                   crossAxisAlignment: CrossAxisAlignment.start,
+        //                   children: [
+        //                     _keyVal('LR No.: ', order.lrNumber),
+        //                     _keyVal('LSP: ', order.lsp),
+        //                     const SizedBox(height: 5),
+        //                     ...List.generate(
+        //                         count,
+        //                         (index) => _generateBoxImgRow(
+        //                             order, index, context, size)),
+        //                     Obx(() {
+        //                       final hasBoxImages = !controller
+        //                           .isAnyNullInBox(order.dispatchOrderNo);
+        //                       final hasPickupImages = !controller
+        //                           .isAnyNullInPickup(order.dispatchOrderNo);
+        //
+        //                       return Column(
+        //                         children: [
+        //                           if (hasBoxImages)
+        //                             _generatePickupImgRow(
+        //                                 order, 0, context, size),
+        //                           const SizedBox(height: 5),
+        //                           if (hasPickupImages)
+        //                             GainerPrimaryButton(
+        //                               onPressed: () => controller.onSubmit(
+        //                                 order.dispatchOrderNo,
+        //                                 order.lrNumber,
+        //                               ),
+        //                               title: 'Submit',
+        //                               isLoading: controller
+        //                                   .isSubmitting(order.dispatchOrderNo),
+        //                             ),
+        //                         ],
+        //                       );
+        //                     })
+        //                     // Obx(() {
+        //                     //   if (!controller
+        //                     //       .isAnyNullInBox(order.dispatchOrderNo)) {
+        //                     //     return _generatePickupImgRow(
+        //                     //         order, 0, context, size);
+        //                     //   }
+        //                     //   return const SizedBox.shrink();
+        //                     // }),
+        //                     // Obx(() {
+        //                     //   if (!controller
+        //                     //       .isAnyNullInPickup(order.dispatchOrderNo)) {
+        //                     //     return GainerPrimaryButton(
+        //                     //       onPressed: () {},
+        //                     //       title: 'Submit',
+        //                     //     );
+        //                     //   }
+        //                     //   return const SizedBox.shrink();
+        //                     // }),
+        //                     // if (!controller
+        //                     //     .isAnyNullInPickup(order.dispatchOrderNo))
+        //                     //   GainerPrimaryButton(
+        //                     //     onPressed: () {},
+        //                     //     title: 'Submit',
+        //                     //   ),
+        //                   ],
+        //                 ),
+        //               ),
+        //             ],
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //   ],
+        //   // children: [
+        //   //   _keyVal('LR No.: ', order.lrNumber),
+        //   //   _keyVal('LSP: ', order.lsp),
+        //   //   // ListView.separated(
+        //   //   //   shrinkWrap: true,
+        //   //   //   physics: const NeverScrollableScrollPhysics(),
+        //   //   //   itemCount: group.items.length,
+        //   //   //   separatorBuilder: (_, __) =>
+        //   //   //       const Divider(height: 1, color: Colors.black38),
+        //   //   //   itemBuilder: (_, index) {
+        //   //   //     final item = group.items[index];
+        //   //   //     return DDDetailsCard(
+        //   //   //       isPart: true,
+        //   //   //       order: item,
+        //   //   //     );
+        //   //   //   },
+        //   //   // ),
+        //   // ],
+        // ),
       ),
     );
   }
@@ -443,16 +533,4 @@ class DDExpansionTile extends GetView<DDController> {
         children: [_label(key), _bold(val)],
       );
 
-  BoxDecoration _gradientDecoration() {
-    return const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment(0.94, 0.97),
-        end: Alignment(2.94, -0.47),
-        colors: [
-          Color.fromRGBO(213, 221, 249, 0.5),
-          Color.fromRGBO(223, 247, 246, 0.2),
-        ],
-      ),
-    );
-  }
 }

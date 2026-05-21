@@ -16,6 +16,7 @@ class InfoSection extends StatelessWidget {
                 fontSize: 12, color: Colors.grey, letterSpacing: 1)),
         // const SizedBox(height: 2),
         Card(
+          margin: EdgeInsets.all(2),
           elevation: 2,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

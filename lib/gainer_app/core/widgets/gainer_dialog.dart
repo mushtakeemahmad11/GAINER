@@ -178,8 +178,8 @@ class GainerDialog {
             itemBuilder: (_, index) {
               String invoiceItem = invoiceList[index];
               return ListTile(
-                leading: const Icon(Icons.picture_as_pdf),
-                title: Text(invoiceItem),
+                leading: const Icon(Icons.picture_as_pdf, size: 20),
+                title: Text(invoiceItem, style: TextStyle(fontSize: 14)),
                 onTap: () {
                   Get.back();
                   UrlLaunchUtils.openUrl(
@@ -245,11 +245,13 @@ class GainerDialog {
               ),
 
               // Title
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+              Center(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
 

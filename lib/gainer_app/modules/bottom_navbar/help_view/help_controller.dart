@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,6 @@ import 'package:gainer/gainer_app/core/Services/auth_service.dart';
 import 'package:gainer/gainer_app/core/constants/gainer_image.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_dialog.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import '../../../core/services/gainer_api_service.dart';
 import 'models.dart';
 
@@ -127,63 +125,35 @@ class HelpController extends GetxController {
 
   void fetchIssues() async {
     issuesError.value = null;
-    final res = await http.get(Uri.parse(
-        "http://web27.185.238.new.ocpwebserver.com/api/v1/gnr/issue"));
-    try {
-      if (res.statusCode == 200) {
-        var body = json.decode(res.body);
-        var data = body['Data'];
-
-        List<dynamic> issueData = data;
-        issues.value = issueData
-            .map((e) => IssueModel.fromJson(e as Map<String, dynamic>))
-            .toList();
-        selectedIssueId.value = null;
-        subIssues.clear();
-        selectedSubIssueId.value = null;
-      } else {
-        issuesError.value = "There is some problem to fetch issue option";
-      }
-    } catch (e) {
-      issuesError.value =
-          "UnExpected Error\nPlease check your network or try again later";
+    final response = await GainerApiService().getIssue();
+    if (response['success']) {
+      final List data = response['data'];
+      issues.value =
+          data.map<IssueModel>((e) => IssueModel.fromJson(e)).toList();
+      selectedIssueId.value = null;
+      subIssues.clear();
+      selectedSubIssueId.value = null;
+    } else {
+      issuesError.value = response['message'];
     }
   }
 
   Future<void> fetchSubIssues(int issueId) async {
     subIssueError.value = null;
-    final url = "http://web27.185.238.new.ocpwebserver.com/api/v1/gnr/subissue";
 
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"issueid": issueId}),
-      );
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        // Example: access 'Data' field
-        if (data['Data'] != null) {
-          List<dynamic> subIssueList = data['Data'];
-          subIssues.value = subIssueList
-              .map((e) => SubIssueModel.fromJson(e as Map<String, dynamic>))
-              .toList();
-        }
-      } else {
-        subIssueError.value = "There is some problem to fetch subIssue item";
-      }
-    } catch (e) {
-      subIssueError.value =
-          "UnExpected Error\nPlease check your network or try again later";
+    final response = await GainerApiService().getSubIssue(issueId);
+    if (response['success']) {
+      List<dynamic> subIssueList = response['data'];
+      subIssues.value = subIssueList
+          .map<SubIssueModel>(
+              (e) => SubIssueModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } else {
+      subIssueError.value = response['message'];
     }
   }
 
   Future<void> submitForm() async {
-    // bool checkInt = await checkInternet();
-    // if (!checkInt) {
-    //   Get.toNamed(Routes.NOINTERNETVIEW);
-    //   return;
-    // }
 
     clearErrors();
 

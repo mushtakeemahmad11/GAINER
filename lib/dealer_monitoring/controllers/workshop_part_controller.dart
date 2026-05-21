@@ -1,11 +1,11 @@
 import 'package:gainer/gainer_app/core/Services/auth_service.dart';
 import 'package:get/get.dart';
-import '../../dealer_monitoring/core/services/api_services.dart';
+import '../../dealer_monitoring/core/services/dm_api_services.dart';
 import '../../gainer_app/core/utils/check_internet.dart';
 import '../widgets/no_internet_dialog.dart';
 
 class WorkshopPartsController extends GetxController {
-  ApiServices api = ApiServices();
+  DMApiServices api = DMApiServices();
   // Common params for all requests on this screen
   final String dealerId;
   final String locationId;

@@ -248,7 +248,6 @@ class OrderPlacedController extends GetxController {
   }
 
   ///Sort Sheet
-
   Future<bool?> openSortSheet(BuildContext context) {
     return Get.bottomSheet<bool>(
       SafeArea(

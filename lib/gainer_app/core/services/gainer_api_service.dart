@@ -12,11 +12,12 @@ import 'package:path/path.dart';
 import 'package:xml/xml.dart';
 import '../../modules/internet_connectivity/no_internet_controller.dart';
 import '../../routes/app_routes.dart';
+import '../Services/auth_service.dart';
 
 class GainerApiService {
-  final String baseUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
-  // final String baseUrl =
-  //     "http://web13.185.238.new.ocpwebserver.com/AppServicesV2.asmx";
+  // final String baseUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
+  final String baseUrl =
+      "http://web13.185.238.new.ocpwebserver.com/AppServicesV2.asmx";
 
   ///checking internet before hit API
   final networkC = Get.find<NoInternetController>();
@@ -108,8 +109,10 @@ class GainerApiService {
     }
   }
 
-  Future<Map<String, dynamic>> searchPart(String partNumber, String brandId,
-      String locationId, String tCode) async {
+  Future<Map<String, dynamic>> searchPart(String partNumber) async {
+    String brandId = await AuthService.getBrandId();
+    String locationId = await AuthService.getLocationId();
+    String tCode = await AuthService.getTCode();
     String url = '$baseUrl/GetPartNumber';
     final payload = {
       "PartNumber": partNumber,
@@ -218,8 +221,9 @@ class GainerApiService {
       Map<String, dynamic> jsonData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         if (jsonData["d"] != "[]" && jsonData.isNotEmpty) {
-          final data = jsonData['d'];
-          return {'success': true, 'data': data};
+          // final data = jsonData['d'];
+          final List<dynamic> decodedList = jsonDecode(jsonData['d']);
+          return {'success': true, 'data': decodedList};
         } else {
           return {'success': false, 'message': 'Part not found'};
         }
@@ -377,19 +381,11 @@ class GainerApiService {
     try {
       // final stopwatch = Stopwatch()..start();
       final response = await apiRequest(url, payload, timeoutSeconds: 60);
-      // stopwatch.stop();
-
-      // print("API Time: ${stopwatch.elapsedMilliseconds/1000} ms");
-      // final response = await http.post(
-      //   Uri.parse(url),
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: jsonEncode({"LocationID": locationID}),
-      // );
-      // convert response into json data
       final jsonData = jsonDecode(response.body);
 
       // get data as json string from json data
       final data = jsonData['d'];
+      print("Data get Buyer values: $data");
       if (response.statusCode == 200) {
         if (data.isNotEmpty) {
           if (jsonDecode(data)[0]['Status'] == "Error") {
@@ -1588,6 +1584,70 @@ class GainerApiService {
     }
   }
 
+  ///Issue for help section
+  Future<Map<String, dynamic>> getIssue() async {
+    String apiUrl =
+        "http://web27.185.238.new.ocpwebserver.com/api/v1/gnr/issue";
+
+    try {
+      return await guardRequest<Map<String, dynamic>>(() async {
+        final url = Uri.parse(apiUrl);
+        final res = await http.get(url);
+        if (res.statusCode == 200) {
+          var body = json.decode(res.body);
+          var data = body['Data'];
+          return {'success': true, 'data': data};
+        } else {
+          return {
+            'success': false,
+            'message': 'There are some problem to fetch issue option'
+          };
+        }
+      });
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out'};
+    } catch (e) {
+      return {
+        'success': false,
+        'message':
+            'Network is unreachable\nPlease check your Internet connection or try again'
+      };
+    }
+  }
+
+  ///SubIssue for help section
+  Future<Map<String, dynamic>> getSubIssue(int issueId) async {
+    String apiUrl =
+        "http://web27.185.238.new.ocpwebserver.com/api/v1/gnr/subissue";
+
+    try {
+      final response = await apiRequest(apiUrl, {"issueid": issueId});
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // Example: access 'Data' field
+        if (data['Data'] != null) {
+          List<dynamic> subIssueList = data['Data'];
+          return {'success': true, 'data': subIssueList};
+        }
+        return {'success': false, 'message': 'sub issue not found'};
+      } else {
+        return {
+          'success': false,
+          'message': 'There are some problem to fetch subIssue item'
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out'};
+    } catch (e) {
+      return {
+        'success': false,
+        'message':
+            'Network is unreachable\nPlease check your Internet connection or try again'
+      };
+    }
+  }
+
   /// In help screen for raise ticket
   Future<Map<String, dynamic>> raiseTicketHelp({
     required issue,
@@ -1656,7 +1716,7 @@ class GainerApiService {
           // Handle non-JSON response
           return {
             "success": false,
-            "Error": "There is some problem to raise ticket",
+            "Error": "There are some problem to raise ticket",
           };
         }
       });
@@ -1774,7 +1834,7 @@ class GainerApiService {
         } else {
           return {
             'success': false,
-            'message': 'There is some problem, Please try again later'
+            'message': 'There are some problem, Please try again later'
           };
         }
       });
@@ -1804,7 +1864,7 @@ class GainerApiService {
       } else {
         return {
           'success': false,
-          'message': 'There is some problem, Please try again later'
+          'message': 'There are some problem, Please try again later'
         };
       }
     } on TimeoutException {
@@ -1834,7 +1894,7 @@ class GainerApiService {
       } else {
         return {
           'success': false,
-          'message': 'There is some problem, Please try again later'
+          'message': 'There are some problem, Please try again later'
         };
       }
     } on TimeoutException {
@@ -1863,7 +1923,7 @@ class GainerApiService {
       } else {
         return {
           'success': false,
-          'message': 'There is some problem, Please try again later'
+          'message': 'There are some problem, Please try again later'
         };
       }
     } catch (e) {
@@ -1878,5 +1938,389 @@ class GainerApiService {
   Future<void> readNotification(int notificationId) async {
     String apiUrl = "$baseUrl/isRead";
     await apiRequest(apiUrl, {'Id': notificationId});
+  }
+
+  Future<Map<String, dynamic>> getSuggestedDealer(String brandId) async {
+    String apiUrl = "$baseUrl/GetSuggestedSeller";
+
+    try {
+      final response = await apiRequest(apiUrl, {"BrandId": brandId});
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // Example: access 'Data' field
+        if (data['d'] != null) {
+          final List<dynamic> decodedList = jsonDecode(data['d']);
+          return {'success': true, 'data': decodedList};
+        }
+        return {'success': false, 'message': 'Dealer not found'};
+      } else {
+        return {
+          'success': false,
+          'message': 'There are some problem to fetch dealer list'
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out'};
+    } catch (e) {
+      return {
+        'success': false,
+        'message':
+            'Network is unreachable\nPlease check your Internet connection or try again'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> getSuggestedLocation(int dealerId) async {
+    String apiUrl = "$baseUrl/GetSuggestedLocation";
+
+    try {
+      final response = await apiRequest(apiUrl, {"DealerId": dealerId});
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // Example: access 'Data' field
+        if (data['d'] != null) {
+          final List<dynamic> decodedList = jsonDecode(data['d']);
+          return {'success': true, 'data': decodedList};
+        }
+        return {'success': false, 'message': 'Location not found'};
+      } else {
+        return {
+          'success': false,
+          'message': 'There are some problem to fetch location list'
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out'};
+    } catch (e) {
+      return {
+        'success': false,
+        'message':
+            'Network is unreachable\nPlease check your Internet connection or try again'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> getSuggestedOrderType() async {
+    String apiUrl = "$baseUrl/OrderFor";
+
+    try {
+      final response = await apiRequest(apiUrl, {});
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // Example: access 'Data' field
+        if (data['d'] != null) {
+          final List<dynamic> decodedList = jsonDecode(data['d']);
+          return {'success': true, 'data': decodedList};
+        }
+        return {'success': false, 'message': 'Order type not found'};
+      } else {
+        return {
+          'success': false,
+          'message': 'There are some problem to fetch order type list'
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out'};
+    } catch (e) {
+      return {
+        'success': false,
+        'message':
+            'Network is unreachable\nPlease check your Internet connection or try again'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> submitDirectRequest(
+      List<Map<String, String>> parts) async {
+    String apiUrl = "$baseUrl/submitDirectRequest";
+
+    // final payload = jsonEncode({"Data": parts});
+
+    try {
+      final response = await apiRequest(apiUrl, {"Data": parts});
+      // final response = await http.post(Uri.parse(apiUrl), headers: {});
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print("Response of Submit dire ct request: ${response.body}");
+        if (data['d'] != null) {
+          // final List<dynamic> decodedList = jsonDecode(data['d']);
+          return {'success': true, 'data': data['d']};
+        }
+        return {'success': false, 'message': 'Something went wrong'};
+      } else {
+        return {
+          'success': false,
+          'message': 'There are some problem to submit direct request'
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out'};
+    } catch (e) {
+      return {
+        'success': false,
+        'message':
+            'Network is unreachable\nPlease check your Internet connection or try again'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> submitScsRequest(
+      List<Map<String, String>> parts) async {
+    String apiUrl ="$baseUrl/SubmitNotifyAdmin";
+
+    try {
+      final response = await apiRequest(apiUrl, {"Data": parts});
+      // final response = await http.post(Uri.parse(apiUrl), headers: {});
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print("Response of Submit dire ct request: ${response.body}");
+        if (data['d'] != null) {
+          // final List<dynamic> decodedList = jsonDecode(data['d']);
+          return {'success': true, 'data': data['d']};
+        }
+        return {'success': false, 'message': 'Something went wrong'};
+      } else {
+        return {
+          'success': false,
+          'message': 'There are some problem to submit direct request'
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out'};
+    } catch (e) {
+      return {
+        'success': false,
+        'message':
+            'Network is unreachable\nPlease check your Internet connection or try again'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> getDrSentOrder(
+      String locationID, String tCode) async {
+    String url = "$baseUrl/ViewDRBuyer";
+    final payload = {
+      "locationId": locationID,
+      "userId": tCode,
+    };
+
+    try {
+      final response = await apiRequest(url, payload);
+      // convert response into json data
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        // get data as json string from json data
+        final data = jsonData['d'];
+
+        if (data.length > 2 && data.isNotEmpty) {
+          if (jsonDecode(data)[0]['Status'] == "Error") {
+            // return {'success': false, 'message': jsonDecode(data)[0]['Msg']};
+            return {'success': false, 'message': 'order not available'};
+          }
+          return {'success': true, 'data': data};
+        } else {
+          return {'success': false, 'message': 'Data not found'};
+        }
+      } else {
+        return {
+          'success': false,
+          'message': 'Some thing went wrong, Please try again'
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out'};
+    } catch (e) {
+      return {
+        'success': false,
+        'message':
+            'Network is unreachable\nPlease check your Internet connection or try again'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> getDrReceivedOrder(
+      String locationID, String tCode) async {
+    String url = "$baseUrl/ViewDRSeller";
+    final payload = {
+      "locationId": locationID,
+      "userId": tCode,
+    };
+
+    try {
+      final response = await apiRequest(url, payload);
+      // convert response into json data
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        // get data as json string from json data
+        final data = jsonData['d'];
+
+        if (data.length > 2 && data.isNotEmpty) {
+          if (jsonDecode(data)[0]['Status'] == "Error") {
+            // return {'success': false, 'message': jsonDecode(data)[0]['Msg']};
+            return {'success': false, 'message': 'order not available'};
+          }
+          return {'success': true, 'data': data};
+        } else {
+          return {'success': false, 'message': 'Data not found'};
+        }
+      } else {
+        return {
+          'success': false,
+          'message': 'Some thing went wrong, Please try again'
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out'};
+    } catch (e) {
+      return {
+        'success': false,
+        'message':
+            'Network is unreachable\nPlease check your Internet connection or try again'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> getStockCat() async {
+    String apiUrl = "$baseUrl/StockableQuality";
+
+    try {
+      final response = await apiRequest(apiUrl, {});
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // Example: access 'Data' field
+        if (data['d'] != null) {
+          final List<dynamic> decodedList = jsonDecode(data['d']);
+          return {'success': true, 'data': decodedList};
+        }
+        return {'success': false, 'message': 'Stock category not found'};
+      } else {
+        return {
+          'success': false,
+          'message': 'There are some problem to fetch stock category'
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out'};
+    } catch (e) {
+      return {
+        'success': false,
+        'message':
+            'Network is unreachable\nPlease check your Internet connection or try again'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> acceptDrReceived({
+    required String id,
+    required String discount,
+    required String sellerStockQty,
+    required String stockQuality,
+    required String tCode,
+    required String locationId,
+  }) async {
+    String apiUrl = "$baseUrl/AcceptDRSeller";
+    final Map<String, dynamic> payload = {
+      "id": id,
+      "Discount": discount,
+      "SellerStockQty": sellerStockQty,
+      "StockCat": stockQuality,
+      "SellerId": tCode,
+      "locationId": locationId,
+    };
+
+    try {
+      final response = await apiRequest(apiUrl, payload);
+      final jsonData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        final data = jsonData['d'];
+        if (data != null && data.isNotEmpty) {
+          return {'success': true, 'data': data};
+        }
+        return {'success': false, 'message': 'something went wrong'};
+      } else {
+        return {
+          'success': false,
+          'message': 'There are some problem to accept order'
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out'};
+    } catch (e) {
+      return {
+        'success': false,
+        'message':
+            'Network is unreachable\nPlease check your Internet connection or try again'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> rejectDRReceived({
+    required String id,
+    required String tCode,
+  }) async {
+    String apiUrl = "$baseUrl/RejectDRSeller";
+    final Map<String, dynamic> payload = {
+      "id": id,
+      "SellerId": tCode,
+    };
+
+    try {
+      final response = await apiRequest(apiUrl, payload);
+      final jsonData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        final data = jsonData['d'];
+        if (data != null && data.isNotEmpty) {
+          return {'success': true, 'data': data};
+        }
+        return {'success': false, 'message': 'something went wrong'};
+      } else {
+        return {
+          'success': false,
+          'message': 'There are some problem to reject order'
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out'};
+    } catch (e) {
+      return {
+        'success': false,
+        'message':
+            'Network is unreachable\nPlease check your Internet connection or try again'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> getDirectRequestAccess({
+    required String locationId,
+  }) async {
+    String apiUrl = "$baseUrl/GetDirectRequestAccess";
+    final Map<String, dynamic> payload = {"LocationId": locationId};
+
+    try {
+      final response = await apiRequest(apiUrl, payload);
+      final jsonData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        final data = jsonData['d'];
+        if (data != null && data.isNotEmpty) {
+          return {'success': true, 'data': jsonDecode(data)};
+        }
+        return {'success': false, 'message': 'something went wrong'};
+      } else {
+        return {
+          'success': false,
+          'message': 'There are some problem to fetch direct request access'
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out'};
+    } catch (e) {
+      return {
+        'success': false,
+        'message':
+            'Network is unreachable\nPlease check your Internet connection or try again'
+      };
+    }
   }
 }

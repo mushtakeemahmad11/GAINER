@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/core/utils/dm_images.dart';
+import 'package:gainer/gainer_app/core/widgets/error_text.dart';
+import 'package:gainer/gainer_app/core/widgets/gainer_app_loader.dart';
+import 'package:gainer/gainer_app/modules/bottom_navbar/profile_view/widgets/logout_button.dart';
 import 'package:get/get.dart';
 import '../gainer_app/core/constants/gainer_color.dart';
 import '../gainer_app/core/constants/gainer_image.dart';
@@ -12,6 +15,7 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    bool isAppNotAccess = controller.appAccess.values.every((val) => val == 0);
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -19,6 +23,7 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
         appBar: AppBar(
           backgroundColor: GainerColors.primary,
           elevation: 0,
+          // centerTitle: false,
           title: Obx(
             () => Text(
               'Hi, ${controller.userName.value}',
@@ -27,10 +32,6 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
           ),
         ),
         body: Obx(() {
-          // if (controller.isLoading.value) {
-          //   return const Center(child: CircularProgressIndicator());
-          // }
-
           return Stack(
             children: [
               Padding(
@@ -38,46 +39,44 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Center(child: AppErrorText(error: controller.errMsg)),
                     _appCard(
                       logo: GainerImages.gLogo,
                       title: 'Gainer',
-                      // subTitle: 'Dead Stock Liquidation',
                       subTitle: 'Faster Liquidation of Dead Stock',
-                      isAccessed: controller.appAccess['IsGainerActive'] ?? 1,
+                      isAccessed: controller.appAccess['IsGainerActive'] ?? 0,
                     ),
                     _appCard(
                       logo: DMImages.simsLogo,
                       title: 'SIMS',
-                      subTitle: 'Smart Inventory  Management System',
-                      isAccessed: controller.appAccess['IsSimsActive'] ?? 1,
+                      subTitle: 'Smart Inventory Management System',
+                      isAccessed: controller.appAccess['IsSimsActive'] ?? 0,
                     ),
-                    // ElevatedButton(onPressed: (){
-                    //   Navigator.push(context, MaterialPageRoute(builder: (_)=>PinScreen()));
-                    // }, child: Text("PIN SCREEN")),
-
-                    // _appCard(
-                    //   logo: GainerImages.scsCircle,
-                    //   title: 'ScanApp',
-                    //   subTitle:
-                    //       'Two layered audit process ensuring best accuracy',
-                    //   isAccessed: 1,
-                    // ),
-                    // GainerPrimaryButton(
-                    //   onPressed: () async {
-                    //     await PushNotification.notifyDealer(
-                    //       locationID: '30634',
-                    //       title: 'ORDER ENQUIRY (Testing Notification)',
-                    //       body:
-                    //           'Enquiry Received at  for Parts:  worth Rs: /- from "30634". Pl check & accept order via Gainer APP',
-                    //       data: {
-                    //         'route': Routes.ORDERPLACED,
-                    //         'notifyTo': '30634',
-                    //       },
-                    //     );
-                    //   },
-                    //   title: 'Test Notification',
-                    // ),
                     Spacer(),
+
+                    if (controller.appAccess.values.every((val) => val == 0))
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: OutlinedButton.icon(
+                          onPressed: controller.logout,
+                          icon: const Icon(Icons.logout,
+                              color: GainerColors.primary),
+                          label: const Text("Log Out",
+                              style: TextStyle(color: GainerColors.primary)),
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 45),
+                            side: const BorderSide(color: GainerColors.primary),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                      ),
+                    // ElevatedButton(
+                    //     onPressed: () {
+                    //       Navigator.push(context,
+                    //           MaterialPageRoute(builder: (_) => PinScreen()));
+                    //     },
+                    //     child: Text("Pin Screen")),
                     _AppFooter(version: controller.oldVersion.value),
                   ],
                 ),
@@ -96,12 +95,10 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
                     alignment: Alignment.bottomRight,
                     child: _updateAppCard(size));
               }),
+              GainerAppLoader(isLoading: controller.isLoading)
             ],
           );
         }),
-        // bottomNavigationBar: _AppFooter(
-        //   version: controller.oldVersion.value,
-        // ),
       ),
     );
   }
@@ -115,6 +112,7 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
     bool enable = isAccessed == 1;
     return Card(
       color: enable ? null : Colors.white12,
+      // color: enable ? null : Colors.grey,
       // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: enable ? () => controller.onModuleTap(title) : null,
@@ -122,17 +120,17 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
         child: ListTile(
           // leading: Icon(icon, color: const Color(0xFF2C9AA0)),
           leading: Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               color: GainerColors.primary.withAlpha(30),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Image.asset(
               logo,
-              height: 32,
+              // height: 32,
+              height: 45,
             ),
           ),
-          // leading: Image.asset(logo, height: 40),
           title: Text(
             title,
             style: const TextStyle(
@@ -140,7 +138,6 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
               fontWeight: FontWeight.w700,
               letterSpacing: .2,
             ),
-            // style: TextStyle(fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
             subTitle,
@@ -222,7 +219,7 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
-                    onTap: UrlLaunchUtils.downloadApk,
+                    onTap: UrlLaunchUtils.updateApk,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
@@ -247,99 +244,7 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
         ],
       ),
     );
-
-    // return Card(
-    //   color: GainerColors.background,
-    //   margin: EdgeInsets.symmetric(horizontal: 15, vertical: 45),
-    //   elevation: 2,
-    //   child: Padding(
-    //     padding: const EdgeInsets.all(8.0),
-    //     child: Row(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         Icon(Icons.system_update, color: GainerColors.primary, size: 45),
-    //         Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             Text(
-    //               'Update Available',
-    //               style: TextStyle(
-    //                 fontSize: 18,
-    //                 fontWeight: FontWeight.bold,
-    //                 color: GainerColors.primary,
-    //               ),
-    //             ),
-    //             const Text(
-    //               'A newer version of the App is available.',
-    //               style: TextStyle(
-    //                 fontSize: 14,
-    //                 color: Colors.black54,
-    //                 height: 1.4,
-    //               ),
-    //             ),
-    //             const SizedBox(height: 5),
-    //             GainerPrimaryButton(
-    //               width: size.width * .5,
-    //               height: 35,
-    //               title: 'Update Now',
-    //               onPressed: DownloadUtils.downloadApk,
-    //             ),
-    //           ],
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
-
-  // Widget _updateAppCard(Size size) {
-  //   return Card(
-  //     color: GainerColors.background,
-  //     margin: EdgeInsets.symmetric(horizontal: 15, vertical: 45),
-  //     elevation: 2,
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(8.0),
-  //       child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           Icon(Icons.system_update, color: GainerColors.primary, size: 45),
-  //           Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Text(
-  //                 'Update Available',
-  //                 style: TextStyle(
-  //                   fontSize: 18,
-  //                   fontWeight: FontWeight.bold,
-  //                   color: GainerColors.primary,
-  //                 ),
-  //               ),
-  //               const Text(
-  //                 'A newer version of the App is available.',
-  //                 style: TextStyle(
-  //                   fontSize: 14,
-  //                   color: Colors.black54,
-  //                   height: 1.4,
-  //                 ),
-  //               ),
-  //               const SizedBox(height: 5),
-  //               GainerPrimaryButton(
-  //                 width: size.width * .5,
-  //                 height: 35,
-  //                 title: 'Update Now',
-  //                 onPressed: DownloadUtils.downloadApk,
-  //               ),
-  //             ],
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 }
 
 class _AppFooter extends StatelessWidget {
@@ -377,52 +282,5 @@ class _AppFooter extends StatelessWidget {
         ),
       ],
     );
-    // return Container(
-    //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-    //   decoration: BoxDecoration(
-    //     // color: Colors.grey.shade50,
-    //     color: GainerColors.background,
-    //     border: Border(
-    //       top: BorderSide(color: Colors.grey.shade300),
-    //     ),
-    //   ),
-    //   child: Row(
-    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //     children: [
-    //       // Company branding
-    //       Row(
-    //         children: [
-    //           Container(
-    //             height: 8,
-    //             width: 8,
-    //             decoration: BoxDecoration(
-    //               color: Theme.of(context).primaryColor,
-    //               shape: BoxShape.circle,
-    //             ),
-    //           ),
-    //           const SizedBox(width: 8),
-    //           const Text(
-    //             'SpareCare Solutions',
-    //             style: TextStyle(
-    //               fontSize: 14,
-    //               fontWeight: FontWeight.w600,
-    //               letterSpacing: 0.4,
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //
-    //       // Version
-    //       Text(
-    //         'v$version',
-    //         style: const TextStyle(
-    //           fontSize: 12,
-    //           color: Colors.black54,
-    //           fontWeight: FontWeight.w500,
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

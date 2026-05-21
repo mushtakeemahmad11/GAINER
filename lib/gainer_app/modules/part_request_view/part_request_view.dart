@@ -1,13 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/core/theme/app_colors.dart';
 import 'package:gainer/dealer_monitoring/core/utils/dm_images.dart';
 import 'package:gainer/dealer_monitoring/widgets/head_bar.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_app_bar.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_primary_button.dart';
+import 'package:gainer/gainer_app/core/widgets/gainer_secondary_button.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import '../../core/constants/gainer_color.dart';
 import '../../core/utils/input_formatters.dart';
 import '../../core/widgets/gainer_text_form_field.dart';
 import '../../core/widgets/part_suggestion_list.dart';
+import '../../routes/app_routes.dart';
+import '../bottom_navbar/home_view/home_controller.dart';
+import '../direct_request_view/direct_request_tab_bar.dart';
 import './widgets/pr_part_tile.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../core/widgets/error_text.dart';
@@ -24,6 +31,7 @@ class PartRequestView extends GetView<PartRequestController> {
   Widget build(BuildContext context) {
     final bool isDealer = controller.isFromDealer.value;
     final bool isDealerDirect = controller.isFromDealerDirect.value;
+    final bool isAllowBuying = Get.find<HomeController>().isAllowBuying.value;
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -89,6 +97,20 @@ class PartRequestView extends GetView<PartRequestController> {
                           }
                           final err = controller.errorMsg;
                           if (err.value != null && err.value!.isNotEmpty) {
+                            if (err.value!.startsWith('Part Not Available')) {
+                              return Column(
+                                children: [
+                                  Center(child: AppErrorText(error: err)),
+                                  if (isAllowBuying && Platform.isAndroid)
+                                    GainerSecondaryButton(
+                                      isAccepted: true,
+                                      onTap: () =>
+                                          Get.toNamed(Routes.DIRECTREQ),
+                                      title: "Direct Request",
+                                    ),
+                                ],
+                              );
+                            }
                             return Center(child: AppErrorText(error: err));
                           }
                           // if (controller.filteredList.isEmpty) {

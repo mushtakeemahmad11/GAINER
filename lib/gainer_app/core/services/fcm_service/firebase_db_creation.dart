@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../../Services/auth_service.dart';
+import 'firebase_notification_service.dart';
 
 class FirebaseDbCreation {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -90,7 +91,8 @@ class FirebaseDbCreation {
     required String dealerId,
     required List<String> locationIds,
   }) async {
-    final token = await FirebaseMessaging.instance.getToken();
+    // final token = await FirebaseMessaging.instance.getToken();
+    final token = await NotificationServiceNEW.getFirebaseMessagingToken();
     if (token == null) return;
 
     // final currentTime = getCurrentTimeAsString();

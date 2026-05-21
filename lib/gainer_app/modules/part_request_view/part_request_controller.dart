@@ -198,16 +198,8 @@ class PartRequestController extends GetxController {
       partSuggestions.clear();
       return;
     } else if (query.isNotEmpty) {
-      String brandId = await AuthService.getBrandId();
-      String locationId = await AuthService.getLocationId();
-      String tCode = await AuthService.getTCode();
       partSearchLoading.value = true;
-      final response = await GainerApiService().searchPart(
-        query,
-        brandId,
-        locationId,
-        tCode,
-      );
+      final response = await GainerApiService().searchPart(query);
       partSearchLoading.value = false;
       if (response['success']) {
         partSuggestions.value = response['data'];
@@ -259,7 +251,7 @@ class PartRequestController extends GetxController {
     final response = await GainerApiService().showPartAvailability(brandId,
         dealerId, locationId, '', '1', '', '', searchingPart, '', '', tCode);
     isLoading.value = false;
-    // print("Response of showAvailabilityBtn: $response");
+    print("Response of showAvailabilityBtn: $response");
     if (response['success']) {
       partNo.value = searchingPart;
       List<dynamic> jsonList = jsonDecode(response['data']);

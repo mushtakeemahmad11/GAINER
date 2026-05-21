@@ -250,54 +250,6 @@ class OrderReceivedController extends GetxController {
     }
   }
 
-  // ///ON CHANGED ACCEPT QTY FILED
-  // void onChangedReqQty(String val, TextEditingController reqCtrl,
-  //     OrderReceivedModel order, BuildContext context) {
-  //   // Return early if the input is empty
-  //   if (val.isEmpty) return;
-  //
-  //   // Cache the available stock and the controller for easier access
-  //   final int availableStock = order.sellerFreeStock.toInt();
-  //   final int reqQty = order.qty.toInt();
-  //   final controller = reqCtrl;
-  //
-  //   // Prevent the first character from being '0'
-  //   if (val.isNotEmpty && val.startsWith("0")) {
-  //     controller.text = controller.text.replaceFirst('0', '');
-  //   }
-  //
-  //   if (val.isNumericOnly) {
-  //     final int enteredQty = int.parse(val);
-  //
-  //     // Case 1: entered greater than request qty
-  //     if (enteredQty > reqQty) {
-  //       controller.text = reqQty.toString();
-  //       GainerBottomSheet.showSnackBar(
-  //         "Confirm Qty can't be greater than Request Qty $reqQty",
-  //       );
-  //       return;
-  //     }
-  //
-  //     // Case 2: entered greater than available stock
-  //     if (enteredQty > availableStock) {
-  //       controller.text = availableStock.toString();
-  //       GainerBottomSheet.showSnackBar(
-  //         "Confirm Qty can't be greater than Free Stock $availableStock",
-  //       );
-  //       return;
-  //     }
-  //
-  //     // Case 3: valid input (less than or equal to both)
-  //     // do nothing – user is decreasing manually
-  //   } else {
-  //     // Remove non-numeric input
-  //     if (controller.text.isNotEmpty) {
-  //       controller.text =
-  //           controller.text.substring(0, controller.text.length - 1);
-  //     }
-  //   }
-  // }
-
   ///FROM ORDERS
   String sellerLocationID = '';
 
@@ -315,12 +267,7 @@ class OrderReceivedController extends GetxController {
       imgPath: GainerImages.decisionMaking,
       yesFunction: () async {
         Get.back();
-        // bool checkInt = await checkInternet();
-        // if (checkInt) {
         onYes();
-        // } else {
-        //   Get.toNamed(Routes.NOINTERNETVIEW);
-        // }
       },
       noFunction: Get.back,
     );
@@ -331,38 +278,6 @@ class OrderReceivedController extends GetxController {
   void toggleImage() {
     isShowImage(!isShowImage.value);
   }
-
-  // Future<void> pickImage(
-  //     String bigId, ImageSource source, BuildContext context) async {
-  //   Get.back();
-  //
-  //   final ImagePicker picker = ImagePicker();
-  //   // final XFile? picked = await picker.pickImage(source: source);
-  //   final List<XFile> picked = await picker.pickMultiImage(limit: 3);
-  //
-  //   // if (picked == null) return;
-  //   if (picked.isEmpty) return;
-  //
-  //   // Check if image already exists
-  //   bool alreadySelected = false;
-  //   for (var img in picked) {
-  //     final name = basename(img.path);
-  //     alreadySelected =
-  //         selectedImages[bigId]?.any((File img) => img.path == name) ?? false;
-  //   }
-  //
-  //   if (alreadySelected) {
-  //     GainerBottomSheet.showSnackBar('This image is already selected');
-  //     return;
-  //   }
-  //
-  //   // Assign image to slot
-  //   for (var img in picked) {
-  //     final String pickedPath = img.path;
-  //     selectedImages[bigId]?.add(File(pickedPath));
-  //     // selectedImageNames[bigId] = name;
-  //   }
-  // }
 
   Future<void> pickImages({
     required String bigId,
@@ -544,16 +459,6 @@ class OrderReceivedController extends GetxController {
   ///ORDER REJECT SCREEN
   RxBool isRejectLoading = false.obs;
 
-  // RxBool isPhysicallyNotFound = false.obs;
-  // RxBool isPartDamaged = false.obs;
-  // RxBool isReservedForVehicle = false.obs;
-  // RxBool isNeedForStock = false.obs;
-  // RxBool isHighLogisticsCost = false.obs;
-  // RxBool isFragilePart = false.obs;
-  // RxBool isNonMovingPart = false.obs;
-  // RxBool isPartNotInStock = false.obs;
-  // RxBool isCurrentStockIsLess = false.obs;
-
   // List of toggle button labels and their corresponding controller values
   final List<Map<String, dynamic>> toggleButtons = [
     {'text': 'Physically Not Found', 'state': 'isPhysicallyNotFound'},
@@ -634,94 +539,11 @@ class OrderReceivedController extends GetxController {
         //       'Enquiry raised from $sellerLocation for ${order.partNumber} (${order.qty} Qty) is REJECTED by $dealer/$sellerLocation. Please check part on Gainer & place enquiry to another Co-Dealer',
         //   data: {'moduleRoute': Routes.PARTREQUESTVIEW},
         // );
-
       } else {
         GainerBottomSheet.showSnackBar('${response['message']}');
       }
     });
-
-    // String? selectedIssue = getSelectedIssue();
-    // String remarks = rejectRemarksCtrl.text;
-    // if (selectedIssue == null) {
-    //   GainerBottomSheet.showSnackBar('Please select one issue');
-    //   return;
-    // }
-    // GainerDialog.dialogForYesNo(
-    //   text: 'Are you sure to reject Order Received',
-    //   imgPath: GainerImages.decisionMaking,
-    //   yesFunction: () async {
-    //     Get.back();
-    //     isRejectLoading.value = true;
-    //     if (await checkInternet()) {
-    //       final response = await GainerApiService().poReject(
-    //         freeStock: order.sellerFreeStock.toString(),
-    //         rejectReason: selectedIssue,
-    //         remarks: remarks,
-    //         bigID: order.bigId.toString(),
-    //       );
-    //       isRejectLoading.value = false;
-    //       if (response['success']) {
-    //         Get.back();
-    //         GainerDialog.midPopUp(GainerImages.rejectIcon, response['data']);
-    //
-    //         String location = await AuthService.getLocation();
-    //         String dealer = await AuthService.getDealer();
-    //         await SendNotification.notifyDealerUsers(
-    //             order.sellerLocationId.toString(),
-    //             "Purchase Order (REJECTED)",
-    //             " Part: ${order.partNumber}\n"
-    //                 "Buyer: $dealer, $location\n"
-    //                 "Pl do Invoice & manifest details",
-    //             {});
-    //       } else {
-    //         GainerBottomSheet.showSnackBar(context, response['message']);
-    //       }
-    //     } else {
-    //       Get.to(() => NoInternetScreen());
-    //     }
-    //   },
-    //   noFunction: () {
-    //     Get.back();
-    //   },
-    // );
   }
-
-  // ///FURTHER REMARKS FUNCTIONALITY
-  // RxBool isFRLoading = false.obs;
-  // Future<void> onSubmitFurtherDetails(String bigId, String furtherRemarks,
-  //     String sellerLocationID, String partNumber, BuildContext context) async {
-  //   String remarks = furtherRemarks;
-  //
-  //   bool checkInt = await checkInternet();
-  //   if (checkInt) {
-  //     if (await checkInternet()) {
-  //       isFRLoading.value = true;
-  //       final response = await GainerApiService().poFurtherDetails(
-  //         remarks: remarks,
-  //         bigID: bigId,
-  //       );
-  //       isFRLoading.value = false;
-  //       if (response['success']) {
-  //         GainerDialog.midPopUp(GainerImages.chekIcon, response['data']);
-  //         final location = await AuthService.getLocation();
-  //         final dealer = await AuthService.getDealer();
-  //         await SendNotification.notifyDealerUsers(
-  //             sellerLocationID,
-  //             "Purchase Order (Further Remarks)",
-  //             "Part: $partNumber\n"
-  //                 "Buyer: $dealer, $location\n"
-  //                 "PO Return for Further remarks, please Check",
-  //             {});
-  //         // await _refreshPage();
-  //       } else {
-  //         Get.back();
-  //         GainerBottomSheet.showSnackBar(context, response['message']);
-  //       }
-  //     } else {
-  //       Get.to(() => NoInternetScreen());
-  //     }
-  //   }
-  // }
 
   ///FILTER FUNCTIONALITY
   /// QUICK FILTER
@@ -884,237 +706,6 @@ class OrderReceivedController extends GetxController {
     filteredList.assignAll(orderReceivedList);
     isFilterApplied.value = false;
   }
-
-/* ///FILTER FUNCTIONALITY
-  /// Quick Filter
-  RxString selectedOrderType = 'All'.obs;
-
-  /// Multi-select filters
-  RxSet<String> selectedDealers = <String>{}.obs;
-  RxSet<String> selectedLocations = <String>{}.obs;
-  RxSet<String> selectedPartNos = <String>{}.obs;
-  RxSet<String> tempDealers = <String>{}.obs;
-  RxSet<String> tempLocations = <String>{}.obs;
-  RxSet<String> tempPartNos = <String>{}.obs;
-
-  void openFilter() {
-    // copy APPLIED → TEMP
-    tempDealers = selectedDealers;
-    tempLocations = selectedLocations;
-    tempPartNos = selectedPartNos;
-  }
-
-  void toggleTemp(RxSet<String> set, String value) {
-    set.contains(value) ? set.remove(value) : set.add(value);
-  }
-
-  void cancelFilter() {
-    tempDealers.clear();
-    tempLocations.clear();
-    tempPartNos.clear();
-  }
-
-  ///check is there any filter applied
-  final RxBool isFilterApplied = false.obs;
-
-  /// Clear all filters
-  void clearAllFilter() {
-    selectedOrderType.value = 'All';
-    selectedDealers.clear();
-    selectedLocations.clear();
-    selectedPartNos.clear();
-
-    isFilterApplied.value = false;
-    loadOrdersInFilters(orderReceivedList);
-  }
-
-  bool isSelected(Set<String> set, String value) {
-    return set.contains(value);
-  }
-
-  void toggle(Set<String> set, String value) {
-    set.contains(value) ? set.remove(value) : set.add(value);
-  }
-  // bool isFiltered() {
-  //   return selectedDealers.isNotEmpty ||
-  //       selectedLocations.isNotEmpty ||
-  //       selectedPartNos.isNotEmpty ||
-  //       selectedOrderType.value != 'All';
-  // }
-  //
-  // bool get hasActiveFilters {
-  //   return selectedDealers.isNotEmpty ||
-  //       selectedLocations.isNotEmpty ||
-  //       selectedPartNos.isNotEmpty ||
-  //       selectedOrderType.value != 'All';
-  // }
-  //
-  // int get activeFilterCount {
-  //   return selectedDealers.length +
-  //       selectedLocations.length +
-  //       selectedPartNos.length +
-  //       (selectedOrderType.value != 'All' ? 1 : 0);
-  // }
-
-  /// Available filter options (from API)
-  final dealers = <String>{}.obs;
-  final locations = <String>{}.obs;
-  final partNos = <String>{}.obs;
-  final RxMap<String, String> partNdDesc = <String, String>{}.obs;
-  final RxMap<String, String> tempPartNdDesc = <String, String>{}.obs;
-
-  /// LOAD FROM API RESPONSE
-  void loadOrdersInFilters(List<OrderReceivedModel> orders) {
-    /// Initial filter options (no selection)
-    _rebuildDealers();
-    _rebuildLocations();
-    _rebuildParts();
-  }
-
-  ///Toggle dealers and rebuild Dealer -> location, part
-  void toggleDealer(String dealer) {
-    selectedDealers.contains(dealer)
-        ? selectedDealers.remove(dealer)
-        : selectedDealers.add(dealer);
-
-    /// Clear dependent selections
-    selectedLocations.clear();
-    selectedPartNos.clear();
-
-    /// Rebuild options
-    _rebuildLocations();
-    _rebuildParts();
-  }
-
-  ///Toggle Location and rebuild Location -> part
-  void toggleLocation(String location) {
-    selectedLocations.contains(location)
-        ? selectedLocations.remove(location)
-        : selectedLocations.add(location);
-
-    /// Clear dependent selection
-    selectedPartNos.clear();
-
-    /// Rebuild parts
-    _rebuildParts();
-  }
-
-  ///Toggle Part
-  void togglePart(String partNo) {
-    selectedPartNos.contains(partNo)
-        ? selectedPartNos.remove(partNo)
-        : selectedPartNos.add(partNo);
-  }
-
-  void _rebuildDealers() {
-    dealers.assignAll(orderReceivedList.map((e) => e.dealerName).toSet());
-  }
-
-  void _rebuildLocations() {
-    final filtered = orderReceivedList.where((o) {
-      if (selectedDealers.isNotEmpty &&
-          !selectedDealers.contains(o.dealerName)) {
-        return false;
-      }
-      return true;
-    });
-
-    locations.assignAll(
-      filtered.map((e) => e.sellerLocation).toSet(),
-    );
-  }
-
-  void _rebuildParts() {
-    final filtered = orderReceivedList.where((o) {
-      if (selectedDealers.isNotEmpty &&
-          !selectedDealers.contains(o.dealerName)) {
-        return false;
-      }
-
-      if (selectedLocations.isNotEmpty &&
-          !selectedLocations.contains(o.sellerLocation)) {
-        return false;
-      }
-
-      return true;
-    });
-
-    partNdDesc.clear();
-    for (final o in filtered) {
-      partNdDesc[o.partNumber] = o.partDesc;
-    }
-  }
-
-  void applyFilters() {
-    filteredList.value = orderReceivedList.where((order) {
-      /// Quick filter
-      if (selectedOrderType.value != 'All' &&
-          order.orderFor != selectedOrderType.value) {
-        return false;
-      }
-
-      if (selectedDealers.isNotEmpty &&
-          !selectedDealers.contains(order.dealerName)) {
-        return false;
-      }
-
-      if (selectedLocations.isNotEmpty &&
-          !selectedLocations.contains(order.sellerLocation)) {
-        return false;
-      }
-
-      if (selectedPartNos.isNotEmpty &&
-          !selectedPartNos.contains(order.partNumber)) {
-        return false;
-      }
-
-      return true;
-    }).toList();
-
-    if (selectedDealers.isNotEmpty ||
-        selectedLocations.isNotEmpty ||
-        selectedPartNos.isNotEmpty ||
-        selectedOrderType.value != 'All') {
-      isFilterApplied.value = true;
-    }
-
-    regroup();
-  }
-
-  Future<bool?> openFilterSheet(BuildContext context) {
-    return Get.bottomSheet<bool>(
-      SafeArea(
-        child: Container(
-          height: MediaQuery.of(context).size.height * .75,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: FilterBottomSheet(),
-        ),
-      ),
-      isScrollControlled: true,
-    );
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (_) {
-        return SafeArea(
-          child: FilterBottomSheet(),
-        );
-      },
-    );
-  }
-
-  Future<void> onFilterTap(BuildContext context) async {
-    final applied = await openFilterSheet(context);
-    if (applied == true) {
-      applyFilters();
-      update();
-    }
-  }*/
 
   Future<bool?> openSortSheet(BuildContext context) {
     return Get.bottomSheet<bool>(

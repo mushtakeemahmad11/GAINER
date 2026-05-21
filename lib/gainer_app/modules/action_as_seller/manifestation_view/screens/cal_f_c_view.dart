@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/utils/gainer_text_filed_validator.dart';
+import 'package:gainer/gainer_app/core/utils/input_formatters.dart';
+import 'package:gainer/gainer_app/core/widgets/gainer_expansion_tile.dart';
+import 'package:gainer/gainer_app/core/widgets/scrollable_text_widget.dart';
 import '../../../../core/widgets/gainer_app_bar.dart';
 import 'package:get/get.dart';
 import '../../../../core/constants/gainer_color.dart';
@@ -181,8 +184,9 @@ class CalFCView extends GetView<CalFCController> {
       children: [
         if (count > 0)
           Padding(
-            padding: const EdgeInsets.only(left: 20.0),
-            child: Text('All measurement in inches except weight(in KG)'),
+            padding: const EdgeInsets.only(left: 20.0, bottom: 5.0),
+            // child: Text('All measurement in inches except weight(in KG)'),
+            child: Text('All measurements in inches, weight in kg.'),
           ),
         Column(
           spacing: 5,
@@ -273,6 +277,7 @@ class CalFCView extends GetView<CalFCController> {
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           child: ListTile(
+            dense: true,
             // contentPadding: const EdgeInsets.symmetric(horizontal: 15.0),
             leading: SizedBox(
               width: 10,
@@ -284,6 +289,10 @@ class CalFCView extends GetView<CalFCController> {
             ),
             title: Text(lastCourier.name),
           ),
+        ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: _redText(" **GST Cost Applicable"),
         ),
         const SizedBox(height: 5),
         _remarksAndSubmit(),
@@ -305,69 +314,44 @@ class CalFCView extends GetView<CalFCController> {
               border: Border.all(color: GainerColors.border),
               borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
-            child: ExpansionTile(
-              tilePadding: const EdgeInsets.symmetric(horizontal: 10),
-              backgroundColor: GainerColors.lightWhite,
-              collapsedBackgroundColor: GainerColors.lightWhite,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              collapsedShape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              title: Row(
+            child: GainerExpansionTile(
+              titleWidget: Row(
+                spacing: 10,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // _buildExpansionTileTitle(item.partNumber),
                   SizedBox(
                     width: 20,
+                    height: 20,
                     child: Checkbox(
                       activeColor: GainerColors.primary,
                       value: controller.selectedCourier.value == courier,
                       onChanged: (_) => controller.selectCourier(courier),
                     ),
                   ),
-                  Column(
-                    children: [
-                      _buildExpansionTileTitle('${item.companyName}', size),
-                      _buildExpansionTileTitle(
-                          'W(KG): ${item.weight?.toInt()}', size),
-                    ],
+
+                  _buildHeaderCol(
+                    '${item.companyName}',
+                    'W(KG): ${item.weight?.toInt()}',
                   ),
-                  const SizedBox(width: 1),
-                  Column(
-                    children: [
-                      _buildExpansionTileTitle('Appx Freight Cost', size),
-                      _buildExpansionTileTitle(
-                          '${item.estCost?.ceilToDouble().toInt()}', size),
-                    ],
+
+                  _buildHeaderCol(
+                    'Appx Freight Cost*',
+                    '₹ ${item.estCost?.ceilToDouble().toInt()}',
                   ),
-                  const SizedBox(width: 1),
+
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'TAT',
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        '${item.tat} Days',
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      )
+                      _buildHeadText('TAT'),
+                      _buildHeadText('${item.tat} Days'),
                     ],
-                  ),
+                  )
                 ],
               ),
-              // tilePadding: const EdgeInsets.symmetric(horizontal: 10),
-              // shape:
-              //     RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              // collapsedShape:
-              //     RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              // backgroundColor: GainerColors.background,
-              // collapsedBackgroundColor: GainerColors.background,
-              children: [
+              bodyChildren: [
                 Container(
-                  decoration: _gradientDecoration(),
+                  decoration: GainerColors.gradientDecoration,
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: Column(
@@ -390,16 +374,6 @@ class CalFCView extends GetView<CalFCController> {
                             ),
                           ),
                         ),
-
-                        // Table(
-                        //   border: TableBorder.all(),
-                        //   columnWidths: const {
-                        //     0: FlexColumnWidth(3),
-                        //   },
-                        //   children: controller.tableData
-                        //       .map((row) => _buildRow(row))
-                        //       .toList(),
-                        // ),
                         SizedBox(height: size.height * .02),
                         _buildDetailsTable(item),
                       ],
@@ -407,26 +381,153 @@ class CalFCView extends GetView<CalFCController> {
                   ),
                 ),
               ],
+              is48Complete: false,
             ),
           ),
         ),
-        // _buildDropdownAndTextField(),
+        // Padding(
+        //   padding: const EdgeInsets.only(bottom: 4.0),
+        //   child: Container(
+        //     padding: const EdgeInsets.all(2.0),
+        //     decoration: BoxDecoration(
+        //       border: Border.all(color: GainerColors.border),
+        //       borderRadius: BorderRadius.all(Radius.circular(8)),
+        //     ),
+        //     child: ExpansionTile(
+        //       // dense: true,
+        //       tilePadding: const EdgeInsets.symmetric(horizontal: 10),
+        //       backgroundColor: GainerColors.lightWhite,
+        //       collapsedBackgroundColor: GainerColors.lightWhite,
+        //       shape: RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(8)),
+        //       collapsedShape: RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(8)),
+        //       title: Row(
+        //         spacing: 10,
+        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //         children: [
+        //           // _buildExpansionTileTitle(item.partNumber),
+        //           SizedBox(
+        //             width: 20,
+        //             height: 20,
+        //             child: Checkbox(
+        //               activeColor: GainerColors.primary,
+        //               value: controller.selectedCourier.value == courier,
+        //               onChanged: (_) => controller.selectCourier(courier),
+        //             ),
+        //           ),
+        //
+        //           _buildHeaderCol(
+        //             '${item.companyName}',
+        //             'W(KG): ${item.weight?.toInt()}',
+        //           ),
+        //
+        //           _buildHeaderCol(
+        //             'Appx Freight Cost*',
+        //             '₹ ${item.estCost?.ceilToDouble().toInt()}',
+        //           ),
+        //
+        //           Column(
+        //             crossAxisAlignment: CrossAxisAlignment.start,
+        //             children: [
+        //               _buildHeadText('TAT'),
+        //               _buildHeadText('${item.tat} Days'),
+        //             ],
+        //           )
+        //
+        //           ///-------------
+        //           // Column(
+        //           //   children: [
+        //           //     _buildExpansionTileTitle('${item.companyName}', size),
+        //           //     _buildExpansionTileTitle(
+        //           //         'W(KG): ${item.weight?.toInt()}', size),
+        //           //   ],
+        //           // ),
+        //           // const SizedBox(width: 1),
+        //           //
+        //           // Column(
+        //           //   children: [
+        //           //     _buildExpansionTileTitle('Appx Freight Cost*', size),
+        //           //     _buildExpansionTileTitle(
+        //           //         '₹ ${item.estCost?.ceilToDouble().toInt()}', size),
+        //           //   ],
+        //           // ),
+        //           // const SizedBox(width: 1),
+        //           // Column(
+        //           //   crossAxisAlignment: CrossAxisAlignment.end,
+        //           //   children: [
+        //           //     Text(
+        //           //       'TAT',
+        //           //       style: const TextStyle(
+        //           //           fontSize: 12, fontWeight: FontWeight.bold),
+        //           //     ),
+        //           //     Text(
+        //           //       '${item.tat} Days',
+        //           //       style: const TextStyle(
+        //           //           fontSize: 12, fontWeight: FontWeight.bold),
+        //           //     )
+        //           //   ],
+        //           // ),
+        //         ],
+        //       ),
+        //
+        //       ///---------------
+        //       // tilePadding: const EdgeInsets.symmetric(horizontal: 10),
+        //       // shape:
+        //       //     RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        //       // collapsedShape:
+        //       //     RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        //       // backgroundColor: GainerColors.background,
+        //       // collapsedBackgroundColor: GainerColors.background,
+        //       children: [
+        //         Container(
+        //           decoration: _gradientDecoration(),
+        //           child: Padding(
+        //             padding: const EdgeInsets.all(8),
+        //             child: Column(
+        //               children: [
+        //                 SingleChildScrollView(
+        //                   scrollDirection: Axis.horizontal,
+        //                   child: ConstrainedBox(
+        //                     constraints: BoxConstraints(
+        //                       minWidth: MediaQuery.of(context).size.width,
+        //                     ),
+        //                     child: Table(
+        //                       border: TableBorder.all(),
+        //                       columnWidths: _buildColumnWidths(
+        //                           controller.tableData.first.length),
+        //                       defaultVerticalAlignment:
+        //                           TableCellVerticalAlignment.middle,
+        //                       children: controller.tableData
+        //                           .map((row) => _buildRow(row))
+        //                           .toList(),
+        //                     ),
+        //                   ),
+        //                 ),
+        //
+        //                 // Table(
+        //                 //   border: TableBorder.all(),
+        //                 //   columnWidths: const {
+        //                 //     0: FlexColumnWidth(3),
+        //                 //   },
+        //                 //   children: controller.tableData
+        //                 //       .map((row) => _buildRow(row))
+        //                 //       .toList(),
+        //                 // ),
+        //                 SizedBox(height: size.height * .02),
+        //                 _buildDetailsTable(item),
+        //               ],
+        //             ),
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
 
-  BoxDecoration _gradientDecoration() {
-    return const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment(0.94, 0.97),
-        end: Alignment(2.94, -0.47),
-        colors: [
-          Color.fromRGBO(213, 221, 249, 0.5),
-          Color.fromRGBO(223, 247, 246, 0.2),
-        ],
-      ),
-    );
-  }
 
   Map<int, TableColumnWidth> _buildColumnWidths(int columnCount) {
     final Map<int, TableColumnWidth> widths = {};
@@ -442,17 +543,35 @@ class CalFCView extends GetView<CalFCController> {
     return widths;
   }
 
-  _buildExpansionTileTitle(String text, Size size) {
-    return SizedBox(
-      width: size.width * .27,
-      child: SingleChildScrollView(
-        child: Text(
-          text,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-        ),
+  _buildHeadText(String text) => Text(
+        text,
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+      );
+
+  _buildHeaderCol(String text1, String text2) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ScrollableTextWidget(textWidget: _buildHeadText(text1)),
+          _buildHeadText(text2),
+        ],
       ),
     );
   }
+
+  // _buildExpansionTileTitle(String text, Size size) {
+  //   return SizedBox(
+  //     width: size.width * .27,
+  //     child: SingleChildScrollView(
+  //       scrollDirection: Axis.horizontal,
+  //       child: Text(
+  //         text,
+  //         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildDetailsTable(CalFCModel item) {
     return Table(
@@ -524,15 +643,15 @@ class CalFCView extends GetView<CalFCController> {
             _tableCell(item.estCost.toString()),
           ],
         ),
-        TableRow(
-          children: [
-            Text(
-              "**Texes Extra",
-              style: TextStyle(color: Colors.red),
-            ),
-            _tableCell(""),
-          ],
-        ),
+        // TableRow(
+        //   children: [
+        //     Text(
+        //       "**Taxes Extra",
+        //       style: TextStyle(color: Colors.red),
+        //     ),
+        //     _tableCell(""),
+        //   ],
+        // ),
       ],
     );
   }
@@ -576,7 +695,7 @@ class CalFCView extends GetView<CalFCController> {
           Text('Admin Remarks:\nAlways check physically before manifesting'),
           const SizedBox(height: 5),
           GainerTextFormField(
-            label: 'Manifestation Remarks',
+            label: 'Manifestation Remarks*',
             validator: (value) =>
                 value == null || value.isEmpty ? 'Please enter remarks' : null,
             controller: controller.remarksController,
@@ -598,9 +717,9 @@ class CalFCView extends GetView<CalFCController> {
                       GainerTextFormField(
                         isDense: false,
                         controller: controller.lrController,
-                        label: 'LR Number',
+                        label: 'LR Number*',
                         validator: (value) => value == null || value.isEmpty
-                            ? 'Please enter LR Number'
+                            ? 'Please enter LR number'
                             : null,
                         onChanged: (value) {
                           // Allow only letters, numbers, and hyphens
@@ -619,9 +738,9 @@ class CalFCView extends GetView<CalFCController> {
                       GainerTextFormField(
                         isDense: false,
                         controller: controller.transportNameController,
-                        label: 'Transporter Name/Courier Service',
+                        label: 'Transporter Name/Courier Service*',
                         validator: (value) => value == null || value.isEmpty
-                            ? 'Please enter Transporter Name/Courier Service'
+                            ? 'Please enter transporter name/courier service'
                             : null,
                         onChanged: (value) {
                           // Allow only a-z, A-Z, 0-9, space, underscore, and hyphen
@@ -643,9 +762,9 @@ class CalFCView extends GetView<CalFCController> {
                       GainerTextFormField(
                         isDense: false,
                         controller: controller.contactPersonNameController,
-                        label: 'Contact Person’s Name',
+                        label: 'Contact Person’s Name*',
                         validator: (value) => value == null || value.isEmpty
-                            ? 'Please enter Contact Person’s Name'
+                            ? 'Please enter contact person’s name'
                             : null,
                         onChanged: (value) {
                           // Allow only letters, spaces, apostrophes, periods, and hyphens
@@ -665,10 +784,21 @@ class CalFCView extends GetView<CalFCController> {
                       GainerTextFormField(
                         isDense: false,
                         controller: controller.contactPersonPhoneController,
-                        label: 'Contact Person’s Phone Number',
-                        validator: (value) => value == null || value.isEmpty
-                            ? 'Please enter Contact Person’s Phone Number'
-                            : null,
+                        label: 'Contact Person’s Phone Number*',
+                        // validator: (value) => value == null || value.isEmpty
+                        //     ? 'Please enter Contact Person’s Phone Number'
+                        //     : null,
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter contact person’s phone number';
+                          }
+
+                          if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
+                            return 'Enter a valid 10-digit phone number';
+                          }
+
+                          return null; // ✅ valid
+                        },
                         keyboardType: TextInputType.phone,
                         onChanged: (value) {
                           // Remove all non-digit characters
@@ -699,24 +829,30 @@ class CalFCView extends GetView<CalFCController> {
                         isDense: false,
                         controller: controller.contactPersonEmailController,
                         keyboardType: TextInputType.emailAddress,
+                        inputFormatters: [GainerInputFormatters.email],
                         label: 'Contact Person’s Email ID',
-                        validator: (value) => value == null || value.isEmpty
-                            ? 'Please enter Contact Person’s Email ID'
-                            : null,
+                        // validator: (value) => value == null || value.isEmpty
+                        //     ? 'Please enter Contact Person’s Email ID'
+                        //     : null,
+                        validator: (value) => value == null ||
+                                value.isEmpty ||
+                                RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)
+                            ? null
+                            : 'Please enter a valid email id',
                         onChanged: (value) {
                           // Allow only valid email characters
-                          String filteredValue =
-                              value.replaceAll(RegExp(r'[^a-zA-Z0-9@._-]'), '');
+                          // String filteredValue =
+                          //     value.replaceAll(RegExp(r'[^a-zA-Z0-9@._-]'), '');
 
                           // Update only if different
-                          if (value != filteredValue) {
-                            controller.contactPersonEmailController.value =
-                                TextEditingValue(
-                              text: filteredValue,
-                              selection: TextSelection.collapsed(
-                                  offset: filteredValue.length),
-                            );
-                          }
+                          // if (value != filteredValue) {
+                          //   controller.contactPersonEmailController.value =
+                          //       TextEditingValue(
+                          //     text: filteredValue,
+                          //     selection: TextSelection.collapsed(
+                          //         offset: filteredValue.length),
+                          //   );
+                          // }
                         },
                       ),
                       const SizedBox(height: 5),
@@ -734,14 +870,18 @@ class CalFCView extends GetView<CalFCController> {
   }
 
   Widget _warningText() {
-    return const Text(
-      "⚠ Freight is calculated based on Dimensions. Ensure to input CORRECT DIMENSION.\n"
-      "Courier will charge based on dimensions & NO Request for dimension change will be entertained later.",
+    return _redText(
+      "⚠ Freight is calculated based on dimensions. Ensure to input CORRECT DIMENSION.\n"
+      "Courier will charge based on dimensions & No request for dimension change will be entertained later.",
       // "⚠ Freight is calculated based on dimensions.\nEnsure correct measurements.\nCourier will charge based on dimensions updated/actual dimension & NO Request for dimension change will be entertained later.",
-      style: TextStyle(color: Colors.red, fontSize: 12),
-      textAlign: TextAlign.center,
     );
   }
+
+  _redText(String text) => Text(
+        text,
+        style: TextStyle(color: Colors.red, fontSize: 12),
+        textAlign: TextAlign.center,
+      );
 
   Widget _inputFiled({
     required String label,
@@ -762,4 +902,9 @@ class CalFCView extends GetView<CalFCController> {
       },
     );
   }
+
+  String? emailValidator(String? value) =>
+      value != null && RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)
+          ? null
+          : 'Invalid email';
 }

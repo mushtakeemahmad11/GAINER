@@ -161,8 +161,6 @@ class RaisedConcernView extends GetView<PartReceiptController> {
     });
   }
 
-
-
   /*Widget _widgetForRow(String text, VoidCallback onTap, Size size) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

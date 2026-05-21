@@ -2,13 +2,14 @@ import 'package:gainer/dealer_monitoring/models/vehicle_parts_details_model.dart
 import 'package:gainer/gainer_app/core/Services/auth_service.dart';
 import 'package:gainer/gainer_app/core/utils/check_internet.dart';
 import 'package:get/get.dart';
-import '../core/services/api_services.dart';
+import '../core/services/dm_api_services.dart';
 import '../core/utils/transform_graph_ppni_data.dart';
 import '../widgets/no_internet_dialog.dart';
 
 class WorkShopManagerController extends GetxController {
-  ApiServices api = ApiServices();
+  DMApiServices api = DMApiServices();
   RxBool isLoading = false.obs;
+  RxBool hasErrorInPagination = false.obs;
   RxBool isMoreLoading = false.obs;
   RxBool isFirstLoading = false.obs;
   RxBool showScrollButton = false.obs;

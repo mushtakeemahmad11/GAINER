@@ -19,7 +19,9 @@ class GainerTextFormField extends StatelessWidget {
   final void Function(String)? onChanged;
   final void Function()? onTap;
   final Color? fillColor;
+  final Color? labelColor;
   final bool isPartSearch;
+
 
   const GainerTextFormField({
     super.key,
@@ -39,6 +41,7 @@ class GainerTextFormField extends StatelessWidget {
     this.onTap,
     this.inputFormatters,
     this.fillColor = Colors.white,
+    this.labelColor = Colors.black,
     this.isPartSearch = false,
   });
 
@@ -67,12 +70,12 @@ class GainerTextFormField extends StatelessWidget {
         isDense: isDense,
         labelText: label,
         hintText: hint,
-        labelStyle: TextStyle(fontSize: 14, color: Colors.black),
+        labelStyle: TextStyle(fontSize: 14, color: labelColor),
         hintStyle: TextStyle(fontSize: 14),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: fillColor,
+        fillColor: readOnly?Colors.black12:fillColor,
         border: _border(GainerColors.border),
         enabledBorder:
             _border(isPartSearch ? GainerColors.primary : GainerColors.border),

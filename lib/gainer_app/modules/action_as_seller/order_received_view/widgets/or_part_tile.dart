@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gainer/gainer_app/core/widgets/gainer_expansion_tile.dart';
 import '../../../../core/constants/gainer_color.dart';
 import '../../../../core/utils/check_time.dart';
 import '../models/order_received_part_model.dart';
@@ -20,16 +21,9 @@ class ORPartTile extends StatelessWidget {
           border: Border.all(color: GainerColors.border),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-        child: ExpansionTile(
-          // showTrailingIcon: false,
-          tilePadding: const EdgeInsets.symmetric(horizontal: 10),
-          backgroundColor: GainerColors.lightWhite,
-          collapsedBackgroundColor:
-              is48Complete ? GainerColors.lightPink : GainerColors.lightWhite,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          collapsedShape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          title: ORExpansionTileHeader(
+        child: GainerExpansionTile(
+          is48Complete: is48Complete,
+          titleWidget: ORExpansionTileHeader(
             title1: 'Pending Since',
             subTitle1: group.minimumDate,
             title2: group.partNumber,
@@ -37,7 +31,7 @@ class ORPartTile extends StatelessWidget {
             title3: 'Part: ${group.totalItem}',
             // subTitle3: '',
           ),
-          children: [
+          bodyChildren: [
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -54,6 +48,40 @@ class ORPartTile extends StatelessWidget {
             ),
           ],
         ),
+        // child: ExpansionTile(
+        //   dense: true,
+        //   tilePadding: const EdgeInsets.symmetric(horizontal: 10),
+        //   backgroundColor: GainerColors.lightWhite,
+        //   collapsedBackgroundColor:
+        //       is48Complete ? GainerColors.lightPink : GainerColors.lightWhite,
+        //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        //   collapsedShape:
+        //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        //   title: ORExpansionTileHeader(
+        //     title1: 'Pending Since',
+        //     subTitle1: group.minimumDate,
+        //     title2: group.partNumber,
+        //     subTitle2: group.partDesc,
+        //     title3: 'Part: ${group.totalItem}',
+        //     // subTitle3: '',
+        //   ),
+        //   children: [
+        //     ListView.separated(
+        //       shrinkWrap: true,
+        //       physics: const NeverScrollableScrollPhysics(),
+        //       itemCount: group.items.length,
+        //       separatorBuilder: (_, __) =>
+        //           const Divider(height: 1, color: Colors.black38),
+        //       itemBuilder: (_, index) {
+        //         final item = group.items[index];
+        //         return ORDetailsCard(
+        //           isPart: false,
+        //           order: item,
+        //         );
+        //       },
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }

@@ -9,22 +9,6 @@ import '../internet_connectivity/no_internet_controller.dart';
 import 'models/nav_model.dart';
 
 class GainerMainController extends GetxController {
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  //
-  //   final notificationCtrl = Get.find<NotificationController>();
-  //
-  //   if (notificationCtrl.openFromNotification.value) {
-  //     WidgetsBinding.instance.addPostFrameCallback((_) {
-  //       Get.toNamed(Routes.NOTIFICATIONVIEW);
-  //
-  //       notificationCtrl.openFromNotification.value = false;
-  //     });
-  //   }
-  // }
-
-  // var selectedLocation = 'Location'.obs;
   SearchController searchController = SearchController();
 
   final RxInt currentIndex = 0.obs;

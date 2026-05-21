@@ -33,9 +33,6 @@ class HelpView extends GetView<HelpController> {
 
           // Show loading indicator if an API call is ongoing
           GainerAppLoader(isLoading: controller.isLoading),
-          // Obx(() => controller.isLoading.value
-          //     ? customCircularProgressIndicator()
-          //     : const SizedBox.shrink()),
         ],
       ),
     );

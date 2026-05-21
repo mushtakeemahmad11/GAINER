@@ -50,7 +50,6 @@ class OrderReceivedView extends GetView<OrderReceivedController> {
                   if (controller.filteredList.isEmpty) {
                     return const Center(child: Text("No Orders Found"));
                   }
-
                   if (controller.groupType.value == ORGroupType.part) {
                     return ListView.builder(
                       shrinkWrap: true,

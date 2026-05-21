@@ -41,16 +41,7 @@ class ActionColumn extends StatelessWidget {
                 // mainAxisSize: MainAxisSize.max,
                 children: [
                   SizedBox(height: 2),
-                  // ...items.map((item) {
-                  //   if (item.title == 'Order Placed') {
-                  //     return ActionItemCard(item: item);
-                  //   }
-                  //   if (item.title == 'Update PO') {
-                  //     return ActionItemCard(item: item);
-                  //   } else {
-                  //     return ActionItemCard(item: item);
-                  //   }
-                  // }),
+
                   ...items.map((item) => ActionItemCard(item: item)),
                   SizedBox(height: 2)
                 ],

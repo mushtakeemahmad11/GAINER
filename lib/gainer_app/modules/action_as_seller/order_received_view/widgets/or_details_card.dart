@@ -30,7 +30,7 @@ class ORDetailsCard extends GetView<OrderReceivedController> {
         TextEditingController(text: order.sellerFreeStock.toInt().toString());
 
     return Container(
-      decoration: _gradientDecoration(),
+      decoration: GainerColors.gradientDecoration,
       padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -300,19 +300,6 @@ class ORDetailsCard extends GetView<OrderReceivedController> {
   //     ),
   //   );
   // }
-
-  BoxDecoration _gradientDecoration() {
-    return const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment(0.94, 0.97),
-        end: Alignment(2.94, -0.47),
-        colors: [
-          Color.fromRGBO(213, 221, 249, 0.5),
-          Color.fromRGBO(223, 247, 246, 0.2),
-        ],
-      ),
-    );
-  }
 }
 
 // Widget _discountChip(String text) {

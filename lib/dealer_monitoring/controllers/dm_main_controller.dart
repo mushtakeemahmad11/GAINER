@@ -4,13 +4,13 @@ import 'package:gainer/gainer_app/core/widgets/gainer_bottom_sheet.dart';
 import 'package:get/get.dart';
 import '../../app_switcher_view/app_switcher_controller.dart';
 import '../../gainer_app/modules/login/model/user_model.dart';
-import '../core/services/api_services.dart';
+import '../core/services/dm_api_services.dart';
 import '../core/utils/dm_images.dart';
 import '../core/utils/transform_value_ind.dart';
 import '../widgets/access_denied_snackbar.dart';
 
 class DMMainController extends GetxController {
-  ApiServices api = ApiServices();
+  DMApiServices api = DMApiServices();
   final controller = Get.find<AppSwitcherController>();
   // final LocationController _locationController = Get.put(LocationController());
   RxnString selectedLocation = RxnString(null);

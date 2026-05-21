@@ -20,7 +20,7 @@ class DetailsCard extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Container(
-      decoration: _gradientDecoration(),
+      decoration: GainerColors.gradientDecoration,
       padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,32 +167,4 @@ class DetailsCard extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       );
-
-  // Widget _discountChip(String text) {
-  //   return Container(
-  //     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-  //     decoration: BoxDecoration(
-  //       color: Colors.deepOrange[900],
-  //       borderRadius: BorderRadius.circular(8),
-  //     ),
-  //     child: Text(
-  //       text,
-  //       style:
-  //           const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-  //     ),
-  //   );
-  // }
-
-  BoxDecoration _gradientDecoration() {
-    return const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment(0.94, 0.97),
-        end: Alignment(2.94, -0.47),
-        colors: [
-          Color.fromRGBO(213, 221, 249, 0.5),
-          Color.fromRGBO(223, 247, 246, 0.2),
-        ],
-      ),
-    );
-  }
 }

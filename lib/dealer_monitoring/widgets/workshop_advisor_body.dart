@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/app_switcher_view/app_switcher_controller.dart';
+import 'package:gainer/dealer_monitoring/widgets/access_denied_snackbar.dart';
 import 'package:gainer/dealer_monitoring/widgets/ppni_value_box.dart';
 import 'package:gainer/dealer_monitoring/widgets/refresh_indicator.dart';
 import 'package:gainer/dealer_monitoring/widgets/title_icon_row.dart';
@@ -9,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../gainer_app/core/widgets/error_text.dart';
 import '../controllers/workshop_manager_controller.dart';
-import '../core/services/api_services.dart';
+import '../core/services/dm_api_services.dart';
 import '../core/theme/app_colors.dart';
 import '../core/utils/dm_images.dart';
 import '../core/utils/transform_graph_ppni_data.dart';
@@ -45,7 +46,7 @@ class WorkshopAdvisorBody extends StatefulWidget {
 }
 
 class _WorkshopAdvisorBodyState extends State<WorkshopAdvisorBody> {
-  ApiServices api = ApiServices();
+  DMApiServices api = DMApiServices();
   final WorkShopManagerController _controller =
       Get.put(WorkShopManagerController());
   final appSwitcherCtrl = Get.find<AppSwitcherController>();
@@ -134,6 +135,8 @@ class _WorkshopAdvisorBodyState extends State<WorkshopAdvisorBody> {
     // });
 
     scrollController.addListener(() {
+      if (!scrollController.hasClients) return;
+
       if (scrollController.position.pixels >=
               scrollController.position.maxScrollExtent - 200 &&
           !_controller.isLoading.value &&
@@ -143,6 +146,17 @@ class _WorkshopAdvisorBodyState extends State<WorkshopAdvisorBody> {
         _loadMore();
       }
     });
+
+    // scrollController.addListener(() {
+    //   if (scrollController.position.pixels >=
+    //           scrollController.position.maxScrollExtent - 200 &&
+    //       !_controller.isLoading.value &&
+    //       !_controller.isMoreLoading.value &&
+    //       hasMore) {
+    //     isPagination = true;
+    //     _loadMore();
+    //   }
+    // });
   }
 
   void scrollToBottom() {
@@ -153,7 +167,16 @@ class _WorkshopAdvisorBodyState extends State<WorkshopAdvisorBody> {
     );
   }
 
+  // void _onLocationChanged(String? location) {
+  //   _fetchApiData(locationId: location);
+  // }
+
   void _onLocationChanged(String? location) {
+    pageValue = 1;
+    hasMore = true;
+    _controller.hasErrorInPagination.value = false;
+    _controller.vehiclePartsDetailsList.clear();
+
     _fetchApiData(locationId: location);
   }
 
@@ -162,6 +185,17 @@ class _WorkshopAdvisorBodyState extends State<WorkshopAdvisorBody> {
     _worker.dispose(); // Important!
     api.cancelRequest(); // for cancel old fetchVehiclePPNIValuesByAdvisor
     super.dispose();
+  }
+
+  void resetVariable() {
+    _controller.secondSError.value = null;
+    _controller.vehiclePartsDetailsList.clear();
+    _controller.totalPPNIValueAdvisor.value = 0;
+    pageValue = 1;
+    hasMore = true;
+    _controller.showScrollButton.value = false;
+    _controller.hasErrorInPagination.value = false;
+    isPagination = false;
   }
 
   Future<void> _fetchApiData(
@@ -196,18 +230,14 @@ class _WorkshopAdvisorBodyState extends State<WorkshopAdvisorBody> {
     locationIdValue = widget.locationID ?? locationID;
     advisorValue = advisorName ?? widget.advisor;
     monthDateValue = monthYear;
-    // tCode = await getIntData("tCode");
     tCode = await AuthService.getTCode();
-    _controller.secondSError.value = null;
-    _controller.vehiclePartsDetailsList.clear();
-    _controller.totalPPNIValueAdvisor.value = 0;
-    pageValue = 1;
-    hasMore = true;
-    _controller.showScrollButton.value = true;
-    isPagination = false;
+    resetVariable();
     _controller.isLoading(true);
     await _loadMore();
     _controller.isLoading(false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndAutoPaginate();
+    });
     // for fetch graph data
     _controller.graphErrorAdvisor.value = null;
     final graphResponse = await api.fetchGraphPPNIValue(
@@ -247,34 +277,66 @@ class _WorkshopAdvisorBodyState extends State<WorkshopAdvisorBody> {
 
     // print("response of fetchVehiclePPNIValuesByAdvisor: $response");
     if (response['success']) {
+      _controller.hasErrorInPagination.value = false;
       final data = response['data'];
       _controller.vehiclePartsDetailsList.addAll(
           data.map<VehiclePPNI>((item) => VehiclePPNI.fromJson(item)).toList());
       _controller.totalPPNIValueAdvisor.value += response['totalPPNI'];
       bool dataHasMore = response['hasMore'];
-      if (!dataHasMore || data.length < pageValue) {
+      if (!dataHasMore || data.length < limitValue) {
         hasMore = false;
         _controller.showScrollButton.value = false;
       } else {
         pageValue++;
+        _controller.showScrollButton.value = true;
       }
+      // if (!dataHasMore || data.length < pageValue) {
+      //   hasMore = false;
+      //   _controller.showScrollButton.value = false;
+      // } else {
+      //   pageValue++;
+      // }
     } else {
+      _controller.hasErrorInPagination.value = true;
       final err = response['message'];
       if (isPagination) {
-        Get.rawSnackbar(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          messageText: Center(
-            child: Text(err, style: TextStyle(color: Colors.white)),
-          ),
-        );
+        DealerSnackbar.showAccessDenied(err);
+        // Get.rawSnackbar(
+        //   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        //   messageText: Center(
+        //     child: Text(err, style: TextStyle(color: Colors.white)),
+        //   ),
+        // );
 
         if (err == "Data not available") {
           hasMore = false;
           _controller.showScrollButton.value = false;
+          _controller.hasErrorInPagination.value = false;
         }
       } else {
         _controller.secondSError.value = err;
       }
+    }
+  }
+
+  void _checkAndAutoPaginate() {
+    if (!scrollController.hasClients) return;
+
+    final maxScroll = scrollController.position.maxScrollExtent;
+
+    /// If content is NOT scrollable → load more automatically
+    if (maxScroll <= 0 &&
+        hasMore &&
+        !_controller.hasErrorInPagination.value &&
+        !_controller.isLoading.value &&
+        !_controller.isMoreLoading.value) {
+      isPagination = true;
+      _loadMore().then((_) {
+        /// Check again after loading (recursive until filled)
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _checkAndAutoPaginate();
+        });
+      });
     }
   }
 

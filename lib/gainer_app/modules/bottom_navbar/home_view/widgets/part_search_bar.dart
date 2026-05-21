@@ -42,7 +42,8 @@ class LocationAndPartSearchCard extends GetView<HomeController> {
           Align(
             alignment: Alignment.topRight,
             child: Text(
-              '*Multi part with , separated ',
+              // '*Multi part with , separated ',
+              '*For multi part , separated ',
               style: TextStyle(fontSize: 12, color: GainerColors.error),
             ),
           ),

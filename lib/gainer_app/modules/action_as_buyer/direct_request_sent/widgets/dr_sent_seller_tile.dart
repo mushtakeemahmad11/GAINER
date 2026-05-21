@@ -1,0 +1,90 @@
+import 'package:flutter/material.dart';
+import '../../../../core/constants/gainer_color.dart';
+import '../../../../core/utils/check_time.dart';
+import '../../../../core/widgets/gainer_expansion_tile.dart';
+import '../models/dr_sent_seller_model.dart';
+import 'dr_sent_card.dart';
+import 'dr_sent_expansion_tile_header.dart';
+
+class DrSentSellerTile extends StatelessWidget {
+  final DrSentSellerModel group;
+  const DrSentSellerTile({super.key, required this.group});
+
+  @override
+  Widget build(BuildContext context) {
+    bool is48Complete = group.items
+        .any((item) => CheckTime.is48HoursCompleted(item.requestDate??''));
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: GainerColors.border),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        child: GainerExpansionTile(
+            titleWidget: DrSentExpansionTileHeader(
+              title1: group.sellerName,
+              title2: group.location,
+              title3: 'Qty: ${group.qty}',
+            ),
+            bodyChildren: [
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: group.items.length,
+                separatorBuilder: (_, __) =>
+                    const Divider(height: 1, color: Colors.black38),
+                itemBuilder: (_, index) {
+                  final item = group.items[index];
+                  return DrSentDetailsCard(
+                    isPart: true,
+                    order: item,
+                  );
+                },
+              ),
+            ],
+            is48Complete: is48Complete),
+        // child: ExpansionTile(
+        //   tilePadding: const EdgeInsets.symmetric(horizontal: 10),
+        //   backgroundColor: GainerColors.lightWhite,
+        //   collapsedBackgroundColor:
+        //       is48Complete ? GainerColors.lightPink : GainerColors.lightWhite,
+        //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        //   collapsedShape:
+        //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        //   title: PRExpansionTileHeader(
+        //     title1: group.sellerName,
+        //     title2: group.location,
+        //     title3: 'PO Qty: ${group.poQty}',
+        //   ),
+        //   // title: PoExpansionTileHeader(
+        //   //   title1: 'Pending Since',
+        //   //   subTitle1: group.highestDate,
+        //   //   title2: group.sellerName,
+        //   //   subTitle2: group.location,
+        //   //   title3: 'Total Price',
+        //   //   subTitle3: '₹${group.totalPrice}',
+        //   // ),
+        //   // title: Text('1234567890'),
+        //   children: [
+        //     ListView.separated(
+        //       shrinkWrap: true,
+        //       physics: const NeverScrollableScrollPhysics(),
+        //       itemCount: group.items.length,
+        //       separatorBuilder: (_, __) =>
+        //           const Divider(height: 1, color: Colors.black38),
+        //       itemBuilder: (_, index) {
+        //         final item = group.items[index];
+        //
+        //         return PRDetailsCard(
+        //           isPart: true,
+        //           order: item,
+        //         );
+        //       },
+        //     ),
+        //   ],
+        // ),
+      ),
+    );
+  }
+}

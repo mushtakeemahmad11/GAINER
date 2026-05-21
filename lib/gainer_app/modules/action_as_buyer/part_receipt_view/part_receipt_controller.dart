@@ -149,19 +149,14 @@ class PartReceiptController extends GetxController {
       imgPath: GainerImages.decisionMaking,
       yesFunction: () async {
         Get.back();
-        // bool checkInt = await checkInternet();
-        // if (checkInt) {
         onYes();
-        // } else {
-        //   Get.toNamed(Routes.NOINTERNETVIEW);
-        // }
       },
       noFunction: Get.back,
     );
   }
 
   //On Tap Happy To received
-  Future<void> onTapReceived(String bigId, BuildContext context) async {
+  Future<void> onTapReceived(String bigId) async {
     isLoading.value = true;
     final response = await GainerApiService().pendingToBeReceivedV2(
       remarks: '',
@@ -652,7 +647,7 @@ class PartReceiptController extends GetxController {
 
   @override
   void onClose() {
-    ///
+    searchController.dispose();
     super.onClose();
   }
 }

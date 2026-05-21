@@ -44,7 +44,7 @@ class PRBtnRow extends GetView<PartReceiptController> {
           'Happy To Received',
           () => controller.onTapBtn(
             'Are you sure to received order',
-            () => controller.onTapReceived(order.bigid.toString(), context),
+            () => controller.onTapReceived(order.bigid.toString()),
           ),
           size,
           // isDisable: isNotDel,

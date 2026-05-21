@@ -50,22 +50,6 @@ class PoUpdationMrp extends StatelessWidget {
                   DiscountFlag(text: '${order.discount.toInt()}% Off'),
                 ],
               ),
-        // Column(
-        //   children: [
-        //     Row(
-        //       children: [
-        //         _label("Buyers's Remarks: "),
-        //         _scrollBold(order.remarks),
-        //       ],
-        //     ),
-        //     Row(
-        //       children: [
-        //         _label("Seller's Remarks: "),
-        //         _scrollBold(order.requestAcceptRemarks),
-        //       ],
-        //     )
-        //   ],
-        // ),
       ],
     );
   }

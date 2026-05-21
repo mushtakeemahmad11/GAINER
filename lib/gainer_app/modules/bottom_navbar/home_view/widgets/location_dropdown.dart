@@ -31,7 +31,7 @@ class LocationDropdown extends StatelessWidget {
         headerStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         listItemStyle: TextStyle(fontSize: 14),
         // closedFillColor: Colors.white38,
-        expandedFillColor: GainerColors.primary,
+        expandedFillColor: GainerColors.background,
         expandedSuffixIcon: Icon(
           Icons.arrow_drop_down_sharp,
           color: Colors.black54,

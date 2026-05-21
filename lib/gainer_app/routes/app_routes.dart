@@ -1,5 +1,5 @@
 abstract class Routes {
-  ///common screens routes
+  ///common screens routes--------------------------------
   static const SPLASH = '/splash';
   static const LOGIN = '/login';
   static const APPSWITCHER = '/app-switcher-view';
@@ -12,6 +12,8 @@ abstract class Routes {
 
   ///Gainer Buyer Routes
   static const PARTREQUESTVIEW = '/gainer/buyer/part-request';
+  static const DIRECTREQ = '/gainer/buyer/direct-req';
+  static const DIRECTREQSENT = '/gainer/buyer/direct-req-sent';
   static const ORDERPLACED = '/gainer/buyer/order-placed';
   static const UPDATEPO = '/gainer/buyer/update-po';
   static const PARTRECEIPT = '/gainer/buyer/part-receipt';
@@ -20,6 +22,7 @@ abstract class Routes {
   static const UPDATEPOORDERSUMMARY = '/gainer/buyer/update-po/order-summary';
 
   ///Gainer Seller Routes
+  static const DIRECTREQRECEIVED = '/gainer/buyer/direct-req-received';
   static const ORDERRECEIVED = '/gainer/seller/order-received';
   static const MANIFESTATIONVIEW = '/gainer/seller/manifestation';
   static const DISPATCHEDDETAILSVIEW = '/gainer/seller/dispatched-details';

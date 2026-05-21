@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -15,7 +17,7 @@ class UrlLaunchUtils {
     }
 
     return Get.snackbar(
-      'Error',
+      'Problem',
       message,
       backgroundColor: GainerColors.secondary,
       colorText: Colors.black,
@@ -50,26 +52,51 @@ class UrlLaunchUtils {
   }
 
   /// Open Play Store app page
-  static void downloadApk() async {
-    // final url = 'https://drive.google.com/uc?export=download&id=$fileId';
-    final url =
-        'https://play.google.com/store/apps/details?id=com.sparecare.tel_e_scope&hl=en';
-    final uri = Uri.parse(url);
+  static void updateApk() async {
+    bool isIos = Platform.isIOS;
+    final Uri url = Uri.parse(
+      isIos
+          ? "https://apps.apple.com/app/id310633997"
+          : "https://play.google.com/store/apps/details?id=com.sparecare.tel_e_scope&hl=en",
+    );
 
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      _showError('Could not open Play Store');
-      // Get.snackbar('Error', 'Could not open Play Store.',
-      //     backgroundColor: DMAppColors.accent, colorText: Colors.black);
+    String store = isIos ? 'App' : 'Play';
+
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      _showError('Could not open $store Store to update app\n'
+          'Update it manually from the $store Store');
     }
+
+    // if (await canLaunchUrl(url)) {
+    //   await launchUrl(
+    //     url,
+    //     mode: LaunchMode.externalApplication,
+    //   );
+    // } else {
+    //   _showError('Could not open $store Store to update app\n'
+    //       'Update it manually from the $store Store');
+    // }
+    // final url =
+    //      'https://play.google.com/store/apps/details?id=com.sparecare.tel_e_scope&hl=en';
+    //  final uri = Uri.parse(url);
+    //
+    //  if (await canLaunchUrl(uri)) {
+    //    await launchUrl(uri, mode: LaunchMode.externalApplication);
+    //  } else {
+    //    _showError('Could not open Play Store');
+    //    // Get.snackbar('Error', 'Could not open Play Store.',
+    //    //     backgroundColor: DMAppColors.accent, colorText: Colors.black);
+    //  }
   }
 
   /// Open any external URL
   static Future<void> openUrl(
-      String url, {
-        String errorMessage = 'Could not open URL',
-      }) async {
+    String url, {
+    String errorMessage = 'Could not open URL',
+  }) async {
     final Uri uri = Uri.parse(url);
     try {
       if (!await launchUrl(

@@ -250,14 +250,12 @@ class CalFCController extends GetxController {
         (response['data'] as List).map((e) => CalFCModel.fromJson(e)).toList(),
       );
 
-      couriers.assignAll(
-        calculateFCList
-            .map((e) => Courier(
-                  name: e.companyName ?? '',
-                  code: e.companyCode.toString(),
-                ))
-            .toList(),
-      );
+      couriers.assignAll(calculateFCList
+          .map((e) => Courier(
+                name: e.companyName ?? '',
+                code: e.companyCode.toString(),
+              ))
+          .toList());
 
       couriers.add(Courier(name: 'Own Arrangement', code: ''));
     } else {
@@ -410,34 +408,34 @@ class CalFCController extends GetxController {
     Future<void> confirmAndManifest() async {
       isLoadingCFCSubmit.value = true;
       final response = await GainerApiService().manifestation(
-          bigIDs: manifestationBigIds.join(','),
-          companyCode:
-              isOwnSelected.value ? "3" : selectedCourier.value?.code ?? "3",
-          remarks: remarksController.text,
-          noofInvoioce: invoiceCount.value.toString(),
-          itemInvoice: itemInvoice,
-          noofBoxes: boxCount.value.toString(),
-          itemBox: itemBox.toString(),
-          estFreightCost: selectedCompany?.estCost.toString() ?? "0",
-          chargeableWeight:
-              selectedCompany?.minChargeableWeight.toString() ?? "0",
-          volumetricWt: selectedCompany?.volumetricWt.toString() ?? "0",
-          odaChargePickup: selectedCompany?.odaChargePickup.toString() ?? "0",
-          odaChargeDelivery:
-              selectedCompany?.odaChargeDelivery.toString() ?? "0",
-          handlingCharges: selectedCompany?.handlingCharges.toString() ?? "0",
-          tat: selectedCompany?.tat.toString() ?? "",
-          buyerZone: selectedCompany?.buyerZone ?? "",
-          sellerZone: selectedCompany?.sellerZone ?? "",
-          lrNumber: lrController.text.trim(),
-          transporterName: transportNameController.text.trim(),
-          contactPerson: contactPersonNameController.text.trim(),
-          phone: contactPersonPhoneController.text.trim(),
-          emailID: contactPersonEmailController.text.trim(),
-          itemCN: "",
-          noofCN: "",
-          loginUserID: userId,
-          locationId: locationId);
+        bigIDs: manifestationBigIds.join(','),
+        companyCode:
+            isOwnSelected.value ? "3" : selectedCourier.value?.code ?? "3",
+        remarks: remarksController.text,
+        noofInvoioce: invoiceCount.value.toString(),
+        itemInvoice: itemInvoice,
+        noofBoxes: boxCount.value.toString(),
+        itemBox: itemBox.toString(),
+        estFreightCost: selectedCompany?.estCost.toString() ?? "0",
+        chargeableWeight:
+            selectedCompany?.minChargeableWeight.toString() ?? "0",
+        volumetricWt: selectedCompany?.volumetricWt.toString() ?? "0",
+        odaChargePickup: selectedCompany?.odaChargePickup.toString() ?? "0",
+        odaChargeDelivery: selectedCompany?.odaChargeDelivery.toString() ?? "0",
+        handlingCharges: selectedCompany?.handlingCharges.toString() ?? "0",
+        tat: selectedCompany?.tat.toString() ?? "",
+        buyerZone: selectedCompany?.buyerZone ?? "",
+        sellerZone: selectedCompany?.sellerZone ?? "",
+        lrNumber: lrController.text.trim(),
+        transporterName: transportNameController.text.trim(),
+        contactPerson: contactPersonNameController.text.trim(),
+        phone: contactPersonPhoneController.text.trim(),
+        emailID: contactPersonEmailController.text.trim(),
+        itemCN: "",
+        noofCN: "",
+        loginUserID: userId,
+        locationId: locationId,
+      );
       isLoadingCFCSubmit.value = false;
       if (response['success']) {
         Get.back();

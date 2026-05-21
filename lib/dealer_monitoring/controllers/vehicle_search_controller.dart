@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/widgets/no_internet_dialog.dart';
 import 'package:gainer/gainer_app/core/Services/auth_service.dart';
@@ -5,11 +7,13 @@ import 'package:gainer/gainer_app/core/utils/check_internet.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_dialog.dart';
 import 'package:get/get.dart';
 import '../../gainer_app/core/constants/gainer_image.dart';
-import '../core/services/api_services.dart';
+import '../../gainer_app/core/widgets/scrollable_text_widget.dart';
+import '../core/services/dm_api_services.dart';
+import '../core/theme/app_colors.dart';
 import '../widgets/remarks_bottom_sheet.dart';
 
 class VehicleSearchController extends GetxController {
-  ApiServices api = ApiServices();
+  DMApiServices api = DMApiServices();
   final TextEditingController searchController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 

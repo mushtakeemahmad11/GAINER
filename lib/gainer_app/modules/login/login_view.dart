@@ -16,7 +16,7 @@ class LoginView extends GetView<LoginController> {
     final size = MediaQuery.sizeOf(context);
     return SafeArea(
       top: false,
-      bottom: true,
+      // bottom: true,
       child: Scaffold(
         backgroundColor: GainerColors.background,
         body: Stack(
@@ -61,15 +61,7 @@ class LoginView extends GetView<LoginController> {
                               ],
                             ),
                           ),
-                          // const SizedBox(height: 10),
 
-                          // const SizedBox(height: 20),
-                          // const Spacer(),
-                          // Image.asset(
-                          //   Constants.scsBlack,
-                          //   height: 100,
-                          // ),
-                          // const SizedBox(height: 12),
                           /// THIS TAKES REMAINING HEIGHT
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -181,12 +173,6 @@ class LoginView extends GetView<LoginController> {
             ),
             // Loading Indicator
             GainerAppLoader(isLoading: controller.isLoading),
-            // Obx(() => controller.isLoading.value
-            //     ? Container(
-            //         color: Colors.black26,
-            //         child: CircularProgressIndicator(),
-            //       )
-            //     : const SizedBox.shrink()),
           ],
         ),
       ),

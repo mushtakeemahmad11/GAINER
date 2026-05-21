@@ -12,6 +12,19 @@ class GainerInputFormatters {
   /// Only numbers
   static final numbersOnly = FilteringTextInputFormatter.digitsOnly;
 
+  /// ✅ Discount: 0 → 99, decimal allowed, max 2 digits after decimal
+  static final discountFormatter = FilteringTextInputFormatter.allow(
+    RegExp(r'^(?:[0-9]|[1-9][0-9]?)(?:\.\d{0,2})?$'),
+  );
+
+  /// ✅ Stock: > 0, decimal allowed, max 2 digits
+  static final stockFormatter = FilteringTextInputFormatter.allow(
+    RegExp(r'^[1-9]\d*(?:\.\d{0,2})?$'),
+  );
+
+  static final positiveNumbers =
+      FilteringTextInputFormatter.allow(RegExp(r'[1-9][0-9]*'));
+
   /// Letters only
   // static final lettersOnly = FilteringTextInputFormatter.allow(
   //   RegExp(r'[a-zA-Z ]'),
@@ -25,9 +38,9 @@ class GainerInputFormatters {
   );
 
   /// Email friendly
-  // static final email = FilteringTextInputFormatter.allow(
-  //   RegExp(r'[a-zA-Z0-9@._\-]'),
-  // );
+  static final email = FilteringTextInputFormatter.allow(
+    RegExp(r'[a-zA-Z0-9@._\-]'),
+  );
 }
 
 class PartNumberFormatter extends TextInputFormatter {

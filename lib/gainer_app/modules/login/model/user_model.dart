@@ -17,18 +17,6 @@ class UserModel {
     required this.photo,
   });
 
-  // factory UserModel.fromJson(Map<String, dynamic> json) {
-  //   return UserModel(
-  //     userStatus: json['userStatus'],
-  //     userTCode: json['userTCode'],
-  //     firstName: json['firstName']??'',
-  //     lastName: json['lastName']??'',
-  //     email: json['email']??'',
-  //     lastLogin: json['lastLogin']??'',
-  //     photo: json['photo']??'',
-  //   );
-  // }
-
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       userStatus: json['Status'],

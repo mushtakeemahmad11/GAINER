@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gainer/dealer_monitoring/core/services/api_services.dart';
+import 'package:gainer/dealer_monitoring/core/services/dm_api_services.dart';
 import 'package:gainer/dealer_monitoring/widgets/dm_dropdown.dart';
 import 'package:gainer/dealer_monitoring/widgets/reusable_table.dart';
 import 'package:gainer/gainer_app/core/Services/auth_service.dart';
@@ -76,7 +76,7 @@ class RemarksController extends GetxController {
   Future<void> fetchDropRemarks(String type) async {
     reset();
     isLoading(true);
-    final res = await ApiServices().getRemarksItem(type: type);
+    final res = await DMApiServices().getRemarksItem(type: type);
     isLoading(false);
     if (res['success']) {
       remarksItems.value = res['data'];
@@ -119,7 +119,7 @@ class RemarksController extends GetxController {
     }
 
     isSubmitting(true);
-    final response = await ApiServices().addRemarks(
+    final response = await DMApiServices().addRemarks(
       url: url,
       dealerId: dealerId,
       locationId: locationId,
@@ -160,7 +160,7 @@ class RemarksController extends GetxController {
     viewRemarksList.clear();
     remarksError.value = null;
     remarksLoading(true);
-    final response = await ApiServices().viewRemarks(
+    final response = await DMApiServices().viewRemarks(
       type: type,
       vehicleNumber: vehicleNumber,
       partNumber: partNumber,

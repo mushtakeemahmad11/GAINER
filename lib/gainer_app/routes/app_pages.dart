@@ -1,4 +1,6 @@
 import 'package:gainer/dealer_monitoring/screens/dm_splash_screen.dart';
+import 'package:gainer/gainer_app/modules/action_as_buyer/direct_request_sent/dr_sent_binding.dart';
+import 'package:gainer/gainer_app/modules/action_as_buyer/direct_request_sent/dr_sent_view.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/order_placed_view/order_placed_binding.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/screens/update_po_image_view.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/screens/update_po_order_summary.dart';
@@ -6,6 +8,7 @@ import 'package:gainer/gainer_app/modules/action_as_seller/dispatched_details_vi
 import 'package:gainer/gainer_app/modules/action_as_seller/dispatched_details_view/dispatched_details_view.dart';
 import 'package:gainer/gainer_app/modules/action_as_seller/manifestation_view/bindings/cal_f_c_binding.dart';
 import 'package:gainer/gainer_app/modules/action_as_seller/manifestation_view/screens/manifestation_view.dart';
+import 'package:gainer/gainer_app/modules/direct_request_view/direct_request_tab_bar.dart';
 import 'package:gainer/gainer_app/modules/gainer_splash/gainer_splash_view.dart';
 import 'package:gainer/gainer_app/modules/internet_connectivity/no_internet_binding.dart';
 import 'package:gainer/gainer_app/modules/internet_connectivity/no_internet_view.dart';
@@ -17,12 +20,16 @@ import '../modules/action_as_buyer/part_receipt_view/part_receipt_binding.dart';
 import '../modules/action_as_buyer/part_receipt_view/part_receipt_view.dart';
 import '../modules/action_as_buyer/update_po_view/update_po_binding.dart';
 import '../modules/action_as_buyer/update_po_view/screens/update_po_view.dart';
+import '../modules/action_as_seller/direct_request_received/dr_received_binding.dart';
+import '../modules/action_as_seller/direct_request_received/dr_received_view.dart';
 import '../modules/action_as_seller/manifestation_view/bindings/manifestation_binding.dart';
 import '../modules/action_as_seller/manifestation_view/screens/cal_f_c_view.dart';
 import '../modules/action_as_seller/manifestation_view/screens/manifestation_summary_view.dart';
 import '../modules/action_as_seller/order_received_view/order_received_binding.dart';
 import '../modules/action_as_seller/order_received_view/screens/order_received_view.dart';
 import '../modules/bottom_navbar/help_view/help_binding.dart';
+import '../modules/direct_request_view/tab_view/direct_req_tab/direct_request_binding.dart';
+import '../modules/direct_request_view/tab_view/scs_req_tab/scs_request_binding.dart';
 import '../modules/gainer_splash/gainer_splash_binding.dart';
 import '../modules/login/login_binding.dart';
 import '../modules/login/login_view.dart';
@@ -83,6 +90,12 @@ class AppPages {
 
     ///Buyer
     GetPage(
+      name: Routes.DIRECTREQSENT,
+      page: () => DrSentView(),
+      binding: DrSentBinding(),
+    ),
+
+    GetPage(
       name: Routes.ORDERPLACED,
       page: () => OrderPlacedView(),
       binding: OrderPlacedBinding(),
@@ -112,6 +125,11 @@ class AppPages {
     ),
 
     ///Seller
+    GetPage(
+      name: Routes.DIRECTREQRECEIVED,
+      page: () => DrReceivedView(),
+      binding: DrReceivedBinding(),
+    ),
     GetPage(
       name: Routes.ORDERRECEIVED,
       page: () => OrderReceivedView(),
@@ -147,6 +165,12 @@ class AppPages {
       name: Routes.PARTREQUESTVIEW,
       page: () => PartRequestView(),
       binding: PartRequestBinding(),
+    ),
+
+    GetPage(
+      name: Routes.DIRECTREQ,
+      page: () => DirectRequestTabBar(),
+      bindings: [DirectRequestBinding(), ScsRequestBinding()],
     ),
 
     GetPage(

@@ -160,6 +160,7 @@ class _StockCardSaleTrendState extends State<StockCardSaleTrend>
     Get.to(
       () => Scaffold(
         appBar: AppBar(
+          backgroundColor: DMAppColors.secondary,
           title: Text("Substitution Check"),
         ),
         body: SafeArea(

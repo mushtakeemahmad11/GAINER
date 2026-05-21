@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class GainerColors {
-
   static Color primaryOld = Colors.cyan.shade900;
   static Color primaryShadeOld = Colors.teal.shade50;
   // static Color primaryTealOld = Colors.teal;
@@ -10,7 +9,6 @@ class GainerColors {
   static const backgroundOld = Color(0xFFF5F5F5);
   // static const textPrimaryOld = Color(0xFF212121);
   // static const textSecondaryOld = Color(0xFF757575);
-
 
   static const Color primary = Color(0xFF5A9FA3);
   static const Color secondary = Color(0xFFBBE4E1);
@@ -35,4 +33,15 @@ class GainerColors {
   // static const Color lightPink = Color(0xFFE6C3C9);
   static const Color lightPink = Color(0x9BEFD0D4);
   static const Color filtered = Color(0x9BEF939F);
+
+  static const BoxDecoration gradientDecoration = BoxDecoration(
+    gradient: LinearGradient(
+      begin: Alignment(0.94, 0.97),
+      end: Alignment(2.94, -0.47),
+      colors: [
+        Color.fromRGBO(213, 221, 249, 0.5),
+        Color.fromRGBO(223, 247, 246, 0.2),
+      ],
+    ),
+  );
 }

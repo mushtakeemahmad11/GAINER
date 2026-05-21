@@ -14,7 +14,7 @@ class BarChartWidget extends StatelessWidget {
   final List<String> xLabels;
   final List<String> monthDate;
   final String? error;
-  final Function(String,String)? onBarTap;
+  final Function(String, String)? onBarTap;
 
   const BarChartWidget({
     super.key,
@@ -99,7 +99,7 @@ class BarChartWidget extends StatelessWidget {
                 child: error != null && error!.isNotEmpty
                     ? Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: DmErrorMsg(text: "$error for Showing Graph"),
+                        child: DmErrorMsg(text: "$error for showing graph"),
                       )
                     : Column(
                         children: [
@@ -164,28 +164,11 @@ class BarChartWidget extends StatelessWidget {
                                         if (spot != null) {
                                           final int index =
                                               spot.touchedBarGroupIndex;
-                                          // final double value = spot.rod.toY;
-                                          // final double value =
-                                          //     spot.touchedRodData.toY;
-                                          onBarTap?.call(monthDate.reversed
-                                              .toList()[index],xLabels[index]);
-                                          // print(
-                                          //     "Bar tapped: Index: $index, Label: ${xLabels[index]}, Value: $value");
-                                          // final date =  monthDate.reversed.toList();
-                                          // final tappedDate = date[index];
-                                          // Call external callback if provided
-                                          // onBarTap?.call(tappedDate);
-                                          // Example operation: show a dialog
-                                          // showDialog(
-                                          //   context: context,
-                                          //   builder: (ctx) => AlertDialog(
-                                          //     title: Text("Bar Clicked"),
-                                          //     content: Text("Label: ${xLabels[index]}\nValue: $value"),
-                                          //     actions: [
-                                          //       TextButton(onPressed: () => Navigator.pop(ctx), child: Text("OK"))
-                                          //     ],
-                                          //   ),
-                                          // );
+                                          // onBarTap?.call(monthDate.reversed
+                                          //     .toList()[index],xLabels[index]);
+
+                                          onBarTap?.call(
+                                              monthDate[index], xLabels[index]);
                                         }
                                       }
                                     },

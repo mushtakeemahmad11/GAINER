@@ -18,7 +18,6 @@ class LoginController extends GetxController {
   final errMsg = RxnString();
 
   void toggleRemember() => rememberMe.toggle();
-
   void togglePassword() => isPasswordVisible.toggle();
 
   @override
@@ -31,17 +30,14 @@ class LoginController extends GetxController {
     if (loginKey.currentState!.validate()) {
       final userid = userIdCtrl.text.trim();
       final password = passwordCtrl.text.trim();
-      // if (!Get.find<NoInternetController>().isConnected.value) {
-      //   Get.toNamed(Routes.NOINTERNETVIEW);
-      //   return;
-      // }
+
+      isLoading.value = true;
       //request call for DeviceToken
       String deviceToken =
           // await NotificationServices.getFirebaseMessagingToken() ??
           await NotificationServiceNEW.getFirebaseMessagingToken() ??
               'deviceTokenNotFound ';
       errMsg.value = null;
-      isLoading.value = true;
       final response =
           await GainerApiService().loginUser(userid, password, deviceToken);
       isLoading.value = false;
