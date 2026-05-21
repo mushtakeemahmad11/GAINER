@@ -11,6 +11,7 @@ class GetServerKey {
 
     try {
       final serviceAccountJson = {};
+
       final client = await clientViaServiceAccount(
         ServiceAccountCredentials.fromJson(serviceAccountJson),
         scopes,
