@@ -232,7 +232,7 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
   Future<void> _notificationPermission() async {
     NotificationServiceNEW.requestPermission();
     return;
-    await NotificationServiceNEW.init();
+    // await NotificationServiceNEW.init();
     // await LocalNotificationService.init();
     // await FCMService.init();
     // await NotificationServicesNEW.getFirebaseMessagingToken();

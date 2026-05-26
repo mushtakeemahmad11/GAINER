@@ -15,9 +15,6 @@ class PartStockCheckController extends GetxController {
   DMApiServices api = DMApiServices();
   TextEditingController searchController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  // final LocationController _locationController = Get.put(LocationController());
-  // final SubstitutionCheckController _substitutionCheckController =
-  //     Get.put(SubstitutionCheckController());
 
   RxBool isLoading = false.obs;
   RxBool partSearchLoading = false.obs;
@@ -119,7 +116,6 @@ class PartStockCheckController extends GetxController {
         _norms(data);
         _stock(data);
         _reserved(data);
-        print("Data:::: $data");
 
         isSubstitute.value = data["Substitutes"].length > 1;
         //0105ZAW00211N true
@@ -202,25 +198,49 @@ class PartStockCheckController extends GetxController {
     if (data['Reserved'] != null && data['Reserved'] is List
         // data['Reserved'].isNotEmpty) {
         ) {
-      // reservedDetails.value = data['Reserved'];
-      print("Reserve dataa: ${data['Reserved']}");
-      reservedDetails.value = [
-        {
-          "Vehiclenumber": "RJ14UK7947",
-          "Advisor": "JitendraSharma",
-          "ReservedforVehicle": 10
-        },
-        {
-          "Vehiclenumber": "RJ14UK1234",
-          "Advisor": "MushtakeemAhmad",
-          "ReservedforVehicle": 12
-        },
-        {
-          "Vehiclenumber": "RJ14UK0987",
-          "Advisor": "MA-Sparecare",
-          "ReservedforVehicle": 14
-        }
-      ];
+      reservedDetails.value = data['Reserved'];
+      // reservedDetails.value = [
+      //   {
+      //     "Location": "Alwar",
+      //     "Vehiclenumber": "25BH9436D",
+      //     "Advisor": "VishakhaKatariya",
+      //     "ReservedforVehicle": 1,
+      //     "SCS_Submit_Date": "2026-05-06T17:00:08.683Z",
+      //     "final_close": "Close" //For close job card
+      //   },
+      //   {
+      //     "Location": "Bareilly",
+      //     "Vehiclenumber": "25BH90000",
+      //     "Advisor": "Mushtakeem-Ahmad",
+      //     "ReservedforVehicle": 5,
+      //     "SCS_Submit_Date": "2026-05-06T17:00:08.683Z",
+      //     "final_close": "N", //for Open job card
+      //   },
+      //   {
+      //     "Location": "Bareilly",
+      //     "Vehiclenumber": "25BH90000",
+      //     "Advisor": "Mushtakeem-Ahmad",
+      //     "ReservedforVehicle": 35,
+      //     "SCS_Submit_Date": "2026-05-06T17:00:08.683Z",
+      //     "final_close": "N", //for Open job card
+      //   }
+      //
+      //   // {
+      //   //   "Vehiclenumber": "RJ14UK7947",
+      //   //   "Advisor": "JitendraSharma",
+      //   //   "ReservedforVehicle": 10
+      //   // },
+      //   // {
+      //   //   "Vehiclenumber": "RJ14UK1234",
+      //   //   "Advisor": "MushtakeemAhmad",
+      //   //   "ReservedforVehicle": 12
+      //   // },
+      //   // {
+      //   //   "Vehiclenumber": "RJ14UK0987",
+      //   //   "Advisor": "MA-Sparecare",
+      //   //   "ReservedforVehicle": 14
+      //   // }
+      // ];
 
       reservedForVehicle.value = (reservedDetails).fold(
         0.0,
@@ -270,6 +290,7 @@ class PartStockCheckController extends GetxController {
                       itemCount: data.length,
                       itemBuilder: (context, index) {
                         final item = data[index];
+                        final bool jobCardStatus = item['final_close'] == 'N';
                         return Container(
                           margin: EdgeInsets.symmetric(vertical: 6),
                           padding: EdgeInsets.all(12),
@@ -314,6 +335,42 @@ class PartStockCheckController extends GetxController {
                                         ],
                                       ),
                                     ),
+                                    ScrollableTextWidget(
+                                      textWidget: Row(
+                                        children: [
+                                          Text('Location:  '),
+                                          Text(
+                                            item["Location"],
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    ScrollableTextWidget(
+                                      textWidget: Row(
+                                        children: [
+                                          Text('Approval Date:  '),
+                                          Text(
+                                            TransformValue()
+                                                .formatDateToIndianDate(
+                                                    item["SCS_Submit_Date"],
+                                                    day: true),
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Text(
+                                      jobCardStatus
+                                          ? "Job Card Open"
+                                          : "Job Card Closed",
+                                      style: TextStyle(
+                                          color: jobCardStatus
+                                              ? Colors.green
+                                              : Colors.red),
+                                    )
                                   ],
                                 ),
                               ),
@@ -340,98 +397,6 @@ class PartStockCheckController extends GetxController {
             ),
           );
         },
-        // child: SafeArea(
-        //   child: SingleChildScrollView(
-        //     scrollDirection: Axis.vertical,
-        //     child: Container(
-        //       padding: EdgeInsets.all(16),
-        //       constraints: BoxConstraints(
-        //         maxHeight: Get.height * 0.7,
-        //       ),
-        //       decoration: BoxDecoration(
-        //         color: Colors.white,
-        //         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        //       ),
-        //       child: Column(
-        //         mainAxisSize: MainAxisSize.min,
-        //         children: [
-        //           // Header
-        //           Text(
-        //             "Reserved Details",
-        //             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        //           ),
-        //           SizedBox(height: 10),
-        //
-        //           // List
-        //           Expanded(
-        //             child: ListView.builder(
-        //               shrinkWrap: true,
-        //               itemCount: reservedList.length,
-        //               itemBuilder: (context, index) {
-        //                 final item = reservedList[index];
-        //
-        //                 return Container(
-        //                   margin: EdgeInsets.symmetric(vertical: 6),
-        //                   padding: EdgeInsets.all(12),
-        //                   decoration: BoxDecoration(
-        //                     color: Colors.grey.shade100,
-        //                     borderRadius: BorderRadius.circular(12),
-        //                   ),
-        //                   child: Row(
-        //                     children: [
-        //                       Icon(Icons.directions_car,
-        //                           color: DMAppColors.secondary),
-        //                       SizedBox(width: 10),
-        //                       Expanded(
-        //                         child: Column(
-        //                           crossAxisAlignment: CrossAxisAlignment.start,
-        //                           children: [
-        //                             Row(
-        //                               children: [
-        //                                 Text('Vehicle Num  :  '),
-        //                                 Text(
-        //                                   item["Vehiclenumber"],
-        //                                   style: TextStyle(
-        //                                       fontWeight: FontWeight.bold,
-        //                                       fontSize: 14),
-        //                                 ),
-        //                               ],
-        //                             ),
-        //                             Row(
-        //                               children: [
-        //                                 Text('Advisor Name:  '),
-        //                                 Text(
-        //                                   item["Advisor"],
-        //                                   style: TextStyle(color: Colors.grey),
-        //                                 ),
-        //                               ],
-        //                             ),
-        //                           ],
-        //                         ),
-        //                       ),
-        //                       Container(
-        //                         padding: EdgeInsets.symmetric(
-        //                             horizontal: 10, vertical: 5),
-        //                         decoration: BoxDecoration(
-        //                           color: DMAppColors.secondary,
-        //                           borderRadius: BorderRadius.circular(8),
-        //                         ),
-        //                         child: Text(
-        //                           "${item["ReservedforVehicle"]}",
-        //                           style: TextStyle(color: Colors.white),
-        //                         ),
-        //                       )
-        //                     ],
-        //                   ),
-        //                 );
-        //               },
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //   ),
-        // ),
       ),
     );
   }

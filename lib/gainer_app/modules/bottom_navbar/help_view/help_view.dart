@@ -6,7 +6,6 @@ import 'package:gainer/gainer_app/core/widgets/gainer_dropdown.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_primary_button.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_text_form_field.dart';
 import 'package:get/get.dart';
-
 import '../../../core/constants/gainer_color.dart';
 import '../../../core/widgets/gainer_toggle_outlined_btn.dart';
 import 'help_controller.dart';
@@ -17,24 +16,22 @@ class HelpView extends GetView<HelpController> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Stack(
-        children: [
-          // Scrollable content area
-          SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-            child: Obx(() => Column(children: [
-                  // Heading with dynamic error/status text
-                  _buildTitle(),
-                  // List of issue toggle buttons with conditional form
-                  _buildIssueList(size),
-                ])),
-          ),
+    return Stack(
+      children: [
+        // Scrollable content area
+        SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+          child: Obx(() => Column(children: [
+                // Heading with dynamic error/status text
+                _buildTitle(),
+                // List of issue toggle buttons with conditional form
+                _buildIssueList(size),
+              ])),
+        ),
 
-          // Show loading indicator if an API call is ongoing
-          GainerAppLoader(isLoading: controller.isLoading),
-        ],
-      ),
+        // Show loading indicator if an API call is ongoing
+        GainerAppLoader(isLoading: controller.isLoading),
+      ],
     );
   }
 

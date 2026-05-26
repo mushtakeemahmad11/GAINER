@@ -204,207 +204,6 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
         ],
       ));
 
-  // Widget _buildVehicleResults() => Obx(() {
-  //       if (_controller.isLoading.value) {
-  //         return const Center(child: CircularProgressIndicator());
-  //       }
-  //       final err = _controller.errorMsg.value;
-  //       if (err != null) return CustomErrorMsg(text: err);
-  //       final status = _controller.isCardStatusOther.value;
-  //       if (status != null) return CustomErrorMsg(text: status);
-  //
-  //       // final dataList = _controller.groupedData;
-  //       // final vehicleNumber = _controller.searchController.text;
-  //
-  //       final vehicleData = _controller.vehicleData;
-  //       if (vehicleData.isNotEmpty) {
-  //         final scoreData = _controller.scoreData[0];
-  //         final colorStatus = vehicleData.first['Final_close'];
-  //         print("colorStatus: $colorStatus");
-  //         final bgColor = colorStatus == "close"
-  //             ? Colors.black12
-  //             : colorStatus == "open"
-  //                 ? Colors.black45
-  //                 : DMAppColors.primaryShade;
-  //
-  //         final statusImg = colorStatus == "close"
-  //             ? Image.asset(ConstantImages.jobCardClose, width: 35)
-  //             : colorStatus == "open"
-  //                 ? Image.asset(ConstantImages.jobCardOpen, width: 35)
-  //                 : null;
-  //
-  //         final inStockTotal = scoreData['InStockTotal'] ?? 0;
-  //         final inStockCount = scoreData['InStockCount'] ?? 0;
-  //         final outStockCount = scoreData['OutStockCount'] ?? 0;
-  //         final outStockTotal = scoreData['OutStockTotal'] ?? 0;
-  //         // return ListView.builder(
-  //         //   shrinkWrap: true, // Let it scroll fully
-  //         //   physics: AlwaysScrollableScrollPhysics(), // ensure scroll listener triggers
-  //         //   controller: _controller.scrollController,
-  //         //   itemCount: _controller.vehicleData.length +
-  //         //       (_controller.hasMore.value ? 1 : 0),
-  //         //   itemBuilder: (context, index) {
-  //         //     if (index < _controller.vehicleData.length) {
-  //         //       final item = _controller.vehicleData[index];
-  //         //       return Card(
-  //         //         child: ListTile(
-  //         //           title: Text("Part Number: ${item['part_number1'] ?? 'N/A'}"),
-  //         //           subtitle:
-  //         //               Text("Description: ${item['partdesc'] ?? 'Unknown'}"),
-  //         //         ),
-  //         //       );
-  //         //     } else {
-  //         //       return Center(
-  //         //           child: Padding(
-  //         //         padding: EdgeInsets.all(12),
-  //         //         child: CircularProgressIndicator(),
-  //         //       ));
-  //         //     }
-  //         //   },
-  //         // );
-  //
-  //         return Container(
-  //           color: bgColor,
-  //           child: Column(
-  //             children: [
-  //               Padding(
-  //                 padding: const EdgeInsets.all(5.0),
-  //                 child: SingleChildScrollView(
-  //                   scrollDirection: Axis.horizontal,
-  //                   child: Row(
-  //                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     children: [
-  //                       _buildScoreColumn("Part Not-Issued",
-  //                           "${(inStockTotal + outStockTotal).toInt()}/${inStockCount + outStockCount}",
-  //                           v: true),
-  //                       SizedBox(width: 12),
-  //                       _buildScoreColumn("Not-Issued - In Stock  ",
-  //                           "Not-Issued - Not in Stock  "),
-  //                       // SizedBox(width: 10),
-  //                       _buildScoreColumn(
-  //                           "${inStockTotal.toInt()}/$inStockCount",
-  //                           t: true,
-  //                           "${outStockTotal.toInt()}/$outStockCount",
-  //                           v: true),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ),
-  //               Padding(
-  //                 padding: const EdgeInsets.all(5.0),
-  //                 child: ReusableTable(
-  //                   headers: const [
-  //                     // Part No. - NDP Value - Remarks Reason(New col) - Issued Status - Ord Qty - Stock Qty - PPNI Qty - ETA
-  //                     "Part No.",
-  //                     "NDP Value",
-  //                     "Remarks Reason",
-  //                     "Issued Status",
-  //                     "Ordered Qty",
-  //                     "Stock Qty",
-  //                     "PPNI Qty",
-  //                     "Category",
-  //                     "Description",
-  //                     "Order Date",
-  //                     "ETA",
-  //                   ],
-  //                   rows: vehicleData
-  //                       .map((part) => [
-  //                             part["part_number1"],
-  //                             "₹${TransformValue().formatIndianNumber((part["Value"].toInt()))}",
-  //                             _buildRemarksReason(part),
-  //                             part["IssueStatus"] == "Issued"
-  //                                 ? Icon(Icons.check, color: Colors.green)
-  //                                 : Icon(Icons.close, color: Colors.red),
-  //                             part["Qty"],
-  //                             part["StockQty"],
-  //                             part["PPNI_Qty"],
-  //                             part["category"],
-  //                             part["partdesc"],
-  //                             TransformValue().formatDateToIndianDate(
-  //                                 part["OrderDate"] ?? ""),
-  //                             _buildEyeIcon(part),
-  //                           ])
-  //                       .toList(),
-  //                   columnWidths: const [
-  //                     IntrinsicColumnWidth(),
-  //                     IntrinsicColumnWidth(),
-  //                     FixedColumnWidth(85),
-  //                     FixedColumnWidth(65),
-  //                     FixedColumnWidth(80),
-  //                     FixedColumnWidth(70),
-  //                     FixedColumnWidth(70),
-  //                     FixedColumnWidth(85),
-  //                     FixedColumnWidth(120),
-  //                     FixedColumnWidth(90),
-  //                     FixedColumnWidth(80),
-  //                   ],
-  //                   rowColorsList: vehicleData
-  //                       .map((item) => item['All_Time_NonStck'] == "Y"
-  //                           ? Colors.pink[100]
-  //                           : item['All_Time_NonStck'] == "N"
-  //                               ? Colors.green[300]
-  //                               : DMAppColors.primary)
-  //                       .toList(),
-  //                   // onRowLongPress: (row) =>
-  //                   //     showRemarksDialog(context, "Part No. ${row[0]}"),
-  //                 ),
-  //               ),
-  //               Row(
-  //                 children: [
-  //                   if (statusImg != null)
-  //                     Padding(
-  //                       padding: const EdgeInsets.only(left: 5.0),
-  //                       child: statusImg,
-  //                     ),
-  //                   Obx(() {
-  //                     // final isChecked = _controller.isChecked(vehicleNumber);
-  //                     final isChecked = _controller.isCheck.value;
-  //                     return Checkbox(
-  //                       value: isChecked,
-  //                       onChanged: (val) {
-  //                         _controller.toggleCheckBox(val);
-  //                         // _controller.toggleCheck(vehicleNumber, val);
-  //                         if (val == true) {
-  //                           showDialog(
-  //                             context: Get.context!,
-  //                             builder: (_) => const ConfirmationDialog(),
-  //                           );
-  //                         }
-  //                       },
-  //                     );
-  //                   }),
-  //                   IconButton(
-  //                       // onPressed: () => Get.to(() => ImagePickScreen()),
-  //                       onPressed: () => showCustomBottomSheet(),
-  //                       icon: Icon(Icons.add_a_photo,
-  //                           color: DMAppColors.secondary)),
-  //                   const SizedBox(width: 10),
-  //                   const Expanded(
-  //                     child: Text(
-  //                       "Confirm In case you want to close the job card",
-  //                       softWrap: true,
-  //                       overflow: TextOverflow.visible,
-  //                     ),
-  //                   ),
-  //                   const SizedBox(width: 10),
-  //                 ],
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //       } else {
-  //         return SizedBox.shrink();
-  //
-  //         // return ListView.separated(
-  //         //   physics: const NeverScrollableScrollPhysics(),
-  //         //   shrinkWrap: true,
-  //         //   itemCount: dataList.length,
-  //         //   separatorBuilder: (_, __) => const SizedBox(height: 4),
-  //         //   itemBuilder: (context, index) => _buildJobCard(dataList[index]),
-  //         // );
-  //       }
-  //     });
   Widget _buildVehicleResults() => Obx(() {
         if (_controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
@@ -425,21 +224,6 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
         final scoreData = _controller.scoreData.isNotEmpty
             ? _controller.scoreData[0]
             : const {};
-        // final colorStatus =
-        //     (vehicleData.first['Final_close'] as String?)?.toLowerCase();
-
-        // final bgColor = switch (colorStatus) {
-        //   'close' => Colors.black12,
-        //   'open' => Colors.black45,
-        //   _ => DMAppColors.primaryShade,
-        // };
-        //
-        // final Widget? statusImg = switch (colorStatus) {
-        //   'close' => Image.asset(ConstantImages.jobCardClose, width: 35),
-        //   'open' => Image.asset(ConstantImages.jobCardOpen, width: 35),
-        //   _ => null,
-        // };
-
         final inStockTotal = (scoreData['InStockTotal'] ?? 0) as num;
         final inStockCount = (scoreData['InStockCount'] ?? 0) as num;
         final outStockTotal = (scoreData['OutStockTotal'] ?? 0) as num;
@@ -858,55 +642,70 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
 
   Widget _buildGrpStockDetails(Map<String, dynamic> part) {
     final int grpQty = part['GroupStock'];
-    final locationQtyJson = part['LocationQtyJson'];
-    if (locationQtyJson == null || locationQtyJson.isEmpty) {
-      return Center(child: Text('$grpQty'));
-    }
-    final List grpLocation = jsonDecode(part['LocationQtyJson']);
-    return Center(
-      child: PopupMenuButton(
-        child: Center(
-          child: Wrap(
-            alignment: WrapAlignment.center,
-            // mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 2,
-            children: [
-              Text('$grpQty'),
-              const Text(
-                '(Show)',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        itemBuilder: (context) => [
-          const PopupMenuItem(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Location", style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('  :  '),
-                Text("Qty", style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
+    return GestureDetector(
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 2,
+        children: [
+          Text('$grpQty'),
+          const Text(
+            '(Show)',
+            style: TextStyle(
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          ...grpLocation.map<PopupMenuEntry>((item) {
-            return PopupMenuItem(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(item['Location'] ?? ''),
-                  Text((item['Qty'] ?? 0).toInt().toString()),
-                ],
-              ),
-            );
-          }),
         ],
       ),
+      onTap: () {
+        _controller.showStockDetails(context, part['part_number1']);
+      },
     );
+    // return Center(
+    //   child: PopupMenuButton(
+    //     child: Center(
+    //       child: Wrap(
+    //         alignment: WrapAlignment.center,
+    //         // mainAxisAlignment: MainAxisAlignment.center,
+    //         spacing: 2,
+    //         children: [
+    //           Text('$grpQty'),
+    //           const Text(
+    //             '(Show)',
+    //             style: TextStyle(
+    //               color: Colors.blue,
+    //               fontWeight: FontWeight.bold,
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //     itemBuilder: (context) => [
+    //       const PopupMenuItem(
+    //         child: Row(
+    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //           children: [
+    //             Text("Location", style: TextStyle(fontWeight: FontWeight.bold)),
+    //             Text('  :  '),
+    //             Text("Qty", style: TextStyle(fontWeight: FontWeight.bold)),
+    //           ],
+    //         ),
+    //       ),
+    //       ...grpLocation.map<PopupMenuEntry>((item) {
+    //         return PopupMenuItem(
+    //           child: Row(
+    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //             children: [
+    //               Text(item['Location'] ?? ''),
+    //               Text((item['Qty'] ?? 0).toInt().toString()),
+    //             ],
+    //           ),
+    //         );
+    //       }),
+    //     ],
+    //   ),
+    // );
   }
 
   Widget _buildEyeIcon(Map<String, dynamic> part) {

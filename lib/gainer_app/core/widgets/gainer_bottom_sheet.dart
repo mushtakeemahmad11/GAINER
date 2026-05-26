@@ -95,7 +95,8 @@ class GainerBottomSheet {
   }
 
   /// SnackBar show from bottom
-  static void showSnackBar(String message) {
+  static void showSnackBar(String message,
+      {bool isAction = false, String label = '', VoidCallback? onPressed}) {
     final messenger = scaffoldMessengerKey.currentState;
     if (messenger == null) return;
 
@@ -105,6 +106,20 @@ class GainerBottomSheet {
         SnackBar(
           content: Text(message),
           duration: const Duration(seconds: 3),
+          action: isAction
+              ? SnackBarAction(
+                  label: label,
+                  onPressed: onPressed ?? () {},
+                  textColor: GainerColors.primary,
+                )
+              : null,
+          persist: false,
+          behavior: isAction ? SnackBarBehavior.floating : null,
+          shape: isAction
+              ? RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                )
+              : null,
         ),
       );
 

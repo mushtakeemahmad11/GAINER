@@ -10,8 +10,11 @@ import 'package:gainer/gainer_app/core/widgets/gainer_dialog.dart';
 import 'package:gainer/gainer_app/modules/direct_request_view/models/dealer_list_model.dart';
 import 'package:gainer/gainer_app/modules/direct_request_view/models/location_list_model.dart';
 import 'package:gainer/gainer_app/modules/direct_request_view/models/order_type_list_model.dart';
+import 'package:gainer/gainer_app/modules/direct_request_view/widgets/help_view_snack_bar.dart';
 import 'package:get/get.dart';
 import '../../../../core/utils/gainer_text_filed_validator.dart';
+import '../../../../routes/app_routes.dart';
+import '../../../main_view/gainer_main_controller.dart';
 import '../../models/part_model.dart';
 
 class DirectRequestController extends GetxController {
@@ -170,6 +173,7 @@ class DirectRequestController extends GetxController {
   // ================= PART ACTION ================= //
 
   Future<void> onTapAddPart() async {
+    partSuggestions.clear();
     try {
       isPartAdding(true);
       final brandId = await AuthService.getBrandId();
@@ -201,7 +205,12 @@ class DirectRequestController extends GetxController {
       );
 
       if (!res['success']) {
-        GainerBottomSheet.showSnackBar(res['message']);
+        final String msg = res['message'];
+        if (msg == 'Part not found') {
+          HelpViewSnackBar.snackBar();
+        } else {
+          GainerBottomSheet.showSnackBar(msg);
+        }
         return;
       }
 

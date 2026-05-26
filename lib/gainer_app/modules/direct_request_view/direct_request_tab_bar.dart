@@ -45,7 +45,7 @@ class DirectRequestTabBar extends StatelessWidget {
             labelColor: Colors.black,
             tabs: const <Widget>[
               Tab(text: 'Direct Request'),
-              Tab(text: 'SCS Inform'),
+              Tab(text: 'Gainer Request'),
             ],
           ),
         ),

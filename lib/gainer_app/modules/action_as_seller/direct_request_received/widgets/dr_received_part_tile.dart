@@ -19,7 +19,7 @@ class DrReceivedPartTile extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: GainerColors.border),
-          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
         ),
         child: GainerExpansionTile(
             is48Complete: is48Complete,

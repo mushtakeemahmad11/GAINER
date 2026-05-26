@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gainer/gainer_app/core/widgets/gainer_bottom_sheet.dart';
-import 'package:gainer/gainer_app/modules/bottom_navbar/home_view/home_controller.dart';
 import 'package:get/get.dart';
 
+import '../../bottom_navbar/home_view/home_controller.dart';
 import '../models/action_item_model.dart';
 
 class ActionItemCard extends StatelessWidget {
@@ -23,7 +22,11 @@ class ActionItemCard extends StatelessWidget {
   Widget _isDirectReq(HomeController c) {
     return Obx(() {
       final bool isEnable = c.checkAllow(item.title);
-      return _card(isEnable, c);
+      final isShow = c.isAllowBuying.value || c.isAllowSelling.value;
+      if(isShow) {
+        return _card(isEnable, c);
+      }
+      return const SizedBox.shrink();
     });
   }
 

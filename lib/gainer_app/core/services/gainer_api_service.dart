@@ -906,7 +906,6 @@ class GainerApiService {
       // Convert response into JSON
       final jsonData = jsonDecode(response.body);
       final data = jsonData['d'];
-
       if (response.statusCode == 200 &&
           data.isNotEmpty &&
           jsonDecode(data)[0]['Status'] == "Success") {
@@ -2066,7 +2065,7 @@ class GainerApiService {
 
   Future<Map<String, dynamic>> submitScsRequest(
       List<Map<String, String>> parts) async {
-    String apiUrl ="$baseUrl/SubmitNotifyAdmin";
+    String apiUrl = "$baseUrl/SubmitNotifyAdmin";
 
     try {
       final response = await apiRequest(apiUrl, {"Data": parts});

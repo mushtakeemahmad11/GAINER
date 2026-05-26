@@ -10,8 +10,23 @@ class GetServerKey {
     ];
 
     try {
-      final serviceAccountJson = {};
-
+      final serviceAccountJson = {
+        "type": "service_account",
+        "project_id": "gainer-app",
+        "private_key_id": "24d89c6b5bf32dfe7f29a3e6563db70dadb5ad63",
+        "private_key":
+            "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDUqluMlI6e6oVR\nPe//TxBoNaG/4IPf0zwKeE6hZUSMk+pufhIDDmHBgtCyv9rBtDF2sq9h97S4SVCl\nJpcnQey5XENYPJayJbH6PwRb8O8mz9yntQhHaCza7qwfEPsT1AyLrXEgZfTDdksU\n92//dMGJDx8EbN4rB+zQ+JeXdVY7PEkq2AhjOgpFWUpRUdEoDXdIPLooJzSkzpuK\nOA3MGDYFEFLKUAbMrm2TxTsJYFgFHNOHljxzLNfZFeawMdj6QCMRRnaZicLyeaPJ\neBfClCxQw0thmi90sxWqGj+yYq7Yk2mJjZX4f7UCFEGE+r6j1C8j35aQCkOmO7XZ\n3dY1PZYHAgMBAAECggEAGYCQV+xcqfvvns1xoUkm64g67FqNFeMr2QmSTFJrhPwb\n6cIegNVRrbX1NupA3mewYs6Mr4/X0R2hmRxmleOW8qd4v/UMETLqA9tYt3nOA/Z7\nPHU+F+oLLvneFB+iLD+KfZl/7mWrk2D1If+GI7kpmDkC/DHd9oUNxgV5kEUW4SVi\nitTO5Pc4HHVCVCNY2+kkkGlRPJxx0yiZNNKLU2QgrWWPhO8WH2n8ccpfwTiOO/Xg\nBqUo9wT/QEayQYnegV5cTMGmsxf1hkLCcfzE8zcCZYy9yzPy2Sob8tbUdrfmjaGx\nndJAG/GV2NI7Zp4DcVAlYTIk3OVDLdkQDw/JCvrP6QKBgQD197f+QyV2QAwnCg45\nGBytp9WrTkoFIHUOIVyEvMzE96mahpLn/oBNTOhbAMwX4/vs+Y0xQKmCDB0oF9Oa\n1WbRuwkVqhaeSZYhM+QzmK++WJW7Un2Oa+Y0ePPEF7gfFt9la/Qb/1lIcnOWIN4+\nQ/w0W4FhiSZrMRzH1uMfr0F3cwKBgQDdVummU1ktQodSdyBATJfxSKbZfzh6BuSh\nyYuw/2qUioK8e65tdKFgv45J4Ujb8nqT3WE8DXo8+GUJP1bIJxnTRW7gX6Vq4eJY\n1R9w2g3xD+MvUNJ9Gfffsfz5OYSzmnnUo2sX2opV8P00kMoem9vNAUIHUvqlHfoo\nFlVdBHE6HQKBgQCsVORPvAHaSON60rvGWtN1A/tba53G28fHn64vvgwGELN+9byl\n2JVSE4lUgUl9j5lpnirDkFdzK0OeXJtAhzXjyhSCXko8mrgaCT5gvCCdz3kQ5qnb\niFOg/gFkqW2yMpdQewNsPkryzGWZkOvFWmKw2E/c43fMcHuGtFMrVuIaawKBgQCO\nESgdUugtTcNv4fh4bPEltL0rYyYL5PrBAY1BCWAOga0Sb8xwgujGIY2hzBEo48Vb\nvT+Y/QmVstWfDuGTzM0dtzZIm/uf0+aln/3zQHKsZMcsapMAKzfXg/Xcvdd4NFG4\ncz/c6q/aI7lSERE6fk2hkwofi1pHuysCqfsWnjBS3QKBgHpi96EwzUgga0v5iK74\nbSJU9fGdMuU7nf/EcNiG/ixl76+Joc1PLU5se9BvV1+VEeoE9MfMnOwB45kSd5AK\n9bhKlyeRY4umF1sw/ChGHEKfR6FdqPKV+I2qRIpTPRp7BKiPfG2tEU65IkTeXx8x\n9eyLbZxz/4Na1vFMbUMi5Ss6\n-----END PRIVATE KEY-----\n",
+        "client_email":
+            "firebase-adminsdk-fbsvc@gainer-app.iam.gserviceaccount.com",
+        "client_id": "102642224080672926319",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url":
+            "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url":
+            "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40gainer-app.iam.gserviceaccount.com",
+        "universe_domain": "googleapis.com"
+      };
       final client = await clientViaServiceAccount(
         ServiceAccountCredentials.fromJson(serviceAccountJson),
         scopes,

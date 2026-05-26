@@ -74,41 +74,38 @@ class _FormSection extends GetView<ScsRequestController> {
   }
 
   Widget _descMrpRateWidget() {
-    return Obx(() {
-      bool isReadOnly = controller.isReadOnlyField.value;
-      return Column(
-        spacing: 5,
-        children: [
-          _partDescField(isReadOnly),
-          Row(
-            children: [
-              Expanded(child: _mrpField(isReadOnly)),
-              const SizedBox(width: 6),
-              Expanded(child: _rateField(isReadOnly)),
-            ],
-          ),
-        ],
-      );
-    });
+    return Column(
+      spacing: 5,
+      children: [
+        _partDescField(),
+        Row(
+          children: [
+            Expanded(child: _mrpField()),
+            const SizedBox(width: 6),
+            Expanded(child: _rateField()),
+          ],
+        ),
+      ],
+    );
   }
 
-  Widget _partDescField(bool val) {
+  Widget _partDescField() {
     return GainerTextFormField(
       labelColor: Colors.black45,
       label: 'Enter part Desc.',
       controller: controller.partDescCtrl,
-      readOnly: val,
+      readOnly: true,
       // inputFormatters: [GainerInputFormatters.partNumber],
       // onChanged: (value) => controller.onDescFieldChanged(value),
     );
   }
 
-  Widget _mrpField(bool val) {
+  Widget _mrpField() {
     return GainerTextFormField(
       labelColor: Colors.black45,
       label: 'MRP',
       controller: controller.partMRPCtrl,
-      readOnly: val,
+      readOnly: true,
       keyboardType: TextInputType.number,
       inputFormatters: [GainerInputFormatters.positiveNumbers],
       // inputFormatters: [
@@ -118,12 +115,12 @@ class _FormSection extends GetView<ScsRequestController> {
     );
   }
 
-  Widget _rateField(bool val) {
+  Widget _rateField() {
     return GainerTextFormField(
       labelColor: Colors.black45,
       label: 'Rate',
       controller: controller.partRateCtrl,
-      readOnly: val,
+      readOnly: true,
       keyboardType: TextInputType.number,
       inputFormatters: [GainerInputFormatters.positiveNumbers],
       // onChanged: (value) => controller.onRateFieldChanged(value),

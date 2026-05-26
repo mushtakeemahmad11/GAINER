@@ -18,10 +18,43 @@ class DrReceivedExpansionTileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxFirstWidth = constraints.maxWidth * 0.3; // 2 / (2+3)
+
+        return Row(
+          children: [
+            /// 1️⃣ First child: content width, capped
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: maxFirstWidth,
+              ),
+              child: ScrollableTextWidget(
+                textWidget: _titleText(title1),
+              ),
+            ),
+
+            const SizedBox(width: 10),
+
+            /// 2️⃣ Second child: remaining width
+            Expanded(
+              child: Center(
+                child: ScrollableTextWidget(
+                  textWidget: _titleText(title2),
+                ),
+              ),
+            ),
+
+            const SizedBox(width: 10),
+
+            /// 3️⃣ Third child: content width
+            _titleText(title3),
+          ],
+        );
+      },
+    );
     return Row(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // _titleText(title1),
         Expanded(
           flex: 2,
           child: ScrollableTextWidget(

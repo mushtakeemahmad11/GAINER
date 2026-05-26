@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/widgets/no_internet_dialog.dart';
 import 'package:gainer/gainer_app/core/Services/auth_service.dart';
@@ -7,10 +5,10 @@ import 'package:gainer/gainer_app/core/utils/check_internet.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_dialog.dart';
 import 'package:get/get.dart';
 import '../../gainer_app/core/constants/gainer_image.dart';
-import '../../gainer_app/core/widgets/scrollable_text_widget.dart';
 import '../core/services/dm_api_services.dart';
 import '../core/theme/app_colors.dart';
 import '../widgets/remarks_bottom_sheet.dart';
+import '../widgets/vehicle_search_stock_details_sheet.dart';
 
 class VehicleSearchController extends GetxController {
   DMApiServices api = DMApiServices();
@@ -34,7 +32,6 @@ class VehicleSearchController extends GetxController {
   RxBool isNonStockable = true.obs;
 
   RxnString errorMsg = RxnString(null);
-  // RxnString isCardStatusOther = RxnString(null);
 
   RxBool showScrollButton = false.obs;
   RxBool hasMore = true.obs;
@@ -81,7 +78,6 @@ class VehicleSearchController extends GetxController {
     Map<String, dynamic> part,
     String screenType,
   ) {
-    // final controller = Get.put(RemarksController(), permanent: false);
     final controller = Get.put(RemarksController());
     controller.fetchDropRemarks(screenType);
     String text = "Part No. ${part["part_number1"]}";
@@ -89,30 +85,22 @@ class VehicleSearchController extends GetxController {
       context: context,
       isScrollControlled: true, // ✅ Allows keyboard to push sheet up
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            // ✅ Push sheet above keyboard
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: RemarksBottomSheet(
-            titleText: text,
-            item: part,
-            screen: "v$screenType",
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(
+              // ✅ Push sheet above keyboard
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: RemarksBottomSheet(
+              titleText: text,
+              item: part,
+              screen: "v$screenType",
+            ),
           ),
         );
       },
     );
   }
-
-  // void showRemarksBottomSheet(BuildContext context, String number) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-  //     ),
-  //     builder: (_) => RemarksBottomSheet(number: number),
-  //   );
-  // }
 
   var vehicleSuggestionList = [].obs;
   // API Call to fetch matching vehicle numbers
@@ -121,7 +109,6 @@ class VehicleSearchController extends GetxController {
       vehicleSuggestionList.clear();
       return;
     } else if (vehicleNum.isNotEmpty) {
-      // String dealerId = await getStringData('dealerID') ?? 0;
       String dealerId = await AuthService.getDealerId();
       isVehicleSuggestionLoading.value = true;
       final response = await api.getVehicleSuggestion(
@@ -165,15 +152,6 @@ class VehicleSearchController extends GetxController {
         return NoInternetDialog.show();
       } else {
         reset();
-        // for vehicle search log
-        // int tCode = await getIntData("tCode") ?? 0;
-        // await Future.wait([
-        //   api.vehicleSearchLog(
-        //     vehicleNumber: vehicleNumber.value?.trim() ?? "",
-        //     userId: tCode.toString(),
-        //   ),
-        //   loadNextPage(),
-        // ]);
         isLoading(true);
         await loadNextPage();
         isLoading(false);
@@ -260,167 +238,8 @@ class VehicleSearchController extends GetxController {
         errorMsg.value = err;
       }
     }
-
-    // if (response['success']) {
-    //   List<Map<String, dynamic>> data =
-    //       List<Map<String, dynamic>>.from(response['data']);
-    //   List<Map<String, dynamic>> score =
-    //       List<Map<String, dynamic>>.from(response['score']);
-    //   bool isHasMore = response['hasMore'];
-    //   print("HasMore:: $isHasMore");
-    //   // final List<Map<String, dynamic>> newData =
-    //   // List<Map<String, dynamic>>.from(result['data']);
-    //   // vehicleData.addAll(newData);
-    //
-    //   print("dataaa: $data");
-    //   // vehicleData.value = data.cast<Map<String, dynamic>>();
-    //   vehicleData.addAll(data);
-    //   scoreData.value = score.cast<Map<String, dynamic>>();
-    //
-    //   final formatedData = groupByJobCard(data);
-    //   // final formatedData = data;
-    //   // To replace all entries:
-    //   print("foramttted:   $formatedData, ${data.length} ${data.isNotEmpty}");
-    //   groupedData.addAll(formatedData);
-    //
-    //   if (formatedData.isEmpty && data.isNotEmpty) {
-    //     isCardStatusOther.value = "No vehicle found";
-    //   }
-    //
-    //   // if (newData.length < pageSize) {
-    //   if (!isHasMore) {
-    //     hasMore.value = false;
-    //   } else {
-    //     currentPage.value++;
-    //   }
-    // } else {
-    //   Get.snackbar("Error", response['message']);
-    //   hasMore.value = false;
-    // }
-    // isLoading.value = false;
   }
 
-// // for get Dates
-  // Future initWork() async {
-  //   String dealerID = await getStringData("dealerID");
-  //   String locationId = await getStringData("selectedLocationID");
-  //   final responseDate = await api
-  //       .getStockDate(dealerId: dealerID, locationId: locationId);
-  //   if (responseDate['success']) {
-  //     print("ResponseDate in Vehicle Search: $responseDate");
-  //     final data = responseDate['data'];
-  //     // Find the entry where source == 'stock'
-  //     // String? stockDate = data.firstWhere(
-  //     //       (item) => item['source'] == 'stock',
-  //     //   orElse: () => {}, // Return empty map if not found
-  //     // )['latest_date'];
-  //     // print("date: $stockDate");
-  //
-  //     stockDate.value =
-  //         TransformValue().formatToReadableDate(data[0][0]['StockDate']);
-  //     jobLineDate.value =
-  //         TransformValue().formatToReadableDate(data[1][0]['JoblineCloseDate']);
-  //     jobCardDate.value =
-  //         TransformValue().formatToReadableDate(data[2][0]['JobCardCloseDate']);
-  //
-  //     // final raw = "2025-07-17T18:39:20.200Z";
-  //     //
-  //     // print("DateTime IST full: ${TransformValue().formatToIST(raw)}");
-  //     // print("Only IST Date: ${TransformValue().formatISTDateOnly(raw)}");
-  //     print("jobCardDate Date: ${jobCardDate.value}");
-  //   }
-  // }
-
-  /// Transforms the raw list into a grouped-by-vehicle structure:
-//   List<Map<String, dynamic>> groupByJobCard(List<Map<String, dynamic>> raw) {
-//     //filtered data only work on open and close jobCardStatus
-//     // final filtered = raw.where((entry) {
-//     //   final status = entry['current_status']?.toString().toLowerCase();
-//     //   return status == 'close' || status == 'open'; //show only
-//     // }).toList();
-//     final filtered = raw.where((entry) {
-//       final status = entry['Final_close']?.toString().toLowerCase();
-//       return status == 'close' || status == 'open'; //show only
-//     }).toList();
-//
-//     // 1) Create a map from jobcard_number → List of that jobcard’s entries
-//     final Map<String, List<Map<String, dynamic>>> groupedMap = {};
-//
-//     for (final entry in filtered) {
-//       final String jobcard = entry['jobcard_number'] as String;
-//       groupedMap.putIfAbsent(jobcard, () => []);
-//       groupedMap[jobcard]!.add(entry);
-//     }
-//
-//     // 2) Build the final List by iterating over each group
-//     final List<Map<String, dynamic>> result = [];
-//     groupedMap.forEach((jobcard, entries) {
-//       // Sum up all "Value" fields in this group
-//       double totalValue = entries.fold(
-//         0.0,
-//         (sum, e) => sum + ((e['Value'] as num).toDouble()),
-//       );
-//
-//       /// checking issued or not issued value
-//       final issueStatusValue = entries.fold<Map<String, double>>(
-//         {
-//           'issuedValue': 0.0,
-//           'notIssuedValue': 0.0,
-//         },
-//         (acc, e) {
-//           final value = (e['Value'] as num).toDouble();
-//           final status = e['IssueStatus'];
-//
-//           if (status == "Issued") {
-//             acc['issuedValue'] = acc['issuedValue'] ?? 0 + value;
-//           } else if (status == "Not Issued") {
-//             acc['notIssuedValue'] = acc['notIssuedValue'] ?? 0 + value;
-//           }
-//
-//           return acc;
-//         },
-//       );
-//
-// // Access the values
-//       final double issuedValue = issueStatusValue['issuedValue']!;
-//       final double notIssuedValue = issueStatusValue['notIssuedValue']!;
-//       // print(
-//       //     "Total Value: $totalValue, issuedValue: $issuedValue, notIssuedValue: $notIssuedValue");
-//
-//       ///
-//
-//       // Pick current_status from the first entry (assumes all have same status)
-//       // final String status = entries.first['current_status'] as String? ?? '';
-//       final String status = entries.first['Final_close'] as String? ?? '';
-//
-//       // Build the parts list
-//       final List<Map<String, dynamic>> partsList = entries.map((e) {
-//         return {
-//           'partNumber': e['part_number1'],
-//           'description': e['partdesc'],
-//           'category': e['category'],
-//           'ndp': (e['Price'] ?? 0 as num).toDouble(),
-//           'qty': e['Qty'] ?? 0,
-//           'stockQty': e['StockQty'] ?? 0,
-//           'ppniQty': e['PPNI_Qty'] ?? 0,
-//           'value': (e['Value'] ?? 0 as num).toDouble(),
-//           'All_Time_NonStck': e['All_Time_NonStck'] ?? "",
-//           'IssueStatus': e['IssueStatus'] ?? "",
-//           'orderDate': e['OrderDate'] ?? "",
-//           // 'orderDate': TransformValue().formatDateToIndia(e['OrderDate'] ?? "") ?? "",
-//         };
-//       }).toList();
-//
-//       result.add({
-//         'jobcard_number': jobcard,
-//         'totalValue': totalValue,
-//         'currentStatus': status,
-//         'parts': partsList,
-//       });
-//     });
-//
-//     return result;
-//   }
   RxBool isCheckFinal = false.obs;
   RxBool isCheckSuccess = false.obs;
   RxBool isCheckLoading = false.obs;
@@ -434,21 +253,16 @@ class VehicleSearchController extends GetxController {
     // // data.clear();
     isCheckSuccess(false);
     isCheckLoading(true);
-    // final response = await api.checkJobcard(
-    //   vehicleNumber: vehicleNumber.value ?? "",
-    //   userId: tCode.toString(),
-    // );
+
     final response = await api.vehicleSearchCheckBox(
       vehicleNumber: vehicleNumber.value ?? "",
       dealerId: dealerId!,
       locationId: locationId!,
       userId: tCode,
     );
-    // print(response);
     isCheckLoading(false);
     if (response['success']) {
       toggleCheckBox(true);
-      // data.value = response['data'];
       Get.back();
       GainerDialog.midPopUp(GainerImages.checkIcon, "Successfully Confirm");
     } else {
@@ -464,6 +278,33 @@ class VehicleSearchController extends GetxController {
           ),
         ),
       );
+    }
+  }
+
+  Future<bool?> showStockDetails(BuildContext context, String partNumber) {
+    getGroupStock(partNumber);
+    return showModalBottomSheet(
+      context: context,
+      backgroundColor: DMAppColors.primary,
+      builder: (context) => VehicleSearchStockDetailsSheet(),
+    );
+  }
+
+  // RxList<Map<String, dynamic>> grpStockList = <Map<String, dynamic>>[].obs;
+  List<dynamic> grpStockList = [].obs;
+  RxnString grpStockError = RxnString();
+  RxBool isLoadingGrpStock = false.obs;
+  void getGroupStock(String partNumber) async {
+    isLoadingGrpStock(true);
+    final response = await api.getGrpStockForVehicle(partNumber);
+    isLoadingGrpStock(false);
+    // print("response of partnumber: $response");
+    if (response['success']) {
+      grpStockList = (response['data'] as List)
+          .where((item) => item['GroupStock'] > 0)
+          .toList();
+    } else {
+      grpStockError.value = response['message'];
     }
   }
 }

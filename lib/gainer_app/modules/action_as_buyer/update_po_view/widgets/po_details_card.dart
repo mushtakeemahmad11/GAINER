@@ -25,7 +25,7 @@ class PoDetailsCard extends GetView<UpdatePoController> {
     final reqCtl = TextEditingController(text: order.qty.toString());
     final avlCtl =
         TextEditingController(text: order.sellerFreeStock.toInt().toString());
-    print("stockkkk: ${order.sellerStockQty}, ${order.sellerLatestStock}");
+    // print("stockkkk: ${order.sellerStockQty}, ${order.sellerLatestStock}");
 
     return Container(
       decoration: GainerColors.gradientDecoration,

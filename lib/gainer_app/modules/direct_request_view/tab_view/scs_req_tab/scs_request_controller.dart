@@ -8,6 +8,7 @@ import 'package:gainer/gainer_app/core/widgets/gainer_dialog.dart';
 import 'package:gainer/gainer_app/modules/direct_request_view/models/order_type_list_model.dart';
 import 'package:get/get.dart';
 import '../../../../core/utils/gainer_text_filed_validator.dart';
+import '../../widgets/help_view_snack_bar.dart';
 
 class ScsRequestController extends GetxController {
   /// Controllers
@@ -27,7 +28,7 @@ class ScsRequestController extends GetxController {
   final isGettingPartDetails = false.obs;
   final isSubmitEnabled = false.obs;
   RxBool partSearchLoading = false.obs;
-  RxBool isReadOnlyField = true.obs;
+  // RxBool isReadOnlyField = true.obs;
 
   /// Data lists
   final orderTypeList = <OrderTypeListModel>[].obs;
@@ -114,7 +115,7 @@ class ScsRequestController extends GetxController {
   Future<void> getPartDetails() async {
     try {
       partSuggestions.clear();
-      isReadOnlyField(true);
+      // isReadOnlyField(true);
       isGettingPartDetails(true);
       final brandId = await AuthService.getBrandId();
       final locationId = await AuthService.getLocationId();
@@ -130,9 +131,13 @@ class ScsRequestController extends GetxController {
       );
 
       if (!res['success']) {
-        GainerBottomSheet.showSnackBar(
-            "${res['message']}\nEnter part details manually ");
-        isReadOnlyField(false);
+        final String msg = res['message'];
+        if (msg == 'Part not found') {
+          HelpViewSnackBar.snackBar();
+        } else {
+          GainerBottomSheet.showSnackBar(msg);
+        }
+        // isReadOnlyField(false);
         partDescCtrl.clear();
         partMRPCtrl.clear();
         partRateCtrl.clear();
@@ -141,8 +146,8 @@ class ScsRequestController extends GetxController {
 
       final data = res['data'][0];
       partDescCtrl.text = data['partdesc'];
-      partMRPCtrl.text = data['MRP'].toInt().toString();
-      partRateCtrl.text = data['landedcost'].toInt().toString();
+      partMRPCtrl.text = '₹ ${data['MRP'].toInt()}';
+      partRateCtrl.text = '₹ ${data['landedcost'].toInt()}';
 
       // _resetForm();
     } catch (e) {
@@ -263,7 +268,7 @@ class ScsRequestController extends GetxController {
     remarkCtrl.clear();
     selectedOrderType.value = null;
     isSubmitEnabled.value = false;
-    isReadOnlyField.value = true;
+    // isReadOnlyField.value = true;
   }
 
   @override

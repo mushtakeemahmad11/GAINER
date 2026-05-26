@@ -46,32 +46,6 @@ class DirectRequestTab extends GetView<DirectRequestController> {
         ],
       );
     });
-    return Stack(
-      children: [
-        Obx(
-          () => controller.isError.value
-              ? Center(
-                  child: GainerOutlinedButton(
-                      onPressed: controller.initWork, title: 'Refresh'),
-                )
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        _FormSection(),
-                        const SizedBox(height: 10),
-                        const _PartListSection(),
-                        const SizedBox(height: 5),
-                        _SubmitRequest(),
-                      ],
-                    ),
-                  ),
-                ),
-        ),
-        GainerAppLoader(isLoading: controller.isLoading)
-      ],
-    );
   }
 }
 

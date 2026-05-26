@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gainer/gainer_app/core/utils/input_formatters.dart';
-import 'package:gainer/gainer_app/core/widgets/gainer_dropdown.dart';
-import 'package:gainer/gainer_app/core/widgets/gainer_secondary_button.dart';
-import 'package:gainer/gainer_app/core/widgets/gainer_text_form_field.dart';
-import 'package:gainer/gainer_app/modules/action_as_seller/direct_request_received/widgets/discount_stock_dropdown_row.dart';
 import 'package:get/get.dart';
 import '../../../../core/constants/gainer_color.dart';
 import '../../../../core/widgets/scrollable_text_widget.dart';
 import '../dr_received_controller.dart';
 import '../models/dr_received_model.dart';
+import 'discount_stock_dropdown_row.dart';
 import 'dr_received_button_row.dart';
 
 class DrReceivedDetailsCard extends GetView<DrReceivedController> {
@@ -86,10 +82,7 @@ class DrReceivedDetailsCard extends GetView<DrReceivedController> {
     return Row(
       mainAxisAlignment:
           isSpaceBt ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
-      children: [
-        key,
-        val,
-      ],
+      children: [key, val],
     );
   }
 

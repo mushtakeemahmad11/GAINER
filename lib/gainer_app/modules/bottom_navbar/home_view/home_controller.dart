@@ -67,7 +67,7 @@ class HomeController extends GetxController {
   SearchController searchController = SearchController();
 
   final actionsDummyData = List.generate(
-    4,
+    3,
     (_) => ActionItem(
       icon: Icons.shopping_cart,
       title: "Order Placed",
@@ -160,19 +160,6 @@ class HomeController extends GetxController {
       default:
         break;
     }
-  }
-
-  bool checkAllow(String title) {
-    if (title == 'Direct Req Sent') {
-      return isAllowBuying.value;
-    } else if (title == 'Direct Req Received') {
-      return isAllowSelling.value;
-    }
-    return true;
-  }
-
-  void getSnackBar() {
-    GainerBottomSheet.showSnackBar("You don't have permission to access this");
   }
 
   RxString partSearchText = ''.obs;
@@ -437,8 +424,22 @@ class HomeController extends GetxController {
     if (response['success']) {
       final data = response['data'][0];
       isAllowBuying.value = data['AllowBuying'];
-      isAllowSelling.value = data['AllowBuying'];
+      isAllowSelling.value = data['AllowSelling'];
     } else {}
+  }
+
+  bool checkAllow(String title) {
+    if (title == 'Direct Req Sent') {
+      return isAllowBuying.value;
+    } else if (title == 'Direct Req Received') {
+      return isAllowSelling.value;
+    }
+    return true;
+  }
+
+  void getSnackBar() {
+    GainerBottomSheet.showSnackBar("Please connect to Gainer team for access");
+    // GainerBottomSheet.showSnackBar("You don't have permission to access this");
   }
 
   //══════════════════════════════════════════════════════════════════════//
