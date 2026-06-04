@@ -22,6 +22,7 @@ class GainerApiService {
   // final String baseUrl =
   //     "http://web13.185.238.new.ocpwebserver.com/AppServicesV2.asmx";
 
+
   ///checking internet before hit API
   final networkC = Get.find<NoInternetController>();
 
