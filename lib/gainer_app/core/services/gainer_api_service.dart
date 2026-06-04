@@ -15,12 +15,12 @@ import '../../routes/app_routes.dart';
 import '../Services/auth_service.dart';
 
 class GainerApiService {
-  // final String baseUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
-  // final String helpSupportBaseurl = "https://scopeapi.sparecare.in/api/v1";
-  final String scopeApiBaseurl =
-      "http://web10.185.238.new.ocpwebserver.com/api/v1";
-  final String baseUrl =
-      "http://web13.185.238.new.ocpwebserver.com/AppServicesV2.asmx";
+  final String baseUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
+  final String scopeApiBaseurl = "https://scopeapi.sparecare.in/api/v1";
+  // final String scopeApiBaseurl =
+  //     "http://web10.185.238.new.ocpwebserver.com/api/v1";
+  // final String baseUrl =
+  //     "http://web13.185.238.new.ocpwebserver.com/AppServicesV2.asmx";
 
   ///checking internet before hit API
   final networkC = Get.find<NoInternetController>();
