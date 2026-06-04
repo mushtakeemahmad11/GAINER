@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/Services/auth_service.dart';
 import 'package:gainer/gainer_app/core/widgets/error_text.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_routes.dart';
 import '../../main_view/widgets/action_section.dart';
 import 'home_controller.dart';
 import 'package:skeletonizer/skeletonizer.dart';

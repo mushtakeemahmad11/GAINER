@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gainer/dealer_monitoring/widgets/legend_bar.dart';
 import 'package:gainer/dealer_monitoring/widgets/reusable_table.dart';
 import 'package:gainer/gainer_app/core/widgets/error_text.dart';
 import 'package:get/get.dart';
@@ -8,7 +9,6 @@ import '../core/theme/app_colors.dart';
 import '../core/utils/transform_value_ind.dart';
 
 class VehicleSearchStockDetailsSheet extends StatelessWidget {
-
   const VehicleSearchStockDetailsSheet({super.key});
 
   @override
@@ -39,18 +39,19 @@ class VehicleSearchStockDetailsSheet extends StatelessWidget {
               ),
             ],
           ),
+          LegendBar(),
           const SizedBox(height: 10),
           Obx(() {
             if (controller.isLoadingGrpStock.value) {
               return CircularProgressIndicator();
             }
             final err = controller.grpStockError;
-            if(err.value!=null && err.value!.isNotEmpty){
+            if (err.value != null && err.value!.isNotEmpty) {
               AppErrorText(error: controller.grpStockError);
             }
 
             final dataList = controller.grpStockList;
-            if(dataList.isEmpty){
+            if (dataList.isEmpty) {
               return Text('Details not available');
             }
             return Row(

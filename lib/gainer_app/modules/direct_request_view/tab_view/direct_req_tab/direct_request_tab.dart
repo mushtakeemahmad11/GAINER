@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/utils/input_formatters.dart';
-import 'package:gainer/gainer_app/core/widgets/error_text.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_app_loader.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_dropdown.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_outlined_button.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_primary_button.dart';
-import 'package:gainer/gainer_app/core/widgets/gainer_secondary_button.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_text_form_field.dart';
-import 'package:gainer/gainer_app/core/widgets/gainer_toggle_outlined_btn.dart';
 import 'package:gainer/gainer_app/core/widgets/part_suggestion_list.dart';
 import 'package:get/get.dart';
-import '../../../../core/constants/gainer_color.dart';
 import 'direct_request_controller.dart';
 import '../../widgets/part_details_card.dart';
 

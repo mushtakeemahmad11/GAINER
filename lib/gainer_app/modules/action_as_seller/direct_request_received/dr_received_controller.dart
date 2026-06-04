@@ -263,10 +263,10 @@ class DrReceivedController extends GetxController {
     // Convert grouped map into a list of UpdatePoSellerModel
     return map.entries.map((e) {
       final items = e.value;
-      final totalQty = items.fold<int>(
-        0,
-        (sum, i) => sum + (i.qty?.toInt() ?? 0),
-      );
+      // final totalQty = items.fold<int>(
+      //   0,
+      //   (sum, i) => sum + (i.qty?.toInt() ?? 0),
+      // );
       // 🔹 Date handling
       // final DateFormat formatter = DateFormat('MMM d yyyy hh:mma');
       //

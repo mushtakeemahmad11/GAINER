@@ -78,33 +78,6 @@ class HomeController extends GetxController {
     ),
   );
 
-  // final buyerActionsDummyDataTest = [
-  //   ActionItem(
-  //     icon: Icons.shopping_cart,
-  //     title: "Order Placed",
-  //     subtitle: "6 orders | ₹10.13L",
-  //     status: "Pending since Jan 10, 2025",
-  //     iconColor: Colors.blue,
-  //     actionKey: 'orderPlaced',
-  //   ),
-  //   ActionItem(
-  //     icon: Icons.update,
-  //     title: "Update PO Details",
-  //     subtitle: "3 orders | ₹3.22L",
-  //     status: "Pending since Jan 10, 2025",
-  //     iconColor: Colors.blue,
-  //     actionKey: 'updatePo',
-  //   ),
-  //   ActionItem(
-  //     icon: Icons.inventory,
-  //     title: "Part Receipt",
-  //     subtitle: "8 orders | ₹13.45L",
-  //     status: "Pending since Jan 10, 2025",
-  //     iconColor: Colors.blue,
-  //     actionKey: 'partReceipt',
-  //   ),
-  // ];
-
   Future<void> onActionTap(String actionKey) async {
     bool checkInt = await CheckInternet.checkInternet();
     if (!checkInt) {
@@ -134,10 +107,6 @@ class HomeController extends GetxController {
         break;
 
       case 'DispatchDetail':
-        if (Platform.isIOS) {
-          Get.to(() => GainerSims());
-          return;
-        }
         Get.toNamed(Routes.DISPATCHEDDETAILSVIEW);
         break;
 
@@ -165,10 +134,6 @@ class HomeController extends GetxController {
   RxString partSearchText = ''.obs;
   void onSearchPressed() {
     partSuggestions.clear();
-    if (Platform.isIOS) {
-      Get.to(() => GainerSims());
-      return;
-    }
     final rawText = searchController.text.trim();
     if (rawText.isEmpty) return;
 
@@ -356,7 +321,6 @@ class HomeController extends GetxController {
 
   void setStageData(List<StageModel> stages) {
     stageList.assignAll(stages);
-    for (var st in stages) {}
     buyerActions.value = _buildActions(
       stageList,
       isBuyer: true,
@@ -372,6 +336,7 @@ class HomeController extends GetxController {
   RxnString err = RxnString(null);
   Future<void> getBuyerDetails(String locationId, String location) async {
     try {
+      err.value = null;
       String tCode = await AuthService.getTCode();
       isStageDataLoad.value = true;
       final response =
@@ -404,7 +369,7 @@ class HomeController extends GetxController {
         await AuthService.saveLocationId(locationId);
         await AuthService.saveLocation(location);
       } else {
-        err.value = response['message'];
+        err.value = response['message']+' pull down to refresh the page';
       }
       await getUserDetails();
       showLowBalanceSheet();
@@ -420,7 +385,6 @@ class HomeController extends GetxController {
   Future<void> _getDirectReqAccess(String locationId) async {
     final response =
         await GainerApiService().getDirectRequestAccess(locationId: locationId);
-    print("Response of _getDirectReqAccess ::: $response");
     if (response['success']) {
       final data = response['data'][0];
       isAllowBuying.value = data['AllowBuying'];

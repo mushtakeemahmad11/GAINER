@@ -47,8 +47,6 @@ class DDView extends GetView<DDController> {
                   }
 
                   final groupData = controller.groupedList;
-                  print(controller.groupedList.length);
-                  print(controller.ddList.length);
 
                   return ListView.builder(
                     shrinkWrap: true,

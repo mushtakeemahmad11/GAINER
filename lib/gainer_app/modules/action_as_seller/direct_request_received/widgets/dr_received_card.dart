@@ -27,7 +27,7 @@ class DrReceivedDetailsCard extends GetView<DrReceivedController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _row(
-            _label(isPart ? 'Part Details' : 'Seller Details:'),
+            _label(isPart ? 'Part Details' : 'Buyer Details:'),
             _keyValue('Req Date', reqDate),
             // _keyValue('Req Date', order.requestDate),
             true,
@@ -58,6 +58,7 @@ class DrReceivedDetailsCard extends GetView<DrReceivedController> {
                   ],
                 ),
               ),
+              const SizedBox(width: 5),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [

@@ -2,30 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/core/theme/app_colors.dart';
 import 'package:gainer/dealer_monitoring/widgets/animated_drop_icon.dart';
 import 'package:gainer/gainer_app/core/widgets/scrollable_text_widget.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 
 import '../controllers/part_stock_check_controller.dart';
 
 class PartStockCard extends StatefulWidget {
   final bool isGroupStock;
   final Map<String, dynamic> partDetails;
-  // final String partNumber, description, category, colorType;
-  // final int rate, stockQty, reservedQty, groupStock;
   final List<Map<String, dynamic>> locations;
 
   const PartStockCard({
     super.key,
-    // required this.partNumber,
-    // required this.description,
-    // required this.category,
-    // required this.colorType,
-    // required this.rate,
-    // required this.stockQty,
-    // required this.reservedQty,
-    // required this.groupStock,
     this.isGroupStock = false,
     required this.partDetails,
     required this.locations,
@@ -382,7 +370,8 @@ class _PartStockCardState extends State<PartStockCard>
                                                       Text(stock['qty']
                                                           .toString()),
                                                       label(
-                                                          "!500Stock Date!500  ${stock['stockdate']} "),
+                                                          "${stock['stockdate']} "),
+                                                      // "!500Stock Date!500  ${stock['stockdate']} "),
                                                     ],
                                                   ),
                                                 ),

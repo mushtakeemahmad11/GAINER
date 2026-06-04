@@ -64,12 +64,6 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
         .firstWhere((e) => e.locationId.toString() == selectedLocationID);
     selectedStock.value = foundStock;
     stockData.value = foundStock.stockDate ?? '';
-
-    // Example usage
-    // setStringData('selectedLocationID', foundStock.locationId.toString());
-    // setStringData('dealerID', foundStock.dealerId.toString());
-    // setStringData('brandID', foundStock.brandId.toString());
-    // _getDirectReqAccess(selectedLocationID);
   }
 
   void onModuleTap(String moduleName) {
@@ -89,10 +83,6 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
           Get.toNamed(Routes.DMSPLASH);
         }
         break;
-      // case 'scanapp':
-      //   Get.to(() => ScanappSplashScreen());
-      //   // Get.to(() => ScanAppOldSplashScreen());
-      //   break;
     }
   }
 
@@ -240,17 +230,6 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
     // await NotificationServices.requestNotificationPermission();
     // await NotificationServices().firebaseInit();
   }
-
-  // Future<void> _getDirectReqAccess(String locationId) async {
-  //   final response =
-  //       await GainerApiService().getDirectRequestAccess(locationId: locationId);
-  //   print("Response of _getDirectReqAccess ::: $response");
-  //   if (response['success']) {
-  //     final data = response['data'][0];
-  //     isAllowBuying.value = data['AllowBuying'];
-  //     isAllowSelling.value = data['AllowBuying'];
-  //   } else {}
-  // }
 
   void logout() {
     AuthService.logout('UserLogoutAppSwitcher');

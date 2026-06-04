@@ -53,27 +53,27 @@ class DrReceivedExpansionTileHeader extends StatelessWidget {
         );
       },
     );
-    return Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: ScrollableTextWidget(
-            textWidget: _titleText(title1),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          flex: 3,
-          child: Center(
-            child: ScrollableTextWidget(
-              textWidget: _titleText(title2),
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        _titleText(title3),
-      ],
-    );
+    // return Row(
+    //   children: [
+    //     Expanded(
+    //       flex: 2,
+    //       child: ScrollableTextWidget(
+    //         textWidget: _titleText(title1),
+    //       ),
+    //     ),
+    //     const SizedBox(width: 10),
+    //     Expanded(
+    //       flex: 3,
+    //       child: Center(
+    //         child: ScrollableTextWidget(
+    //           textWidget: _titleText(title2),
+    //         ),
+    //       ),
+    //     ),
+    //     const SizedBox(width: 10),
+    //     _titleText(title3),
+    //   ],
+    // );
   }
 
   Widget _titleText(String text) {

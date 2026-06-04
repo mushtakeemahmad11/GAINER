@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_bottom_sheet.dart';

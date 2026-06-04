@@ -85,8 +85,8 @@ class PoDetailsCard extends GetView<UpdatePoController> {
               GainerQtyField(
                 controller: order.accCtrl,
                 label: 'Cnf. Qty',
-                // onChanged: (val) => controller.onChangedAcctQty(
-                //     val, accCtl, order, context),
+                onChanged: (val) =>
+                    controller.removeAcceptedOrder(order.bigId.toString()),
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                   QtyLimitFormatter(
@@ -460,7 +460,6 @@ class PoDetailsCard extends GetView<UpdatePoController> {
   //     ),
   //   );
   // }
-
 }
 
 // Widget _discountChip(String text) {

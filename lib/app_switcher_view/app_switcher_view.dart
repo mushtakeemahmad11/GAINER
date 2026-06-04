@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/core/utils/dm_images.dart';
 import 'package:gainer/gainer_app/core/widgets/error_text.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_app_loader.dart';
-import 'package:gainer/gainer_app/modules/bottom_navbar/profile_view/widgets/logout_button.dart';
 import 'package:get/get.dart';
 import '../gainer_app/core/constants/gainer_color.dart';
 import '../gainer_app/core/constants/gainer_image.dart';
@@ -15,7 +14,7 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    bool isAppNotAccess = controller.appAccess.values.every((val) => val == 0);
+    // bool isAppNotAccess = controller.appAccess.values.every((val) => val == 0);
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -71,12 +70,6 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
                           ),
                         ),
                       ),
-                    // ElevatedButton(
-                    //     onPressed: () {
-                    //       Navigator.push(context,
-                    //           MaterialPageRoute(builder: (_) => PinScreen()));
-                    //     },
-                    //     child: Text("Pin Screen")),
                     _AppFooter(version: controller.oldVersion.value),
                   ],
                 ),

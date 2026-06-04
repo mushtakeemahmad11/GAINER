@@ -130,6 +130,7 @@ class PartStockCheckController extends GetxController {
         }
 
         groupStock.value = 0.0;
+
         locationsList = groupStockList
             .map((item) {
               final status = item["Partstatus"] ?? "null";
@@ -140,22 +141,33 @@ class PartStockCheckController extends GetxController {
 
               if (item['LocationID'] == locationId) partStatus.value = status;
 
-              final value = (item['GroupStock'] ?? 0) as num;
+              // final value = (item['GroupStock'] ?? 0) as num;
+              final value = (item['GroupFreeStock'] ?? 0) as num;
               groupStock.value += value.toDouble();
 
               // ⏪ Early return null if stock is zero or less
               if (value <= 0) return null;
 
               return {
-                "Location": item["location"],
+                // "Location": item["location"],
+                "Location": item["Location"],
                 "stockdate": TransformValue()
-                    .formatDateToIndianDate(item["Stockdate"] ?? "", day: true),
-                "qty": item["GroupStock"],
+                    .formatDateToIndianDate(item["StockDate"] ?? "", day: true),
+                // "qty": item["GroupStock"],
+                "qty": item["GroupFreeStock"],
                 "type": type,
               };
             })
             .whereType<Map<String, dynamic>>()
             .toList();
+        if (locationsList.isNotEmpty) {
+          locationsList.insert(0, {
+            "Location": 'Location',
+            "stockdate": 'Stock Date',
+            "qty": 'Grp Free Stock',
+            "type": 'null',
+          });
+        }
         if (partStatus.value == null) {
           partStatus.value = "Non-Stockable";
         }

@@ -8,10 +8,10 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 class DMApiServices {
-  // String baseUrl = "http://web10.185.238.new.ocpwebserver.com/api/v1/dm";
-  // String baseUrl = "https://scopeapi.sparecare.in/api/v1/dm";
-  String baseUrl = 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/dm';
+  String baseUrl = "http://web10.185.238.new.ocpwebserver.com/api/v1/dm";
+  // String baseUrl = 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/dm';
   String scopeUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
+  // String baseUrl = "https://scopeapi.sparecare.in/api/v1/dm";
 
   Future<Map<String, dynamic>> getUserRole({required String userId}) async {
     String url = '$baseUrl/user-role';
@@ -207,7 +207,7 @@ class DMApiServices {
       "userId": userId,
     };
 
-    // print("Request Body of part stock check: $requestBody");
+    // print("Request Body of part stock check: $requestBody, $url");
     try {
       final response = await http
           .post(
@@ -217,7 +217,7 @@ class DMApiServices {
           )
           .timeout(const Duration(seconds: 20));
 
-      // print("response of part stock ${response.body}");
+      print("response of part stock ${response.body}");
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(response.body);
         // print("json body part stock: $json");
@@ -353,13 +353,6 @@ class DMApiServices {
     };
 
     try {
-      // final response = await http
-      //     .post(
-      //       Uri.parse(url),
-      //       headers: {'Content-Type': 'application/json'},
-      //       body: jsonEncode(requestBody),
-      //     )
-      //     .timeout(const Duration(minutes: 5));
       final response = await _dio.post(
         url,
         data: jsonEncode(requestBody),
@@ -412,11 +405,7 @@ class DMApiServices {
         'success': false,
         'message': 'Request timed out.',
       };
-    }
-    // on http.ClientException catch (e) {
-    //   return {'success': false, 'message': 'Client error'};
-    // }
-    catch (e) {
+    } catch (e) {
       // print("Unexpected error: $e");
       return {
         'success': false,
@@ -619,8 +608,6 @@ class DMApiServices {
   }) async {
     String url = '$baseUrl/vehicle';
 
-    // String url = 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/dm/vehicle';
-
     final Map<String, dynamic> requestBody = {
       "dealerid": dealerId,
       "locationid": locationId,
@@ -633,7 +620,7 @@ class DMApiServices {
       "userId": userId,
     };
 
-    print("Request Body for Vehicle: $url, $requestBody");
+    // print("Request Body for Vehicle: $url, $requestBody");
     try {
       final response = await http
           .post(
@@ -642,13 +629,11 @@ class DMApiServices {
             body: jsonEncode(requestBody),
           )
           .timeout(const Duration(seconds: 10));
-      print(
-          "🔹 Response Body Vehicle: ${response.statusCode}, ${response.body}");
+      // print(
+      //     "🔹 Response Body Vehicle: ${response.statusCode}, ${response.body}");
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> json = jsonDecode(response.body);
-
-        // final Map<String, dynamic> json = {
+        // final dummyData = {
         //   "Data": [
         //     {"Count": 23},
         //     [
@@ -1203,6 +1188,8 @@ class DMApiServices {
         //     }
         //   ]
         // };
+        // final Map<String, dynamic> json = dummyData;
+        final Map<String, dynamic> json = jsonDecode(response.body);
 
         if (json.containsKey('Data') && json['Data'] is List) {
           final List<dynamic> jobCard = json['Data'][1];
@@ -1744,8 +1731,6 @@ class DMApiServices {
     required String locationId,
   }) async {
     final String url = "$baseUrl/log";
-    // final String url =
-    // "http://web10.185.238.new.ocpwebserver.com/api/v1/dm/log";
     final Map<String, dynamic> requestBody = {
       // "moduleName": "VehicleSearch",
       "locationid": locationId,
@@ -1879,7 +1864,7 @@ class DMApiServices {
     String dealerId = await AuthService.getDealerId();
     String locationId = await AuthService.getLocationId();
     String url = '$baseUrl/grpstk';
-    // String url = 'http://web10.185.238.new.ocpwebserver.com/api/v1/dm/grpstk';
+
     final payload = {
       "brandid": brandId,
       "dealerid": dealerId,
@@ -1887,7 +1872,7 @@ class DMApiServices {
       "partnumber": partNumber,
     };
     try {
-      print("url: $url, $payload");
+      // print("url: $url, $payload");
       final http.Response response = await http
           .post(
             Uri.parse(url),
@@ -1898,7 +1883,6 @@ class DMApiServices {
 
       final jsonData = jsonDecode(response.body);
       // get data as json string from json data
-      print("jsonData: ${response.body}");
 
       if (response.statusCode == 200) {
         // final data = jsonData['d'];

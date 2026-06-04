@@ -172,6 +172,8 @@ class ScsRequestController extends GetxController {
       final orderForId = orderTypeList
           .firstWhere((o) => o.orderFor == selectedOrderType.value)
           .orderForId;
+      final mrp = partMRPCtrl.text.replaceAll('₹', '').trim();
+      final rate = partRateCtrl.text.replaceAll('₹', '').trim();
 
       final payload = [
         {
@@ -179,11 +181,11 @@ class ScsRequestController extends GetxController {
           "buyerId": tCode,
           "PartNumber": partNoCtrl.text.trim(),
           "PartDesc": partDescCtrl.text.trim(),
-          "Mrp": partMRPCtrl.text.trim(),
-          "Rate": partRateCtrl.text.trim(),
+          "Mrp": mrp,
+          "Rate": rate,
           "Qty": partQtyCtrl.text.trim(),
           "OrderFor": orderForId.toString(),
-          "Remark": remarkCtrl.text.trim(),
+          "Remarks": remarkCtrl.text.trim(),
         }
       ];
 

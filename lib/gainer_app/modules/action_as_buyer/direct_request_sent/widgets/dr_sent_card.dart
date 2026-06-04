@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/widgets/scrollable_text_widget.dart';
 import 'package:get/get.dart';
-import '../../../../../dealer_monitoring/core/utils/transform_value_ind.dart';
 import '../../../../core/constants/gainer_color.dart';
 import '../dr_sent_controller.dart';
 import '../models/dr_sent_model.dart';
@@ -56,6 +55,7 @@ class DrSentDetailsCard extends GetView<DrSentController> {
                   ],
                 ),
               ),
+              const SizedBox(width: 5),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [

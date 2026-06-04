@@ -16,6 +16,9 @@ import '../Services/auth_service.dart';
 
 class GainerApiService {
   // final String baseUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
+  // final String helpSupportBaseurl = "https://scopeapi.sparecare.in/api/v1";
+  final String scopeApiBaseurl =
+      "http://web10.185.238.new.ocpwebserver.com/api/v1";
   final String baseUrl =
       "http://web13.185.238.new.ocpwebserver.com/AppServicesV2.asmx";
 
@@ -62,16 +65,6 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload);
-      // final response = await http.post(
-      //   Uri.parse(url),
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: jsonEncode({
-      //     "UserID": userId,
-      //     "Pwd": password,
-      //     "DeviceToken": deviceToken,
-      //   }),
-      // );
-      // convert response into json data
       final jsonData = jsonDecode(response.body);
 
       // get data as json string from json data
@@ -123,14 +116,6 @@ class GainerApiService {
     try {
       final response = await apiRequest(url, payload, timeoutSeconds: 2);
 
-      // final response = await http
-      //     .post(
-      //       Uri.parse(url),
-      //       headers: {'Content-Type': 'application/json'},
-      //       body: jsonEncode({"PartNumber": partNumber, "BrandID": brandId}),
-      //     )
-      //     .timeout(const Duration(seconds: 2));
-
       final jsonData = jsonDecode(response.body);
       // get data as json string from json data
       final data = jsonData['d'];
@@ -166,14 +151,6 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload);
-      // final response = await guardRequest<http.Response>(() async {
-      //   return await http.post(
-      //     Uri.parse(url),
-      //     headers: {'Content-Type': 'application/json'},
-      //     body: jsonEncode({"DispatchOrderNo": orderNumber}),
-      //   );
-      // });
-
       // convert response into json data
       final jsonData = jsonDecode(response.body);
 
@@ -211,13 +188,7 @@ class GainerApiService {
     };
     try {
       final response = await apiRequest(url, payload);
-      // final response = await guardRequest<http.Response>(() async {
-      //   return await http.post(
-      //     Uri.parse(url),
-      //     headers: {'Content-Type': 'application/json'},
-      //     body: jsonEncode({"brandid": brandID, "partnumber": partNumber}),
-      //   );
-      // });
+
       Map<String, dynamic> jsonData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         if (jsonData["d"] != "[]" && jsonData.isNotEmpty) {
@@ -249,13 +220,6 @@ class GainerApiService {
     final payload = {"LocationID": locationID};
     try {
       final response = await apiRequest(url, payload);
-      // final response = await guardRequest<http.Response>(() async {
-      //   return await http.post(
-      //     Uri.parse(url),
-      //     headers: {'Content-Type': 'application/json'},
-      //     body: jsonEncode({"LocationID": locationID}),
-      //   );
-      // });
 
       // convert response into json data
       final jsonData = jsonDecode(response.body);
@@ -291,13 +255,6 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload, timeoutSeconds: 60);
-      // final response = await guardRequest<http.Response>(() async {
-      //   return await http.post(
-      //     Uri.parse(url),
-      //     headers: {'Content-Type': 'application/json'},
-      //     body: jsonEncode({"tCode": tCode}),
-      //   );
-      // });
 
       // convert response into json data
       final jsonData = jsonDecode(response.body);
@@ -336,13 +293,7 @@ class GainerApiService {
     };
     try {
       final response = await apiRequest(url, payload);
-      // final response = await guardRequest<http.Response>(() async {
-      //   return await http.post(
-      //     Uri.parse(url),
-      //     headers: {'Content-Type': 'application/json'},
-      //     body: jsonEncode({"LocationID": locationID}),
-      //   );
-      // });
+
       // convert response into json data
       final jsonData = jsonDecode(response.body);
 
@@ -385,7 +336,6 @@ class GainerApiService {
 
       // get data as json string from json data
       final data = jsonData['d'];
-      print("Data get Buyer values: $data");
       if (response.statusCode == 200) {
         if (data.isNotEmpty) {
           if (jsonDecode(data)[0]['Status'] == "Error") {
@@ -443,21 +393,6 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload, timeoutSeconds: 300);
-      // final response = await http.post(Uri.parse(url),
-      //     headers: ({'Content-Type': 'application/json'}),
-      //     body: jsonEncode({
-      //       "BrandID": brandID,
-      //       "DealerID": dealerID,
-      //       "LocationID": locationID,
-      //       "OrderFor": orderFor,
-      //       "LspCode": lspCode,
-      //       "Tat": tat,
-      //       "ClusterCode": clusterCode,
-      //       "PartNumbers": partNumbers,
-      //       "StockCategory": stockCategory,
-      //       "DiscCondition": '',
-      //       "Discount": '',
-      //     }));
 
       // convert response into json data
       final jsonData = jsonDecode(response.body);
@@ -513,17 +448,6 @@ class GainerApiService {
     //"PARTNUMBER", "ClusterCode", "SELLERDEALERID", "SELLERLOCATION", "SELLERSTOCKQTY", "SELLERFREESTOCK", "DISCOUNT", "TAT", "SELLERVERIFIED", "SCSVERIFIED", "ORDERQTY", "REMARKS", "PRICE", "MRP", "RATE", "StockCat"
     try {
       final response = await apiRequest(url, payload);
-      // final response = await http.post(Uri.parse(url),
-      //     headers: ({'Content-Type': 'application/json'}),
-      //     body: jsonEncode({
-      //       "BuyerBrandID": brandID,
-      //       "BuyerDealerID": dealerID,
-      //       "BuyerLocationID": locationID,
-      //       "UserID": userID,
-      //       "OrderFor": orderFor,
-      //       "LspCode": lspCode,
-      //       "TableVal": tableVal
-      //     }));
 
       // convert response into json data
       final jsonData = jsonDecode(response.body);
@@ -565,10 +489,6 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload, timeoutSeconds: 120);
-      // final response = await http.post(Uri.parse(url),
-      //     headers: ({'Content-Type': 'application/json'}),
-      //     body: jsonEncode({"LocationID": locationID, "Stage": stage}));
-
       // convert response into json data
       final jsonData = jsonDecode(response.body);
       // get data as json string from json data
@@ -612,9 +532,6 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload);
-      // final response = await http.post(Uri.parse(url),
-      //     headers: ({'Content-Type': 'application/json'}),
-      //     body: jsonEncode({"BigID": bigID}));
 
       // convert response into json data
       final jsonData = jsonDecode(response.body);
@@ -654,9 +571,6 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload, timeoutSeconds: 120);
-      // final response = await http.post(Uri.parse(url),
-      //     headers: ({'Content-Type': 'application/json'}),
-      //     body: jsonEncode({"LocationID": locationID, "Stage": stage}));
 
       // convert response into json data
       final jsonData = jsonDecode(response.body);
@@ -702,13 +616,7 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload);
-      // final response = await http.post(Uri.parse(url),
-      //     headers: ({'Content-Type': 'application/json'}),
-      //     body: jsonEncode({
-      //       "BrandID": brandID,
-      //       "DealerID": dealerID,
-      //       "SellerLocationID": sellerLocationID
-      //     }));
+
       // convert response into json data
       final jsonData = jsonDecode(response.body);
       // get data as json string from json data
@@ -764,20 +672,6 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload);
-      // final response = await http.post(
-      //   Uri.parse(url),
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: jsonEncode({
-      //     "BigID": bigID,
-      //     "Remarks": remarks,
-      //     "RejectReason": rejectReason,
-      //     "FreeStock": freeStock,
-      //     "PartNumber": partNumber,
-      //     "StockCatType": stockCatType,
-      //     "SellerLocationID": sellerLocationID,
-      //     "LoginUserID": loginUserID,
-      //   }),
-      // );
 
       // Convert response into JSON
       final jsonData = jsonDecode(response.body);
@@ -831,21 +725,6 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload);
-      // final response = await http.post(
-      //   Uri.parse(url),
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: jsonEncode({
-      //     "BigID": bigID,
-      //     "Remarks": remarks,
-      //     "ConfirmQty": confirmQty,
-      //     "FreeStock": freeStock,
-      //     "TransporterType": transporterType,
-      //     "Img1": img1,
-      //     "Img2": img2,
-      //     "Img3": img3,
-      //     "LoginUserID": loginUserID
-      //   }),
-      // );
 
       // Convert response into JSON
       final jsonData = jsonDecode(response.body);
@@ -892,16 +771,6 @@ class GainerApiService {
     };
     try {
       final response = await apiRequest(url, payload);
-      // final response = await http.post(
-      //   Uri.parse(url),
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: jsonEncode({
-      //     "FreeStock": freeStock,
-      //     "RejectReason": rejectReason,
-      //     "Remarks": remarks,
-      //     "BigID": bigID,
-      //   }),
-      // );
 
       // Convert response into JSON
       final jsonData = jsonDecode(response.body);
@@ -944,14 +813,6 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload);
-      // final response = await http.post(
-      //   Uri.parse(url),
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: jsonEncode({
-      //     "Remarks": remarks,
-      //     "BigID": bigID,
-      //   }),
-      // );
 
       // Convert response into JSON
       final jsonData = jsonDecode(response.body);
@@ -1000,11 +861,6 @@ class GainerApiService {
     // print("Request body of PORaise: $requestBody");
     try {
       final response = await apiRequest(url, payload);
-      // final response = await http.post(
-      //   Uri.parse(url),
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: jsonEncode(payload),
-      // );
 
       // Convert response into JSON
       final jsonData = jsonDecode(response.body);
@@ -1209,9 +1065,6 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload);
-      // final response = await http.post(Uri.parse(url),
-      //     headers: ({'Content-Type': 'application/json'}),
-      //     body: jsonEncode({"AlertLocation": alertLocation, "BigID": bigID}));
 
       // convert response into json data
       final jsonData = jsonDecode(response.body);
@@ -1331,20 +1184,11 @@ class GainerApiService {
     };
     try {
       final response = await apiRequest(url, payload);
-      // final response = await http.post(Uri.parse(url),
-      //     headers: ({'Content-Type': 'application/json'}),
-      //     body: jsonEncode(
-      //         {"DispatchOrderNo": dispatchOrderNo, "LRNumber": lrNumber}));
-
       // convert response into json data
       final jsonData = jsonDecode(response.body);
 
       // get data as json string from json data
       final data = jsonData['d'];
-
-      //   {
-      //     "d": "[{\"Status\":\"Success\",\"Msg\":\"Saved\"}]"
-      // }
 
       if (response.statusCode == 200 &&
           data.isNotEmpty &&
@@ -1396,11 +1240,6 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload);
-      // final response = await http.post(
-      //   Uri.parse(url),
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: jsonEncode(payload),
-      // );
 
       // Convert response into JSON
       final jsonData = jsonDecode(response.body);
@@ -1549,14 +1388,6 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(url, payload);
-      // print(
-      //     "Response of Manifestation: ${response.statusCode}, ${response.body}");
-      // final response = await http.post(
-      //   Uri.parse(url),
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: jsonEncode(payload),
-      // );
-
       // Convert response into JSON
       final jsonData = jsonDecode(response.body);
       final data = jsonData['d'];
@@ -1585,8 +1416,7 @@ class GainerApiService {
 
   ///Issue for help section
   Future<Map<String, dynamic>> getIssue() async {
-    String apiUrl =
-        "http://web27.185.238.new.ocpwebserver.com/api/v1/gnr/issue";
+    String apiUrl = "$scopeApiBaseurl/gnr/issue";
 
     try {
       return await guardRequest<Map<String, dynamic>>(() async {
@@ -1616,8 +1446,7 @@ class GainerApiService {
 
   ///SubIssue for help section
   Future<Map<String, dynamic>> getSubIssue(int issueId) async {
-    String apiUrl =
-        "http://web27.185.238.new.ocpwebserver.com/api/v1/gnr/subissue";
+    String apiUrl = "$scopeApiBaseurl/gnr/subissue";
 
     try {
       final response = await apiRequest(apiUrl, {"issueid": issueId});
@@ -1658,9 +1487,8 @@ class GainerApiService {
     // File? file, // Optional PDF or image
     required List<PlatformFile?> files, // Multiple Optional PDF or image
   }) async {
-    final uri =
-        Uri.parse('http://web27.185.238.new.ocpwebserver.com/api/v1/gnr/help');
-    // 'https://6mztnd0t-3001.inc1.devtunnels.ms/api/v1/gainer/help');
+    final String url = '$scopeApiBaseurl/gnr/help';
+    final uri = Uri.parse(url);
 
     try {
       return await guardRequest<Map<String, dynamic>>(() async {
@@ -1749,17 +1577,7 @@ class GainerApiService {
     };
     try {
       final response = await apiRequest(url, payload);
-      // final response = await http.post(
-      //   Uri.parse(url),
-      //   headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      //   body: {
-      //     'EmpID': empId,
-      //     'UserID': userId,
-      //     'Pwd': "",
-      //     'ActionType': logoutType,
-      //     'DeviceToken': deviceToken,
-      //   },
-      // );
+
       if (response.statusCode == 200) {
         // Parse XML and extract inner text
         final xmlDoc = XmlDocument.parse(response.body);
@@ -1849,8 +1667,7 @@ class GainerApiService {
   }
 
   Future<Map<String, dynamic>> fetchAppVersion() async {
-    String apiUrl =
-        "http://web10.185.238.new.ocpwebserver.com/api/v1/dm/version";
+    String apiUrl = "$scopeApiBaseurl/dm/version";
     final url = Uri.parse(apiUrl);
 
     try {
@@ -1878,8 +1695,7 @@ class GainerApiService {
   }
 
   Future<Map<String, dynamic>> getAppAccess(String userCode) async {
-    String apiUrl =
-        "http://web10.185.238.new.ocpwebserver.com/api/v1/dm/app-switcher";
+    String apiUrl = "$scopeApiBaseurl/dm/app-switcher";
     final payload = {
       'userId': userCode,
     };
@@ -2037,10 +1853,9 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(apiUrl, {"Data": parts});
-      // final response = await http.post(Uri.parse(apiUrl), headers: {});
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print("Response of Submit dire ct request: ${response.body}");
         if (data['d'] != null) {
           // final List<dynamic> decodedList = jsonDecode(data['d']);
           return {'success': true, 'data': data['d']};
@@ -2069,10 +1884,8 @@ class GainerApiService {
 
     try {
       final response = await apiRequest(apiUrl, {"Data": parts});
-      // final response = await http.post(Uri.parse(apiUrl), headers: {});
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print("Response of Submit dire ct request: ${response.body}");
         if (data['d'] != null) {
           // final List<dynamic> decodedList = jsonDecode(data['d']);
           return {'success': true, 'data': data['d']};

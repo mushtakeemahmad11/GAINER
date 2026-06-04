@@ -34,37 +34,47 @@ class ProfileCircle extends StatelessWidget {
 
   Widget _buildImage(String? imageUrl) {
     if (pickedImg != null) {
-      return Image.file(
-        File(pickedImg!),
-        fit: BoxFit.cover,
-      );
+      return Image.file(File(pickedImg!), fit: BoxFit.cover);
     }
 
     if (imageUrl != null) {
-      try {
-        return Image.network(
-          imageUrl,
-          fit: BoxFit.cover,
-          loadingBuilder: (_, child, progress) {
-            if (progress == null) return child;
-            return const Center(
-                child: CircularProgressIndicator(strokeWidth: 2));
-          },
-          errorBuilder: (_, __, ___) {
-            return Image.asset(GainerImages.profile, fit: BoxFit.cover);
-          },
-        );
-      } catch (e) {
-        return Image.asset(
-          GainerImages.profile,
-          fit: BoxFit.cover,
-        );
-      }
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        loadingBuilder: (_, child, progress) {
+          if (progress == null) return child;
+
+          return const Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+            ),
+          );
+        },
+        errorBuilder: (_, __, ___) {
+          return _profileIcon();
+        },
+      );
     }
 
-    return Image.asset(
-      GainerImages.profile,
-      fit: BoxFit.cover,
-    );
+    // if (imageUrl != null) {
+    //   try {
+    //     return Image.network(
+    //       imageUrl,
+    //       fit: BoxFit.cover,
+    //       loadingBuilder: (_, child, progress) {
+    //         if (progress == null) return child;
+    //         return const Center(
+    //             child: CircularProgressIndicator(strokeWidth: 2));
+    //       },
+    //       errorBuilder: (_, __, ___) => _profileIcon(),
+    //     );
+    //   } catch (e) {
+    //     return _profileIcon();
+    //   }
+    // }
+
+    return _profileIcon();
   }
+
+  Widget _profileIcon() => Image.asset(GainerImages.profile, fit: BoxFit.cover);
 }

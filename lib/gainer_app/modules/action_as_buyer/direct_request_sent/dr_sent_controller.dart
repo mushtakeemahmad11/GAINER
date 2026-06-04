@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/Services/auth_service.dart';
 import 'package:gainer/gainer_app/core/Services/gainer_api_service.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-
 import 'models/dr_sent_model.dart';
 import 'models/dr_sent_part_model.dart';
 import 'models/dr_sent_seller_model.dart';
@@ -120,24 +118,6 @@ class DrSentController extends GetxController {
         0,
         (sum, i) => sum + (i.qty?.toInt() ?? 0),
       );
-      // 🔹 Date handling (safe)
-      final DateFormat formatter = DateFormat('MMM d yyyy hh:mma');
-
-      // final validDates =
-      //     items.where((e) => e.requestDate?.isNotEmpty ?? false).map((e) {
-      //   final cleanedDate =
-      //       e.requestDate?.replaceAll(RegExp(r'\s+'), ' ').trim();
-      //   return formatter.parse(cleanedDate ?? '');
-      // }).toList();
-
-      // final DateTime minDate = validDates.isNotEmpty
-      //     ? validDates.reduce((a, b) => a.isBefore(b) ? a : b)
-      //     : DateTime.now();
-
-      // final String formattedMinDate = DateFormat('MMM d yyyy').format(minDate);
-
-      //total item inside
-      // final int totalItem = e.value.length;
 
       return DrSentPartModel(
         partNumber: e.key,
@@ -187,7 +167,7 @@ class DrSentController extends GetxController {
       //     DateFormat('MMM d yyyy').format(highestDate);
 
       //total item inside
-      final int totalItem = e.value.length;
+      // final int totalItem = e.value.length;
       return DrSentSellerModel(
         sellerName: items.first.dealer ?? '', //after group dealer
         location: items.first.location ?? '', //after group location

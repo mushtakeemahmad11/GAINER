@@ -79,7 +79,7 @@ class NotificationServiceNEW {
           return null;
         }
 
-        print("✅ APNS Token: $apnsToken");
+        // print("✅ APNS Token: $apnsToken");
         AuthService.saveDeviceToken(apnsToken);
         return apnsToken;
       }

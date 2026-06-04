@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/Services/auth_service.dart';
 import 'package:gainer/gainer_app/core/Services/gainer_api_service.dart';
@@ -13,8 +11,6 @@ import 'package:gainer/gainer_app/modules/direct_request_view/models/order_type_
 import 'package:gainer/gainer_app/modules/direct_request_view/widgets/help_view_snack_bar.dart';
 import 'package:get/get.dart';
 import '../../../../core/utils/gainer_text_filed_validator.dart';
-import '../../../../routes/app_routes.dart';
-import '../../../main_view/gainer_main_controller.dart';
 import '../../models/part_model.dart';
 
 class DirectRequestController extends GetxController {

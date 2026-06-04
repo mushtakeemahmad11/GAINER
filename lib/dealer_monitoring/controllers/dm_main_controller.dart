@@ -195,6 +195,11 @@ class DMMainController extends GetxController {
   Future<void> goto(String label, int index) async {
     // final String userRole = await getStringData("userRole");
     final String userRole = await AuthService.getUserRole();
+    if (userRole.isEmpty) {
+      DealerSnackbar.showAccessDenied(
+          'Something went wrong\nPlease Restart Application');
+      return;
+    }
 
     // ---------------- PPNI ----------------
     if (label.startsWith("PPNI List")) {
