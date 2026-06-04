@@ -8,10 +8,10 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 class DMApiServices {
-  String baseUrl = "http://web10.185.238.new.ocpwebserver.com/api/v1/dm";
+  // String baseUrl = "http://web10.185.238.new.ocpwebserver.com/api/v1/dm";
   // String baseUrl = 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/dm';
   String scopeUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
-  // String baseUrl = "https://scopeapi.sparecare.in/api/v1/dm";
+  String baseUrl = "https://scopeapi.sparecare.in/api/v1/dm";
 
   Future<Map<String, dynamic>> getUserRole({required String userId}) async {
     String url = '$baseUrl/user-role';
