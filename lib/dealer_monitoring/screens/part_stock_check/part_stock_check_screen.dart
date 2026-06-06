@@ -122,7 +122,7 @@ class _PartStockCheckScreenState extends State<PartStockCheckScreen> {
                 "Stock Qty": checkDoubleInt(stockQty),
                 "Planned Level": checkDoubleInt(plannedLevel),
                 "Reserved for Vehicle": checkDoubleInt(reserveForVehicle),
-                "Group Stock": checkDoubleInt(grpStock),
+                "Group Free Stock": checkDoubleInt(grpStock),
               },
 
               locations: _partStockCheckController.locationsList,

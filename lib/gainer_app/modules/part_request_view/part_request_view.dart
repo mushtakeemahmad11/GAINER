@@ -12,7 +12,6 @@ import '../../core/utils/input_formatters.dart';
 import '../../core/widgets/gainer_text_form_field.dart';
 import '../../core/widgets/part_suggestion_list.dart';
 import '../../routes/app_routes.dart';
-import '../bottom_navbar/home_view/home_controller.dart';
 import './widgets/pr_part_tile.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../core/widgets/error_text.dart';
@@ -29,7 +28,7 @@ class PartRequestView extends GetView<PartRequestController> {
   Widget build(BuildContext context) {
     final bool isDealer = controller.isFromDealer.value;
     final bool isDealerDirect = controller.isFromDealerDirect.value;
-    final bool isAllowBuying = Get.find<HomeController>().isAllowBuying.value;
+    final bool isAllowBuying = controller.isAllowBuying.value;
     return SafeArea(
       top: false,
       child: Scaffold(

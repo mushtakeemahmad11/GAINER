@@ -83,7 +83,9 @@ class DirectRequestController extends GetxController {
   }
 
   Future<void> getLocation(int dealerId) async {
-    final res = await GainerApiService().getSuggestedLocation(dealerId);
+    final locationId = await AuthService.getLocationId();
+    final res =
+        await GainerApiService().getSuggestedLocation(dealerId, locationId);
 
     if (res['success']) {
       locationList.assignAll(

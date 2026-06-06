@@ -264,6 +264,7 @@ class PartStockCheckController extends GetxController {
   void showReservedDetails() {
     List data = reservedDetails;
     Get.bottomSheet(
+      // backgroundColor: DMAppColors.primary,
       DraggableScrollableSheet(
         initialChildSize: 0.5,
         maxChildSize: 0.9,

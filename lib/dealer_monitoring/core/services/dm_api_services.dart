@@ -9,9 +9,9 @@ import 'package:path/path.dart' as p;
 
 class DMApiServices {
   // String baseUrl = "http://web10.185.238.new.ocpwebserver.com/api/v1/dm";
-  // String baseUrl = 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/dm';
+  String baseUrl = 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/dm';
   String scopeUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
-  String baseUrl = "https://scopeapi.sparecare.in/api/v1/dm";
+  // String baseUrl = "https://scopeapi.sparecare.in/api/v1/dm";
 
   Future<Map<String, dynamic>> getUserRole({required String userId}) async {
     String url = '$baseUrl/user-role';
@@ -207,7 +207,7 @@ class DMApiServices {
       "userId": userId,
     };
 
-    // print("Request Body of part stock check: $requestBody, $url");
+    print("Request Body of part stock check: $requestBody, $url");
     try {
       final response = await http
           .post(
@@ -217,7 +217,7 @@ class DMApiServices {
           )
           .timeout(const Duration(seconds: 20));
 
-      print("response of part stock ${response.body}");
+      print("response of part stock ${response.statusCode}, ${response.body}");
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(response.body);
         // print("json body part stock: $json");
@@ -620,7 +620,7 @@ class DMApiServices {
       "userId": userId,
     };
 
-    // print("Request Body for Vehicle: $url, $requestBody");
+    print("Request Body for Vehicle: $url, $requestBody");
     try {
       final response = await http
           .post(
@@ -629,8 +629,8 @@ class DMApiServices {
             body: jsonEncode(requestBody),
           )
           .timeout(const Duration(seconds: 10));
-      // print(
-      //     "🔹 Response Body Vehicle: ${response.statusCode}, ${response.body}");
+      print(
+          "🔹 Response Body Vehicle: ${response.statusCode}, ${response.body}");
 
       if (response.statusCode == 200) {
         // final dummyData = {
@@ -1891,12 +1891,59 @@ class DMApiServices {
           final stockDetails = jsonData['data'];
           return {'success': true, 'data': stockDetails};
         } else {
-          return {'success': false, 'data': []};
+          return {'success': false, 'message': 'Group Stock not available'};
         }
       } else {
         return {
           'success': false,
-          'message': 'Some thing went wrong,Please try again'
+          'message': 'Some thing went wrong, Please try again'
+        };
+      }
+    } on TimeoutException {
+      return {'success': false, 'message': 'Request timed out.'};
+    } catch (e) {
+      return {'success': false, 'message': 'Unexpected error: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> getPartReservedDetails(String partNumber) async {
+    String brandId = await AuthService.getBrandId();
+    String dealerId = await AuthService.getDealerId();
+    String locationId = await AuthService.getLocationId();
+    String url = '$baseUrl/reserved';
+
+    final payload = {
+      "brandid": brandId,
+      "dealerid": dealerId,
+      "locationid": locationId,
+      "partnumber": partNumber,
+    };
+    try {
+      print("url: $url, $payload");
+      final http.Response response = await http
+          .post(
+            Uri.parse(url),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(payload),
+          )
+          .timeout(Duration(seconds: 10));
+      print("Response::: ${response.body}");
+
+      final jsonData = jsonDecode(response.body);
+      // get data as json string from json data
+      if (response.statusCode == 200) {
+        // final data = jsonData['d'];
+        if (jsonData['success'] != null) {
+          // Split the string into a list
+          final reservedDetails = jsonData['data'];
+          return {'success': true, 'data': reservedDetails};
+        } else {
+          return {'success': false, 'message': 'Reserved details not found'};
+        }
+      } else {
+        return {
+          'success': false,
+          'message': 'Some thing went wrong, Please try again'
         };
       }
     } on TimeoutException {

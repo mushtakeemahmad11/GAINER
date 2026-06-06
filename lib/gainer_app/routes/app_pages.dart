@@ -28,6 +28,7 @@ import '../modules/action_as_seller/manifestation_view/screens/manifestation_sum
 import '../modules/action_as_seller/order_received_view/order_received_binding.dart';
 import '../modules/action_as_seller/order_received_view/screens/order_received_view.dart';
 import '../modules/bottom_navbar/help_view/help_binding.dart';
+import '../modules/bottom_navbar/home_view/home_binding.dart';
 import '../modules/direct_request_view/tab_view/direct_req_tab/direct_request_binding.dart';
 import '../modules/direct_request_view/tab_view/scs_req_tab/scs_request_binding.dart';
 import '../modules/gainer_splash/gainer_splash_binding.dart';
@@ -76,8 +77,8 @@ class AppPages {
     GetPage(
       name: Routes.APPSWITCHER,
       page: () => const AppSwitcherView(),
-      binding: AppSwitcherBinding(),
-      // bindings: [AppSwitcherBinding(), HomeBinding()],
+      // binding: AppSwitcherBinding(),
+      bindings: [AppSwitcherBinding(), HomeBinding()],
     ),
 
     ///Gainer

@@ -7,7 +7,7 @@ import '../gainer_main_controller.dart';
 
 class GainerDrawerView extends GetView<GainerMainController> {
   GainerDrawerView({super.key});
-  final c = Get.put(HomeController());
+  final c = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {

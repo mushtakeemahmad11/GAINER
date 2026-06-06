@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/constants/gainer_image.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_bottom_sheet.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_dialog.dart';
+import 'package:gainer/gainer_app/modules/bottom_navbar/home_view/home_controller.dart';
 import 'package:get/get.dart';
 import '../../core/Services/auth_service.dart';
 import '../../core/services/gainer_api_service.dart';
@@ -25,6 +26,10 @@ class PartRequestController extends GetxController {
 
   RxBool isFromDealer = false.obs;
   RxBool isFromDealerDirect = false.obs;
+
+  ///Get Value From Home Controller is User Allow or not for Buying
+  final HomeController homeController = Get.find<HomeController>();
+  RxBool get isAllowBuying => homeController.isAllowBuying;
 
   /// ERROR / RESPONSE MESSAGES
   RxnString errorMsg = RxnString(null);

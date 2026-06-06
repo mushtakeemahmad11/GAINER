@@ -234,6 +234,7 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
         final rows = vehicleData.map<List<dynamic>>((part) {
           final value = (part["Value"] ?? 0);
           final isIssued = part["IssueStatus"] == "Issued";
+          print('${part['part_number1']}, ${part['ReservedforVehicle']}');
           return [
             part["part_number1"],
             "₹${tv.formatIndianNumber((value as num).toInt())}",
@@ -242,11 +243,12 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
                 ? const Icon(Icons.check, color: Colors.green)
                 : const Icon(Icons.close, color: Colors.red),
             part["Qty"],
-            part["StockQty"],
-            // part["GroupStock"],
-            part['GroupStock'] <= 0
-                ? part["GroupStock"]
-                : _buildGrpStockDetails(part),
+            part["ReservedforVehicle"] <= 0
+                ? part["StockQty"]
+                : qtyWithShow(part, true),
+            part['GroupFreeStock'] <= 0
+                ? part["GroupFreeStock"]
+                : qtyWithShow(part, false),
             part["category"],
             part["partdesc"],
             tv.formatDateToIndianDate(part["OrderDate"] ?? ""),
@@ -316,7 +318,7 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
                   "Ordered Qty",
                   "Stock Qty",
                   // "PPNI Qty",
-                  "Grp Stock",
+                  "Grp Free Stock",
                   "Category",
                   "Description",
                   "Order Date",
@@ -331,7 +333,7 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
                   FixedColumnWidth(65),
                   FixedColumnWidth(80),
                   FixedColumnWidth(70),
-                  FixedColumnWidth(70),
+                  FixedColumnWidth(80),
                   FixedColumnWidth(85),
                   FixedColumnWidth(120),
                   FixedColumnWidth(90),
@@ -409,226 +411,6 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
   Widget _textWidget(String text, bool isRed) => Text(text,
       style: TextStyle(color: isRed ? Colors.red : Colors.black, fontSize: 14));
 
-  // Widget _buildJobCard(Map<String, dynamic> jobCard) {
-  //   final jobCardNo = jobCard['jobcard_number'] as String;
-  //   final totalVal =
-  //       "₹${TransformValue().formatIndianNumber((jobCard['totalValue'].toInt()))}";
-  //   final status = (jobCard['currentStatus']?.toLowerCase()) ?? "";
-  //   final parts = jobCard['parts'] as List<Map<String, dynamic>>;
-  //
-  //   final bgColor = status == "close"
-  //       ? Colors.black12
-  //       : status == "open"
-  //           ? Colors.black45
-  //           : DMAppColors.primaryShade;
-  //   final textColor = Colors.black;
-  //   final statusImg = status == "close"
-  //       ? Image.asset(ConstantImages.jobCardClose, width: 35)
-  //       : status == "open"
-  //           ? Image.asset(ConstantImages.jobCardOpen, width: 35)
-  //           : null;
-  //
-  //   return Container(
-  //     color: bgColor,
-  //     child: Column(
-  //       children: [
-  //         Padding(
-  //           padding: const EdgeInsets.all(5.0),
-  //           child: ReusableTable(
-  //             headers: const [
-  //               "ETA",
-  //               // "Order Month-Year",
-  //               "Part No.",
-  //               "Ordered Qty",
-  //               "Stock Qty",
-  //               "PPNI Qty",
-  //               "Value",
-  //               "Category",
-  //               "Description",
-  //               "Issued Status",
-  //               "Order Date",
-  //             ],
-  //             rows: parts
-  //                 .map((part) => [
-  //                       _buildEyeIcon(part),
-  //                       // part["orderDate"],
-  //                       part["partNumber"],
-  //                       part["qty"],
-  //                       part["stockQty"],
-  //                       part["ppniQty"],
-  //                       "₹${TransformValue().formatIndianNumber((part["value"].toInt()))}",
-  //                       part["category"],
-  //                       part["description"],
-  //                       part["IssueStatus"] == "Issued"
-  //                           ? Icon(Icons.check, color: Colors.green)
-  //                           : Icon(Icons.close, color: Colors.red),
-  //                       TransformValue()
-  //                           .formatDateToIndianDate(part["orderDate"] ?? ""),
-  //                     ])
-  //                 .toList(),
-  //             columnWidths: const [
-  //               FixedColumnWidth(80),
-  //               IntrinsicColumnWidth(),
-  //               FixedColumnWidth(80),
-  //               FixedColumnWidth(70),
-  //               FixedColumnWidth(70),
-  //               FixedColumnWidth(80),
-  //               FixedColumnWidth(85),
-  //               FixedColumnWidth(120),
-  //               FixedColumnWidth(65),
-  //               FixedColumnWidth(90),
-  //             ],
-  //             rowColorsList: parts
-  //                 .map((item) => item['All_Time_NonStck'] == "Y"
-  //                     ? Colors.pink[100]
-  //                     : item['All_Time_NonStck'] == "N"
-  //                         ? Colors.green[300]
-  //                         : DMAppColors.primary)
-  //                 .toList(),
-  //             onRowLongPress: (row) =>
-  //                 showRemarksDialog(context, "Part No. ${row[0]}"),
-  //           ),
-  //         ),
-  //         Row(
-  //           children: [
-  //             if (statusImg != null)
-  //               Padding(
-  //                 padding: const EdgeInsets.only(left: 5.0),
-  //                 child: statusImg,
-  //               ),
-  //             Obx(() {
-  //               final isChecked = _controller.isChecked(jobCardNo);
-  //               return Checkbox(
-  //                 value: isChecked,
-  //                 onChanged: (val) {
-  //                   _controller.toggleCheck(jobCardNo, val);
-  //                   if (val == true) {
-  //                     showDialog(
-  //                       context: Get.context!,
-  //                       builder: (_) => const ConfirmationDialog(),
-  //                     );
-  //                   }
-  //                 },
-  //               );
-  //             }),
-  //             IconButton(
-  //                 onPressed: () => Get.to(() => ImagePickScreen()),
-  //                 icon: Icon(Icons.add_a_photo, color: DMAppColors.secondary)),
-  //             const SizedBox(width: 10),
-  //             const Expanded(
-  //               child: Text(
-  //                 "Confirm In case you want to close the job card",
-  //                 softWrap: true,
-  //                 overflow: TextOverflow.visible,
-  //               ),
-  //             ),
-  //             const SizedBox(width: 10),
-  //           ],
-  //         )
-  //       ],
-  //     ),
-  //   );
-  //
-  //   return ExpansionTile(
-  //     initiallyExpanded: true,
-  //     backgroundColor: bgColor,
-  //     collapsedBackgroundColor: bgColor,
-  //     textColor: textColor,
-  //     collapsedTextColor: textColor,
-  //     iconColor: textColor,
-  //     collapsedIconColor: textColor,
-  //     tilePadding: const EdgeInsets.symmetric(horizontal: 12),
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
-  //     ),
-  //     collapsedShape: const RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.all(Radius.circular(8))),
-  //     title: _buildJobCardTile(jobCardNo, totalVal, statusImg),
-  //     // title: Text(""),
-  //     // showTrailingIcon: false,
-  //     // enabled: false,
-  //     children: [
-  //       Padding(
-  //         padding: const EdgeInsets.all(5.0),
-  //         child: ReusableTable(
-  //           headers: const [
-  //             "Part No.",
-  //             "Ordered Qty",
-  //             "Stock Qty",
-  //             "PPNI Qty",
-  //             "Value",
-  //             "Category",
-  //             "Description",
-  //             "Issued Status"
-  //           ],
-  //           rows: parts
-  //               .map((part) => [
-  //                     part["partNumber"],
-  //                     part["qty"],
-  //                     part["stockQty"],
-  //                     "--",
-  //                     "₹${TransformValue().formatIndianNumber((part["value"].toInt()))}",
-  //                     part["category"],
-  //                     part["description"],
-  //                     part["IssueStatus"] == "Issued"
-  //                         ? Icon(Icons.check, color: Colors.green)
-  //                         : Icon(Icons.close, color: Colors.red),
-  //                   ])
-  //               .toList(),
-  //           columnWidths: const [
-  //             IntrinsicColumnWidth(),
-  //             FixedColumnWidth(80),
-  //             FixedColumnWidth(70),
-  //             FixedColumnWidth(70),
-  //             FixedColumnWidth(80),
-  //             FixedColumnWidth(85),
-  //             FixedColumnWidth(120),
-  //             FixedColumnWidth(65),
-  //           ],
-  //           rowColorsList: parts
-  //               .map((item) => item['All_Time_NonStck'] == "Y"
-  //                   ? Colors.pink[100]
-  //                   : Colors.green[300])
-  //               .toList(),
-  //           onRowLongPress: (row) =>
-  //               showRemarksDialog(context, "Part No. ${row[0]}"),
-  //         ),
-  //       ),
-  //       Row(
-  //         children: [
-  //           Obx(() {
-  //             final isChecked = _controller.isChecked(jobCardNo);
-  //             return Checkbox(
-  //               value: isChecked,
-  //               onChanged: (val) {
-  //                 _controller.toggleCheck(jobCardNo, val);
-  //                 if (val == true) {
-  //                   showDialog(
-  //                     context: Get.context!,
-  //                     builder: (_) => const ConfirmationDialog(),
-  //                   );
-  //                 }
-  //               },
-  //             );
-  //           }),
-  //           IconButton(
-  //               onPressed: () => Get.to(() => ImagePickScreen()),
-  //               icon: Icon(Icons.add_a_photo, color: DMAppColors.secondary)),
-  //           const SizedBox(width: 10),
-  //           const Expanded(
-  //             child: Text(
-  //               "Confirm In case you want to close the job card",
-  //               softWrap: true,
-  //               overflow: TextOverflow.visible,
-  //             ),
-  //           ),
-  //           const SizedBox(width: 10),
-  //         ],
-  //       )
-  //     ],
-  //   );
-  // }
-
   Widget _buildRemarksReason(Map<String, dynamic> part) {
     return IconButton(
       onPressed: () {
@@ -639,17 +421,68 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
     );
   }
 
-  Widget _buildGrpStockDetails(Map<String, dynamic> part) {
-    final int grpQty = part['GroupStock'];
+  // Widget _buildStockQtyDetails(Map<String, dynamic> part) {
+  //   final int grpQty = part['StockQty'];
+  //   return GestureDetector(
+  //     child: Wrap(
+  //       alignment: WrapAlignment.center,
+  //       // mainAxisAlignment: MainAxisAlignment.center,
+  //       spacing: 2,
+  //       children: [
+  //         Text('$grpQty'),
+  //         const Text(
+  //           '(Show)',
+  //           style: TextStyle(
+  //             color: Colors.blue,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //     onTap: () {
+  //       _controller.showReservedDetails(context, part['part_number1']);
+  //     },
+  //   );
+  // }
+
+  // Widget _buildGrpStockDetails(Map<String, dynamic> part) {
+  //   final int grpQty = part['GroupStock'];
+  //   return GestureDetector(
+  //     child: Wrap(
+  //       alignment: WrapAlignment.center,
+  //       // mainAxisAlignment: MainAxisAlignment.center,
+  //       spacing: 2,
+  //       children: [
+  //         Text('$grpQty'),
+  //         const Text(
+  //           '(Show)',
+  //           style: TextStyle(
+  //             color: Colors.blue,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //     onTap: () {
+  //       _controller.showStockDetails(context, part['part_number1']);
+  //     },
+  //   );
+  // }
+
+  Widget qtyWithShow(Map<String, dynamic> part, bool isReserved) {
+    int qty = isReserved ? part["StockQty"] : part['GroupFreeStock'];
+    String partNum = part['part_number1'];
+    // RJ02UA9554
+    // RJ29GB1915
     return GestureDetector(
       child: Wrap(
         alignment: WrapAlignment.center,
         // mainAxisAlignment: MainAxisAlignment.center,
         spacing: 2,
         children: [
-          Text('$grpQty'),
-          const Text(
-            '(Show)',
+          Text('$qty'),
+          Text(
+            isReserved ? '(Res)' : '(Show)',
             style: TextStyle(
               color: Colors.blue,
               fontWeight: FontWeight.bold,
@@ -658,53 +491,9 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
         ],
       ),
       onTap: () {
-        _controller.showStockDetails(context, part['part_number1']);
+        _controller.showBottomSheet(context, partNum, isReserved);
       },
     );
-    // return Center(
-    //   child: PopupMenuButton(
-    //     child: Center(
-    //       child: Wrap(
-    //         alignment: WrapAlignment.center,
-    //         // mainAxisAlignment: MainAxisAlignment.center,
-    //         spacing: 2,
-    //         children: [
-    //           Text('$grpQty'),
-    //           const Text(
-    //             '(Show)',
-    //             style: TextStyle(
-    //               color: Colors.blue,
-    //               fontWeight: FontWeight.bold,
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //     itemBuilder: (context) => [
-    //       const PopupMenuItem(
-    //         child: Row(
-    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //           children: [
-    //             Text("Location", style: TextStyle(fontWeight: FontWeight.bold)),
-    //             Text('  :  '),
-    //             Text("Qty", style: TextStyle(fontWeight: FontWeight.bold)),
-    //           ],
-    //         ),
-    //       ),
-    //       ...grpLocation.map<PopupMenuEntry>((item) {
-    //         return PopupMenuItem(
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //             children: [
-    //               Text(item['Location'] ?? ''),
-    //               Text((item['Qty'] ?? 0).toInt().toString()),
-    //             ],
-    //           ),
-    //         );
-    //       }),
-    //     ],
-    //   ),
-    // );
   }
 
   Widget _buildEyeIcon(Map<String, dynamic> part) {

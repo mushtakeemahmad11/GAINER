@@ -5,17 +5,36 @@ class CheckTime {
     try {
       final cleaned = rawDate.replaceAll(RegExp(r'\s+'), ' ').trim();
 
+      // final formats = [
+      //   // With time (AM/PM)
+      //   DateFormat('MMM dd yyyy h:mma', 'en_US'), // Apr 15 2026 11:01AM
+      //   DateFormat('MMM dd yyyy h:mm a', 'en_US'), // Apr 15 2026 11:01 AM
+      //
+      //   DateFormat('dd MMM yyyy h:mma', 'en_US'), // 15 Apr 2026 11:01AM
+      //   DateFormat('dd MMM yyyy h:mm a', 'en_US'), // 15 Apr 2026 11:01 AM
+      //
+      //   // Without time
+      //   DateFormat('dd MMM yyyy', 'en_US'), // 07 Apr 2026
+      //   DateFormat('MMM dd yyyy', 'en_US'), // Apr 07 2026
+      // ];
       final formats = [
-        // With time (AM/PM)
+        // With time including seconds and AM/PM
+        DateFormat('MMM dd yyyy h:mm:ssa', 'en_US'), // Apr 15 2026 11:01:30AM
+        DateFormat('MMM dd yyyy h:mm:ss a', 'en_US'), // Apr 15 2026 11:01:30 AM
+
+        DateFormat('dd MMM yyyy h:mm:ssa', 'en_US'), // 15 Apr 2026 11:01:30AM
+        DateFormat('dd MMM yyyy h:mm:ss a', 'en_US'), // 15 Apr 2026 11:01:30 AM
+
+        // With time (AM/PM) without seconds
         DateFormat('MMM dd yyyy h:mma', 'en_US'), // Apr 15 2026 11:01AM
         DateFormat('MMM dd yyyy h:mm a', 'en_US'), // Apr 15 2026 11:01 AM
 
         DateFormat('dd MMM yyyy h:mma', 'en_US'), // 15 Apr 2026 11:01AM
         DateFormat('dd MMM yyyy h:mm a', 'en_US'), // 15 Apr 2026 11:01 AM
 
-        // Without time
-        DateFormat('dd MMM yyyy', 'en_US'), // 07 Apr 2026
-        DateFormat('MMM dd yyyy', 'en_US'), // Apr 07 2026
+        // Date only
+        DateFormat('dd MMM yyyy', 'en_US'), // 15 Apr 2026
+        DateFormat('MMM dd yyyy', 'en_US'), // Apr 15 2026
       ];
 
       DateTime? parsedDate;

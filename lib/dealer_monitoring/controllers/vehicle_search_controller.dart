@@ -8,6 +8,7 @@ import '../../gainer_app/core/constants/gainer_image.dart';
 import '../core/services/dm_api_services.dart';
 import '../core/theme/app_colors.dart';
 import '../widgets/remarks_bottom_sheet.dart';
+import '../widgets/vehicle_search_reserved_details_sheet.dart';
 import '../widgets/vehicle_search_stock_details_sheet.dart';
 
 class VehicleSearchController extends GetxController {
@@ -281,30 +282,68 @@ class VehicleSearchController extends GetxController {
     }
   }
 
-  Future<bool?> showStockDetails(BuildContext context, String partNumber) {
-    getGroupStock(partNumber);
+  Future<bool?> showBottomSheet(
+    BuildContext context,
+    String partNumber,
+    bool isReserved,
+  ) {
+    isReserved ? getReservedDetails(partNumber) : getGroupStock(partNumber);
+
+    // RJ29GB1915
+    //9554
     return showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: DMAppColors.primary,
-      builder: (context) => VehicleSearchStockDetailsSheet(),
+      builder: (context) {
+        return isReserved
+            ? const VehicleSearchReservedDetailsSheet()
+            : const VehicleSearchGrpStockDetailsSheet();
+      },
     );
   }
 
-  // RxList<Map<String, dynamic>> grpStockList = <Map<String, dynamic>>[].obs;
-  List<dynamic> grpStockList = [].obs;
   RxnString grpStockError = RxnString();
+  RxnString lastFSPart = RxnString();
   RxBool isLoadingGrpStock = false.obs;
-  void getGroupStock(String partNumber) async {
+  List<dynamic> grpFreeStockList = [].obs;
+  Future<void> getGroupStock(String partNumber) async {
+    final lastP = lastFSPart.value;
+    if (lastP != null && lastP == partNumber) {
+      if (grpFreeStockList.isNotEmpty) return;
+    }
+    lastFSPart.value = partNumber;
     isLoadingGrpStock(true);
     final response = await api.getGrpStockForVehicle(partNumber);
     isLoadingGrpStock(false);
-    // print("response of partnumber: $response");
     if (response['success']) {
-      grpStockList = (response['data'] as List)
-          .where((item) => item['GroupStock'] > 0)
+      grpFreeStockList = (response['data'] as List)
+          .where((item) => item['GroupFreeStock'] > 0)
           .toList();
     } else {
+      grpFreeStockList.clear();
       grpStockError.value = response['message'];
+    }
+  }
+
+  RxnString reservedDetailsError = RxnString();
+  RxnString lastReservedPart = RxnString();
+  RxBool isLoadingReservedDetails = false.obs;
+  List<dynamic> reservedDetailsList = [].obs;
+  Future<void> getReservedDetails(String partNumber) async {
+    final lastP = lastReservedPart.value;
+    if (lastP != null && lastP == partNumber) {
+      if (reservedDetailsList.isNotEmpty) return;
+    }
+    lastReservedPart.value = partNumber;
+    isLoadingReservedDetails(true);
+    final response = await api.getPartReservedDetails(partNumber);
+    isLoadingReservedDetails(false);
+    if (response['success']) {
+      reservedDetailsList = response['data'];
+    } else {
+      reservedDetailsList.clear();
+      reservedDetailsError.value = response['message'];
     }
   }
 }

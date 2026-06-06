@@ -15,13 +15,12 @@ import '../../routes/app_routes.dart';
 import '../Services/auth_service.dart';
 
 class GainerApiService {
-  final String baseUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
-  final String scopeApiBaseurl = "https://scopeapi.sparecare.in/api/v1";
-  // final String scopeApiBaseurl =
-  //     "http://web10.185.238.new.ocpwebserver.com/api/v1";
-  // final String baseUrl =
-  //     "http://web13.185.238.new.ocpwebserver.com/AppServicesV2.asmx";
-
+  // final String baseUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
+  // final String scopeApiBaseurl = "https://scopeapi.sparecare.in/api/v1";
+  final String scopeApiBaseurl =
+      "http://web10.185.238.new.ocpwebserver.com/api/v1";
+  final String baseUrl =
+      "http://web13.185.238.new.ocpwebserver.com/AppServicesV2.asmx";
 
   ///checking internet before hit API
   final networkC = Get.find<NoInternetController>();
@@ -1786,11 +1785,15 @@ class GainerApiService {
     }
   }
 
-  Future<Map<String, dynamic>> getSuggestedLocation(int dealerId) async {
+  Future<Map<String, dynamic>> getSuggestedLocation(
+      int dealerId, String locationID) async {
     String apiUrl = "$baseUrl/GetSuggestedLocation";
-
+    final payRequest = {
+      "DealerId": dealerId,
+      "LocationId": locationID,
+    };
     try {
-      final response = await apiRequest(apiUrl, {"DealerId": dealerId});
+      final response = await apiRequest(apiUrl, payRequest);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         // Example: access 'Data' field

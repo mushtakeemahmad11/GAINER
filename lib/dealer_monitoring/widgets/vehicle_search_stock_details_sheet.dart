@@ -8,8 +8,8 @@ import '../controllers/vehicle_search_controller.dart';
 import '../core/theme/app_colors.dart';
 import '../core/utils/transform_value_ind.dart';
 
-class VehicleSearchStockDetailsSheet extends StatelessWidget {
-  const VehicleSearchStockDetailsSheet({super.key});
+class VehicleSearchGrpStockDetailsSheet extends StatelessWidget {
+  const VehicleSearchGrpStockDetailsSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +34,12 @@ class VehicleSearchStockDetailsSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Group Stock Details',
+                'Group Free Stock Details',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ],
           ),
+          Text(controller.lastFSPart.value ?? ''),
           LegendBar(),
           const SizedBox(height: 10),
           Obx(() {
@@ -47,24 +48,24 @@ class VehicleSearchStockDetailsSheet extends StatelessWidget {
             }
             final err = controller.grpStockError;
             if (err.value != null && err.value!.isNotEmpty) {
-              AppErrorText(error: controller.grpStockError);
+              return AppErrorText(error: controller.grpStockError);
             }
 
-            final dataList = controller.grpStockList;
+            final dataList = controller.grpFreeStockList;
             if (dataList.isEmpty) {
               return Text('Details not available');
             }
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ReusableTable(
+            return Flexible(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: ReusableTable(
                   headers: ['Location', 'Qty', 'Stock Date'],
                   rows: dataList.map((d) {
                     final stkDate = TransformValue().formatDateToIndianDate(
-                        d['Stockdate'].toString(),
+                        d['StockDate'].toString(),
                         day: true);
 
-                    return [d['location'], d['GroupStock'], stkDate];
+                    return [d['Location'], d['GroupFreeStock'], stkDate];
                   }).toList(),
                   rowColorsList: dataList.map((item) {
                     // switch (item['PartStatus']) {
@@ -87,8 +88,8 @@ class VehicleSearchStockDetailsSheet extends StatelessWidget {
                     IntrinsicColumnWidth(),
                     // IntrinsicColumnWidth(),
                   ],
-                )
-              ],
+                ),
+              ),
             );
           }),
         ],
