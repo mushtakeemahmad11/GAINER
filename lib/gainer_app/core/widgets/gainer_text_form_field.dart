@@ -22,7 +22,6 @@ class GainerTextFormField extends StatelessWidget {
   final Color? labelColor;
   final bool isPartSearch;
 
-
   const GainerTextFormField({
     super.key,
     this.controller,
@@ -75,7 +74,7 @@ class GainerTextFormField extends StatelessWidget {
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: readOnly?Colors.black12:fillColor,
+        fillColor: readOnly ? Colors.black12 : fillColor,
         border: _border(GainerColors.border),
         enabledBorder:
             _border(isPartSearch ? GainerColors.primary : GainerColors.border),

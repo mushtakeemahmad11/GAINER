@@ -6,7 +6,6 @@ import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
-import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart';
 import 'package:xml/xml.dart';
@@ -16,9 +15,8 @@ import '../Services/auth_service.dart';
 
 class GainerApiService {
   // final String baseUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
-  // final String scopeApiBaseurl = "https://scopeapi.sparecare.in/api/v1";
-  final String scopeApiBaseurl =
-      "http://web10.185.238.new.ocpwebserver.com/api/v1";
+  final String scopeApiBaseurl = "https://scopeapi.sparecare.in/api/v1";
+  // final String scopeApiBaseurl = "http://web10.185.238.new.ocpwebserver.com/api/v1";
   final String baseUrl =
       "http://web13.185.238.new.ocpwebserver.com/AppServicesV2.asmx";
 
@@ -66,7 +64,8 @@ class GainerApiService {
     try {
       final response = await apiRequest(url, payload);
       final jsonData = jsonDecode(response.body);
-
+      print("requestBody: $url $payload");
+print("Reponse login: ${response.statusCode} ${response.body}");
       // get data as json string from json data
       final data = jsonData['d'];
 
@@ -923,7 +922,7 @@ class GainerApiService {
             length,
             filename: basename(file.path),
             contentType:
-                MediaType('image', 'jpeg'), // Change to 'png' if needed
+                http.MediaType('image', 'jpeg'), // Change to 'png' if needed
           );
 
           request.files.add(multipartFile);
@@ -999,8 +998,8 @@ class GainerApiService {
           // Get the MIME type dynamically
           String? mimeType =
               lookupMimeType(file.path); // e.g., "image/jpeg" or "image/png"
-          MediaType mediaType =
-              MediaType.parse(mimeType ?? 'application/octet-stream');
+          http.MediaType mediaType =
+              http.MediaType.parse(mimeType ?? 'application/octet-stream');
 
           var stream = http.ByteStream(file.openRead().cast());
           var length = await file.length();
@@ -1126,7 +1125,7 @@ class GainerApiService {
           stream,
           length,
           filename: basename(imageFiles.path),
-          contentType: MediaType('image', 'jpeg'),
+          contentType: http.MediaType('image', 'jpeg'),
         );
         request.files.add(multipartFile);
 
@@ -1288,7 +1287,7 @@ class GainerApiService {
         final multipartFile = await http.MultipartFile.fromPath(
           'file',
           pdfFile.path,
-          contentType: MediaType('application', 'pdf'),
+          contentType: http.MediaType('application', 'pdf'),
         );
 
         request.files.add(multipartFile);
@@ -1514,7 +1513,7 @@ class GainerApiService {
             final multipartFile = await http.MultipartFile.fromPath(
               'file',
               file.path!,
-              contentType: MediaType(fileType[0], fileType[1]),
+              contentType: http.MediaType(fileType[0], fileType[1]),
               filename: file.name,
             );
             request.files.add(multipartFile);
@@ -1622,7 +1621,7 @@ class GainerApiService {
           stream,
           length,
           filename: basename(imageFiles.path),
-          contentType: MediaType('image', 'jpeg'),
+          contentType: http.MediaType('image', 'jpeg'),
         );
         request.files.add(multipartFile);
 
@@ -1667,7 +1666,9 @@ class GainerApiService {
   }
 
   Future<Map<String, dynamic>> fetchAppVersion() async {
-    String apiUrl = "$scopeApiBaseurl/dm/version";
+    // String apiUrl = "$scopeApiBaseurl/dm/version";
+    String apiUrl =
+        "http://web10.185.238.new.ocpwebserver.com/api/v1/dm/version";
     final url = Uri.parse(apiUrl);
 
     try {
@@ -1695,7 +1696,9 @@ class GainerApiService {
   }
 
   Future<Map<String, dynamic>> getAppAccess(String userCode) async {
-    String apiUrl = "$scopeApiBaseurl/dm/app-switcher";
+    // String apiUrl = "$scopeApiBaseurl/dm/app-switcher";
+    String apiUrl =
+        "http://web10.185.238.new.ocpwebserver.com/api/v1/dm/app-switcher";
     final payload = {
       'userId': userCode,
     };

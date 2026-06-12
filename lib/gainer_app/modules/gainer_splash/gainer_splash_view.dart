@@ -31,11 +31,18 @@ class GainerSplashView extends GetView<GainerSplashController> {
               'Welcome to \nGainer Application',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 20),
+            const Text(
+              "Connecting Buyers & Sellers",
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black54,
+              ),
+            ),
 
             ///Banner Image
             Image.asset(
@@ -47,14 +54,22 @@ class GainerSplashView extends GetView<GainerSplashController> {
 
             ///Quotes Text
             const Text(
-              'Unlocking Value \nEnabling Collaboration',
+              "Unlocking Value • Enabling Collaboration",
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                color: Colors.black54,
+                fontWeight: FontWeight.w600,
               ),
             ),
-
+            // const Text(
+            //   'Unlocking Value \nEnabling Collaboration',
+            //   textAlign: TextAlign.center,
+            //   style: TextStyle(
+            //     fontSize: 18,
+            //     fontWeight: FontWeight.bold,
+            //   ),
+            // ),
             const Spacer(),
           ],
         ),

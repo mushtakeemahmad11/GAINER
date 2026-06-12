@@ -90,30 +90,6 @@ class DDExpansionTile extends GetView<DDController> {
                                 ],
                               );
                             })
-                            // Obx(() {
-                            //   if (!controller
-                            //       .isAnyNullInBox(order.dispatchOrderNo)) {
-                            //     return _generatePickupImgRow(
-                            //         order, 0, context, size);
-                            //   }
-                            //   return const SizedBox.shrink();
-                            // }),
-                            // Obx(() {
-                            //   if (!controller
-                            //       .isAnyNullInPickup(order.dispatchOrderNo)) {
-                            //     return GainerPrimaryButton(
-                            //       onPressed: () {},
-                            //       title: 'Submit',
-                            //     );
-                            //   }
-                            //   return const SizedBox.shrink();
-                            // }),
-                            // if (!controller
-                            //     .isAnyNullInPickup(order.dispatchOrderNo))
-                            //   GainerPrimaryButton(
-                            //     onPressed: () {},
-                            //     title: 'Submit',
-                            //   ),
                           ],
                         ),
                       ),
@@ -125,125 +101,6 @@ class DDExpansionTile extends GetView<DDController> {
           ],
           is48Complete: is48Complete,
         ),
-        // child: ExpansionTile(
-        //   // key: ValueKey(controller.expandedIndex.value == index),
-        //   // initiallyExpanded: controller.expandedIndex.value == index,
-        //   // onExpansionChanged: (expanded) {
-        //   //   controller.toggle(index, expanded);
-        //   // },
-        //
-        //   tilePadding: const EdgeInsets.symmetric(horizontal: 10),
-        //   backgroundColor: GainerColors.lightWhite,
-        //   collapsedBackgroundColor:
-        //       is48Complete ? GainerColors.lightPink : GainerColors.lightWhite,
-        //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        //   collapsedShape:
-        //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        //   title: DDExpansionTileHeader(
-        //     title1: 'Pending Since',
-        //     subTitle1: order.lrDate,
-        //     title2: brand,
-        //     subTitle2: location,
-        //     title3: '₹ ${order.val.toInt()}',
-        //   ),
-        //   children: [
-        //     Container(
-        //       decoration: _gradientDecoration(),
-        //       padding: const EdgeInsets.all(8),
-        //       child: Column(
-        //         crossAxisAlignment: CrossAxisAlignment.start,
-        //         children: [
-        //           Row(
-        //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //             children: [
-        //               Expanded(
-        //                 child: Column(
-        //                   crossAxisAlignment: CrossAxisAlignment.start,
-        //                   children: [
-        //                     _keyVal('LR No.: ', order.lrNumber),
-        //                     _keyVal('LSP: ', order.lsp),
-        //                     const SizedBox(height: 5),
-        //                     ...List.generate(
-        //                         count,
-        //                         (index) => _generateBoxImgRow(
-        //                             order, index, context, size)),
-        //                     Obx(() {
-        //                       final hasBoxImages = !controller
-        //                           .isAnyNullInBox(order.dispatchOrderNo);
-        //                       final hasPickupImages = !controller
-        //                           .isAnyNullInPickup(order.dispatchOrderNo);
-        //
-        //                       return Column(
-        //                         children: [
-        //                           if (hasBoxImages)
-        //                             _generatePickupImgRow(
-        //                                 order, 0, context, size),
-        //                           const SizedBox(height: 5),
-        //                           if (hasPickupImages)
-        //                             GainerPrimaryButton(
-        //                               onPressed: () => controller.onSubmit(
-        //                                 order.dispatchOrderNo,
-        //                                 order.lrNumber,
-        //                               ),
-        //                               title: 'Submit',
-        //                               isLoading: controller
-        //                                   .isSubmitting(order.dispatchOrderNo),
-        //                             ),
-        //                         ],
-        //                       );
-        //                     })
-        //                     // Obx(() {
-        //                     //   if (!controller
-        //                     //       .isAnyNullInBox(order.dispatchOrderNo)) {
-        //                     //     return _generatePickupImgRow(
-        //                     //         order, 0, context, size);
-        //                     //   }
-        //                     //   return const SizedBox.shrink();
-        //                     // }),
-        //                     // Obx(() {
-        //                     //   if (!controller
-        //                     //       .isAnyNullInPickup(order.dispatchOrderNo)) {
-        //                     //     return GainerPrimaryButton(
-        //                     //       onPressed: () {},
-        //                     //       title: 'Submit',
-        //                     //     );
-        //                     //   }
-        //                     //   return const SizedBox.shrink();
-        //                     // }),
-        //                     // if (!controller
-        //                     //     .isAnyNullInPickup(order.dispatchOrderNo))
-        //                     //   GainerPrimaryButton(
-        //                     //     onPressed: () {},
-        //                     //     title: 'Submit',
-        //                     //   ),
-        //                   ],
-        //                 ),
-        //               ),
-        //             ],
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //   ],
-        //   // children: [
-        //   //   _keyVal('LR No.: ', order.lrNumber),
-        //   //   _keyVal('LSP: ', order.lsp),
-        //   //   // ListView.separated(
-        //   //   //   shrinkWrap: true,
-        //   //   //   physics: const NeverScrollableScrollPhysics(),
-        //   //   //   itemCount: group.items.length,
-        //   //   //   separatorBuilder: (_, __) =>
-        //   //   //       const Divider(height: 1, color: Colors.black38),
-        //   //   //   itemBuilder: (_, index) {
-        //   //   //     final item = group.items[index];
-        //   //   //     return DDDetailsCard(
-        //   //   //       isPart: true,
-        //   //   //       order: item,
-        //   //   //     );
-        //   //   //   },
-        //   //   // ),
-        //   // ],
-        // ),
       ),
     );
   }
@@ -258,14 +115,6 @@ class DDExpansionTile extends GetView<DDController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Column(
-            //   crossAxisAlignment: CrossAxisAlignment.end,
-            //   children: [
-            //     // if (rowIndex == 0) _bold("SN"),
-            //     Text('${rowIndex + 1}'),
-            //   ],
-            // ),
-
             Text('${rowIndex + 1}'),
             buildImageIcon(
                 context, "With pkg slip", order, rowIndex, 0, false, size),
@@ -298,115 +147,7 @@ class DDExpansionTile extends GetView<DDController> {
         ),
       ],
     );
-    // return Row(
-    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //   crossAxisAlignment: CrossAxisAlignment.start,
-    //   children: [
-    //     Column(
-    //       crossAxisAlignment: CrossAxisAlignment.center,
-    //       children: [
-    //         if (rowIndex == 0) _bold("SN"),
-    //         Text('${rowIndex + 1}'),
-    //       ],
-    //     ),
-    //     buildImageIcon(
-    //         context, "With pkg slip", order, rowIndex, 0, false, size),
-    //     buildImageIcon(context, "3D image 1", order, rowIndex, 1, false, size),
-    //     buildImageIcon(context, "3D image 2", order, rowIndex, 2, false, size),
-    //   ],
-    // );
   }
-
-  // Widget buildImageRow(DDModel order, int row, bool isSigned,Size size) {
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //     children: List.generate(
-  //       isSigned ? 2 : 3,
-  //       (col) => _buildImageIcon(order, row, col, isSigned,size),
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildImgIcon(BuildContext context, String text, DDModel order,
-  //     int rowIndex, int imageIndex, bool isSigned, Size size) {
-  //   final imageMeta = controller.imageMeta(text, order);
-  //   final fileName = imageMeta.$1;
-  //   final apiImage = imageMeta.$2;
-  //
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //     crossAxisAlignment: CrossAxisAlignment.center,
-  //     children: [
-  //       if (rowIndex == 0) _bold(text),
-  //       Obx(() {
-  //         final image = controller.getImage(
-  //               order: order,
-  //               row: rowIndex,
-  //               col: imageIndex,
-  //               isSigned: isSigned,
-  //             ) ??
-  //             apiImage;
-  //
-  //         final key =
-  //             '${order.dispatchOrderNo}_${rowIndex}_$imageIndex$isSigned';
-  //
-  //         final uploading = controller.uploadingMap[key] == true;
-  //
-  //         return IconButton(
-  //           onPressed: uploading
-  //               ? null
-  //               : () => controller.onImageTap(
-  //                     context,
-  //                     image,
-  //                     apiImage,
-  //                     text,
-  //                     order,
-  //                     rowIndex,
-  //                     imageIndex,
-  //                     isSigned,
-  //                     fileName,
-  //                   ),
-  //           icon: uploading
-  //               ? const SizedBox(
-  //                   width: 40,
-  //                   height: 40,
-  //                   child: CircularProgressIndicator(),
-  //                 )
-  //               : Container(
-  //                   constraints: BoxConstraints(
-  //                     minHeight: size.height * .2, // Minimum height
-  //                     maxHeight: size.height * .7, // Maximum height
-  //                     minWidth: size.width * .9,
-  //                     maxWidth: size.width,
-  //                   ),
-  //                   child: Image.network(
-  //                     'https://scope.sparecare.in/Upload/DispatchDetails/$image',
-  //                     width: size.width * .2,
-  //                     height: size.width * .2,
-  //                     fit: BoxFit.cover,
-  //                     loadingBuilder: (context, child, loadingProgress) {
-  //                       if (loadingProgress == null) {
-  //                         return child; // Display the image once loaded
-  //                       }
-  //                       return Center(
-  //                         child: CircularProgressIndicator(
-  //                           value: loadingProgress.expectedTotalBytes != null
-  //                               ? loadingProgress.cumulativeBytesLoaded /
-  //                                   (loadingProgress.expectedTotalBytes ?? 1)
-  //                               : null, // Show indeterminate if null
-  //                         ),
-  //                       );
-  //                     },
-  //                     errorBuilder: (context, error, stackTrace) =>
-  //                         const Icon(Icons.error),
-  //                   ),
-  //                 ),
-  //           // : _buildImageWidget(image),
-  //         );
-  //       }),
-  //     ],
-  //   );
-  // }
 
   Widget buildImageIcon(
     BuildContext context,
@@ -462,7 +203,10 @@ class DDExpansionTile extends GetView<DDController> {
                       );
                     },
               icon: uploading
-                  ? const CircularProgressIndicator(color: GainerColors.primary)
+                  ? Platform.isIOS
+                      ? CircularProgressIndicator.adaptive()
+                      : const CircularProgressIndicator(
+                          color: GainerColors.primary)
                   : image is File
                       ? Image.file(
                           image,
@@ -482,17 +226,20 @@ class DDExpansionTile extends GetView<DDController> {
                                   return child; // Display the image once loaded
                                 }
                                 return Center(
-                                  child: CircularProgressIndicator(
-                                    color: GainerColors.primary,
-                                    value: loadingProgress.expectedTotalBytes !=
-                                            null
-                                        ? loadingProgress
-                                                .cumulativeBytesLoaded /
-                                            (loadingProgress
-                                                    .expectedTotalBytes ??
-                                                1)
-                                        : null, // Show indeterminate if null
-                                  ),
+                                  child: Platform.isIOS
+                                      ? CircularProgressIndicator.adaptive()
+                                      : CircularProgressIndicator(
+                                          color: GainerColors.primary,
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  (loadingProgress
+                                                          .expectedTotalBytes ??
+                                                      1)
+                                              : null, // Show indeterminate if null
+                                        ),
                                 );
                               },
                               errorBuilder: (context, error, stackTrace) =>
@@ -532,5 +279,4 @@ class DDExpansionTile extends GetView<DDController> {
   Widget _keyVal(String key, String val) => Row(
         children: [_label(key), _bold(val)],
       );
-
 }

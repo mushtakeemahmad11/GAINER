@@ -41,6 +41,7 @@ class SaleTrendController extends GetxController {
     partSuggestions.clear();
     chartData.value = [];
     error.value = null;
+    graphError.value = null;
     max.value = 0.0;
     stock.value = 0.0;
     partFamily.clear();
@@ -64,8 +65,7 @@ class SaleTrendController extends GetxController {
       // String brandId = await getStringData('brandID') ?? 0;
       // String brandId = await getStringData('brandID') ?? 0;
       partSearchLoading.value = true;
-      final response =
-          await api.searchPart(query); // API call function
+      final response = await api.searchPart(query); // API call function
       partSearchLoading.value = false;
       if (response['success']) {
         partSuggestions.value = response['data'];
@@ -80,11 +80,6 @@ class SaleTrendController extends GetxController {
     if (isLoading.value) return;
     if (formKey.currentState!.validate()) {
       String partNumber = searchController.text;
-      // var stockDetails = _locationController.stockDetails;
-      // String brandId = stockDetails['BrandID'].toString();
-      // String dealerId = stockDetails['DealerID'].toString();
-      // String locationId = stockDetails['LocationID'].toString();
-      // int tCode = await getIntData("tCode");
       final bdl = await AuthService.getBDLId();
       String brandId = bdl['brandId'] ?? '';
       String dealerId = bdl['dealerId'] ?? '';

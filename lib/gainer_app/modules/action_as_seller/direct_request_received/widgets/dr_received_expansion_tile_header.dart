@@ -30,7 +30,7 @@ class DrReceivedExpansionTileHeader extends StatelessWidget {
                 maxWidth: maxFirstWidth,
               ),
               child: ScrollableTextWidget(
-                textWidget: _titleText(title1),
+                textWidget: _titleText('$title1 $title1 $title1 $title1 $title1'),
               ),
             ),
 
@@ -40,7 +40,7 @@ class DrReceivedExpansionTileHeader extends StatelessWidget {
             Expanded(
               child: Center(
                 child: ScrollableTextWidget(
-                  textWidget: _titleText(title2),
+                  textWidget: _titleText('$title2 $title2 '),
                 ),
               ),
             ),

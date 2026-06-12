@@ -108,15 +108,6 @@ class AuthService {
     return now - loginTime >= maxSessionMs;
   }
 
-  //
-  // static Future<bool> checkSessionExpired() async {
-  //   final logTime = await _storage.read(key: _loginTime);
-  //   final int loginTime = int.tryParse(logTime ?? '') ?? 0;
-  //
-  //   const int fourHours = 4 * 60 * 60 * 1000;
-  //   final int currentTime = DateTime.now().millisecondsSinceEpoch;
-  //   return (currentTime - loginTime) > fourHours;
-  // }
 
   /* ================= TCODE ================= */
   static Future<void> saveTCode(String tCode) async {

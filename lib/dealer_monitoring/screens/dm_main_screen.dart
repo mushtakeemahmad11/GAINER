@@ -29,7 +29,6 @@ class DMMainScreen extends StatefulWidget {
 class _DMMainScreenState extends State<DMMainScreen> {
   DMMainController dMMainController = Get.put(DMMainController());
   final appSwitcherCtrl = Get.find<AppSwitcherController>();
-  // final LocationController _locationController = Get.put(LocationController());
 
   final List<Widget> screens = [
     _HomeMenuGrid(), // 0: Home
@@ -113,7 +112,6 @@ class _DMMainScreenState extends State<DMMainScreen> {
                     String locationId =
                         appSwitcherCtrl.locationIdMap[newValue].toString();
                     appSwitcherCtrl.selectedLocationId.value = locationId;
-                    // appSwitcherCtrl.updateStockDetails(locationId);
                     await AuthService.saveLocationId(locationId);
                     await AuthService.saveLocation(newValue);
                   }
@@ -122,20 +120,12 @@ class _DMMainScreenState extends State<DMMainScreen> {
             }),
           ],
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.notifications_outlined),
-        //     onPressed: () {},
-        //   ),
-        // ],
       ),
       drawer: _buildDrawerButton(),
-      // drawer: Drawer(child: ListView(children: [DrawerHeader(child: Text('Header')), ListTile(title: Text('Item'))])),
-
       body: Obx(() {
         return PopScope(
-          canPop: dMMainController.currentScreen.value ==
-              0, // Only allow pop if on the home screen
+          // Only allow pop if on the home screen
+          canPop: dMMainController.currentScreen.value == 0,
           onPopInvokedWithResult: _handleBackPressed,
           child: screens[dMMainController.currentScreen.value],
         );
@@ -149,26 +139,11 @@ class _DMMainScreenState extends State<DMMainScreen> {
             IconButton(
               icon: Icon(Icons.home_outlined, size: 35),
               onPressed: () {
-                // Get.to(() => VehicleTestScreen());
                 dMMainController.currentScreen.value = 0;
               },
             ),
-            // //Dealer Name
-            // Expanded(
-            //   child: Center(
-            //     child: SingleChildScrollView(
-            //       scrollDirection: Axis.horizontal,
-            //       child: Text(
-            //         _locationController.stockDetails['Dealer'] ?? 'Dealer Name',
-            //         style: TextStyle(color: Colors.white,fontSize: 18),
-            //         // overflow: TextOverflow.ellipsis,
-            //       ),
-            //     ),
-            //   ),
-            // ),
             IconButton(
               icon: Icon(Icons.logout_outlined, size: 35),
-              // onPressed: () => AppDialog.logoutBtnFunctionality(),
               onPressed: () => AuthService.logout('UserLogoutSIMS'),
             ),
           ],
@@ -215,11 +190,6 @@ class _DMMainScreenState extends State<DMMainScreen> {
               ),
             ),
           ),
-
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: Text("version:  1.1", style: TextStyle(color: Colors.grey)),
-          // ),
         ],
       ),
     );
@@ -251,19 +221,9 @@ class _DMMainScreenState extends State<DMMainScreen> {
   }
 }
 
-// class PartReqView extends StatelessWidget {
-//   const PartReqView({super.key});
-//   @override
-//   Widget build(BuildContext context) {
-//     PartRequestBinding().dependencies();
-//     return const PartRequestView();
-//   }
-// }
-
 class _HomeMenuGrid extends StatelessWidget {
   final DMMainController controller = Get.find();
 
-  // onRefresh: () => controller.initWork(),
   @override
   Widget build(BuildContext context) {
     final menuItems = controller.menuItems;
@@ -307,9 +267,6 @@ class _HomeMenuGrid extends StatelessWidget {
                         color: DMAppColors.primary,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      // child: Icon(menuItems[index]['icon'],
-                      //     size: 30, color: Colors.black,
-                      // ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Image.asset(

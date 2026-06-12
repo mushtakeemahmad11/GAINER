@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/core/services/dm_api_services.dart';
+import 'package:gainer/gainer_app/core/widgets/gainer_bottom_sheet.dart';
 import 'package:gainer/gainer_app/modules/main_view/models/location_data_model.dart';
 import 'package:gainer/test/gainer_sims.dart';
 import 'package:get/get.dart';
@@ -86,9 +87,14 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
     }
   }
 
+  void appAccessSnackBar() {
+    GainerBottomSheet.showSnackBar("You are not authorised to access this");
+  }
+
   Future<void> _checkSession() async {
     final session = await AuthService.checkSessionExpired();
     if (session) await AuthService.logout('SessionExpired');
+    print('_checkSession: $session');
   }
 
   LocationDataModel? getStock() => selectedStock.value;
@@ -115,31 +121,40 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
       }
 
       // Safe access
-      final dealerId = locationDataList.first.dealerId;
-
-      final List<String> locationsId =
-          locationDataList.map((item) => item.locationId.toString()).toList();
+      // final dealerId = locationDataList.first.dealerId;
+      // final List<String> locationsId =
+      //     locationDataList.map((item) => item.locationId.toString()).toList();
+      // String? userId = await AuthService.getUserId();
+      // await FirebaseDbCreation.storeDeviceToken(
+      //   tCode: userTCode.toString(),
+      //   userId: userId,
+      //   dealerId: dealerId.toString(),
+      //   locationIds: locationsId,
+      // );
 
       await getUSerRole();
-      String? userId = await AuthService.getUserId();
-      await FirebaseDbCreation.storeDeviceToken(
-        tCode: userTCode.toString(),
-        userId: userId,
-        dealerId: dealerId.toString(),
-        locationIds: locationsId,
+      await FirebaseDbCreation.storeUserDetails(
+        role: userRole.value,
+        dealerId: locationIdMap.values.first,
+        locationIds: locationIdMap,
+        appVersion: newVersion.value,
       );
     } catch (e, stack) {
       // 🔒 GLOBAL SAFETY (App Store & Play Store friendly)
       errMsg.value = 'Unexpected error occurred. Please try again.';
       debugPrintStack(stackTrace: stack);
     }
+    print('getLocation Done');
   }
 
+  RxString userRole = ''.obs;
   Future<void> getUSerRole() async {
     String tCode = await AuthService.getTCode();
     final response = await DMApiServices().getUserRole(userId: tCode);
+    print('Response getUserRole $response');
     if (response['success']) {
       final role = response['role'].toLowerCase() ?? "NotDefine";
+      userRole.value = role;
       await AuthService.saveUserRole(role);
     }
   }
@@ -160,6 +175,7 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
             item.location: item.locationId.toString()
         };
         selectedLocation.value = locationIdMap.keys.first;
+        print('Location Data: ${locationIdMap}');
         //update stock details by default 0 index
         updateStockDetails(locationIdMap.values.first);
 
@@ -207,6 +223,7 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
     } catch (e) {
       debugPrint('Version fetch error: $e');
     }
+    print('_fetchVersionFromFirestore $response');
   }
 
   final RxMap<String, dynamic> appAccess = <String, dynamic>{}.obs;
@@ -216,11 +233,14 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
     if (response['success']) {
       final data = response['data'];
       appAccess.assignAll(data);
+      // appAccess.assignAll({'IsSimsActive': 1, 'IsGainerActive': 0});
     }
+    print('_checkAppAccess: $response');
   }
 
   Future<void> _notificationPermission() async {
     NotificationServiceNEW.requestPermission();
+    print('_notificationPermission Done');
     return;
     // await NotificationServiceNEW.init();
     // await LocalNotificationService.init();

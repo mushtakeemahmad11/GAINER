@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/constants/gainer_image.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_bottom_sheet.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_dialog.dart';
-import 'package:gainer/gainer_app/modules/bottom_navbar/home_view/home_controller.dart';
 import 'package:get/get.dart';
 import '../../core/Services/auth_service.dart';
 import '../../core/services/gainer_api_service.dart';
@@ -13,6 +12,8 @@ import 'model/part_request_part_model.dart';
 import 'widgets/tat_disc/tat_disc_sheet.dart';
 
 class PartRequestController extends GetxController {
+  GainerApiService api = GainerApiService();
+
   /// ORIGINAL / FILTERED LIST
   RxList<PartRequestModel> partRequestList = <PartRequestModel>[].obs;
   RxList<PartRequestModel> filteredList = <PartRequestModel>[].obs;
@@ -26,10 +27,6 @@ class PartRequestController extends GetxController {
 
   RxBool isFromDealer = false.obs;
   RxBool isFromDealerDirect = false.obs;
-
-  ///Get Value From Home Controller is User Allow or not for Buying
-  final HomeController homeController = Get.find<HomeController>();
-  RxBool get isAllowBuying => homeController.isAllowBuying;
 
   /// ERROR / RESPONSE MESSAGES
   RxnString errorMsg = RxnString(null);
@@ -54,7 +51,7 @@ class PartRequestController extends GetxController {
     initWorkPartReq();
   }
 
-  void initWorkPartReq() {
+  Future<void> initWorkPartReq() async {
     isFromDealerDirect.value = false;
     final Map<String, dynamic> args =
         (Get.arguments as Map<String, dynamic>?) ?? {};
@@ -100,7 +97,6 @@ class PartRequestController extends GetxController {
     searchText.value = '';
     filteredList.assignAll(partRequestList);
     regroup();
-    // filteredList.assignAll(orderReceivedList);
   }
 
   String getCurrentQuery(String text) {
@@ -136,22 +132,6 @@ class PartRequestController extends GetxController {
       await fetchPartSuggestions(query);
     });
   }
-  // Future<void> onSearchChanged(String text) async {
-  //   errorMsg.value = null;
-  //
-  //   if (text.isEmpty) return;
-  //
-  //   // prevent duplicate API calls
-  //   if (text == partSearchText.value) return;
-  //
-  //   partSearchText.value = text;
-  //
-  //   await fetchPartSuggestions(text);
-  // }
-
-  // void onPartSearch() {
-  //   showAvailability(partSearchText.value);
-  // }
 
   void onPartSearch() {
     errorMsg.value = null;
@@ -167,11 +147,6 @@ class PartRequestController extends GetxController {
 
   RxBool partSearchLoading = false.obs;
   var partSuggestions = <String>[].obs;
-  // Function to handle part number selection
-  // void selectPartNumber(String partNumber) {
-  //   partSearchController.text = partNumber;
-  //   partSuggestions.clear();
-  // }
 
   void selectPartNumber(String selectedPart) {
     final currentText = partSearchController.text;
@@ -204,7 +179,7 @@ class PartRequestController extends GetxController {
       return;
     } else if (query.isNotEmpty) {
       partSearchLoading.value = true;
-      final response = await GainerApiService().searchPart(query);
+      final response = await api.searchPart(query);
       partSearchLoading.value = false;
       if (response['success']) {
         partSuggestions.value = response['data'];
@@ -218,43 +193,17 @@ class PartRequestController extends GetxController {
     if (searchingPart.isEmpty) return;
 
     partSuggestions.clear();
-    // partSuggestions.clear();
-    // FocusScope.of(context).unfocus(); // Hide keyboard
 
     final bdl = await AuthService.getBDLId();
     final tCode = await AuthService.getTCode();
     brandId = bdl['brandId'].toString();
     dealerId = bdl['dealerId'].toString();
     locationId = bdl['locationId'].toString();
-    // String? orderFor = selectedValue1.value ?? '';
-    //
-    // String lspCode = '1';
-    // String tat = '';
-    // String clusterCode =
-    //     _selectedValue3 != null ? clusterData[_selectedValue3].toString() : '';
-    //
-    // List<String> partNumber =
-    //     tableData.map((item) => item['Part No.'] as String).toList();
-    // List<String> stockCategory = [
-    //   if (isSelected[0]) 'N',
-    //   if (isSelected[1]) 'S',
-    //   if (isSelected[2]) 'M',
-    // ];
-    // String withinGroup = isMyGroup ? '' : '';
-    // if (orderFor.isEmpty) {
-    //   GainerBottomSheet.showSnackBar('Please select order for');
-    //   return;
-    // }
+    await getDirectReqAccess();
 
-    // if (partNumber.isEmpty) {
-    //   GainerBottomSheet.showSnackBar('Please add some part in the table');
-    // }
-    // if (searchingPart == null) {
-    //   return GainerBottomSheet.showSnackBar('Please enter part for search');
-    // }
     isLoading.value = true;
-    final response = await GainerApiService().showPartAvailability(brandId,
-        dealerId, locationId, '', '1', '', '', searchingPart, '', '', tCode);
+    final response = await api.showPartAvailability(brandId, dealerId,
+        locationId, '', '1', '', '', searchingPart, '', '', tCode);
     isLoading.value = false;
     if (response['success']) {
       partNo.value = searchingPart;
@@ -293,7 +242,6 @@ class PartRequestController extends GetxController {
         // Low TAT first
         items.sort((a, b) => a.tat.compareTo(b.tat));
       }
-      // items.sort((a, b) => (b.discount).compareTo(a.discount));
 
       final first = items.first;
 
@@ -319,14 +267,6 @@ class PartRequestController extends GetxController {
   void submitRequest() {
     sellerLocationList = [];
     List<Map<String, dynamic>> orderData = [];
-    // final submitList = partRequestList
-    //     .where((o) => o.hasQty)
-    //     .map((o) => {
-    //           "partNumber": o.partNumber,
-    //           "qty": o.requestedQty,
-    //           "remarks": o.remarkCtl.text.trim(),
-    //         })
-    //     .toList();
 
     orderData = partRequestList.where((order) => order.hasQty).map((o) {
       //data for send in notification
@@ -368,14 +308,7 @@ class PartRequestController extends GetxController {
   }
 
   Future<void> apiSubmit(List<Map<String, dynamic>> payload) async {
-    // print("payload: $payload");
-    // return;
     String tCode = await AuthService.getTCode();
-
-    // var userID = await getIntData('tCode');
-    // String? orderFor = _partRequestController.selectedValue1.value ?? '';
-    // String lspCode = '';
-
     String tableVal = payload
         .map((item) => item.values.map((value) => value.toString()).join("|"))
         .join(",");
@@ -384,54 +317,14 @@ class PartRequestController extends GetxController {
       GainerBottomSheet.showSnackBar('Please fill qty in Request Qty');
       return;
     }
-    // bool checkInt = await checkInternet();
-    // if (!checkInt) {
-    //   Get.toNamed(Routes.NOINTERNETVIEW);
-    //   return;
-    // }
 
     isLoading.value = true;
-    var response = await GainerApiService().orderReqSubmit(
+    var response = await api.orderReqSubmit(
         brandId, dealerId, locationId, tCode, 'Vehicle', '', tableVal);
     isLoading.value = false;
     if (response['success']) {
       Get.back();
       GainerDialog.midPopUp(GainerImages.checkIcon, response['data']);
-
-      // for (var loc in sellerLocationList) {
-      //   String buyerLocation = await AuthService.getLocation();
-      //   await PushNotification.notifyDealer(
-      //     locationID: loc['locId'],
-      //     title: 'ORDER ENQUIRY',
-      //     body:
-      //         'Enquiry Received at ${loc['loc']} for Parts: ${loc['parts']} worth Rs: ${loc['price'] * loc['qty']}/- from $buyerLocation. Pl check & accept order via Gainer APP',
-      //     data: {'moduleRoute': Routes.ORDERRECEIVED, 'LocationId': loc['locId']},
-      //   );
-      // }
-      // for (var i in payload) {
-      //   String sellerLocationID = i['sellerLocationId'];
-      //   String sellerLocation = 'locationnnnnn';z
-      //   // String sellerLocation = i['sellerLocation'];
-      //   // String partNum = i['partNumber'];
-      //   // String dealerName = await AuthService.getDealer();
-      //   String buyerLocation = await AuthService.getLocation();
-      //   int worth = double.tryParse(i['price'])?.toInt() ?? 0;
-      //   int qty = int.tryParse(i['orderQty']?.toString() ?? '0') ?? 0;
-      //   await PushNotification.notifyDealer(
-      //     locationID: sellerLocationID,
-      //     title: 'ORDER ENQUIRY',
-      //     body:
-      //         'Enquiry Received at $sellerLocation for Parts worth Rs: ${worth * qty}/- from Buyer – $buyerLocation. Pl check & accept order via Gainer APP',
-      //     data: {'moduleRoute': Routes.ORDERRECEIVED},
-      //   );
-      //   // await SendNotification.notifyDealerUsers(
-      //   //     sellerLocationID,
-      //   //     "Order Request (RECEIVED)",
-      //   //     "Part: $partNum\n"
-      //   //         "Buyer: $dealerName, $locationName\n"
-      //   //         "Pl check & CONFIRM order",
-      //   //     {"app": "gainer", "Screen": "orderReceived"});
-      // }
     } else {
       GainerBottomSheet.showSnackBar(response['message']);
     }
@@ -458,6 +351,16 @@ class PartRequestController extends GetxController {
       ),
       isScrollControlled: true,
     );
+  }
+
+  final RxBool _isAllowBuying = false.obs;
+  bool get isAllowBuying => _isAllowBuying.value;
+  Future<void> getDirectReqAccess() async {
+    final response = await api.getDirectRequestAccess(locationId: locationId);
+    if (response['success']) {
+      final data = response['data'][0];
+      _isAllowBuying.value = data['AllowBuying'];
+    }
   }
 
   @override

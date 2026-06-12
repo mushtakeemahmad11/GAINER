@@ -18,10 +18,10 @@ class ExpansionTileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
       children: [
-        _titleText(title1),
+        Flexible(child: ScrollableTextWidget(textWidget: _titleText(title1))),
         Expanded(
           child: Center(
             child: ScrollableTextWidget(textWidget: _titleText(title2)),

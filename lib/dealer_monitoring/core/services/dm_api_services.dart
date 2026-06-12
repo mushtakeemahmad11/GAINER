@@ -2,23 +2,21 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:gainer/gainer_app/core/Services/auth_service.dart';
+import '../../../gainer_app/core/Services/auth_service.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
+// import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 class DMApiServices {
-  // String baseUrl = "http://web10.185.238.new.ocpwebserver.com/api/v1/dm";
-  String baseUrl = 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/dm';
-  String scopeUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
-  // String baseUrl = "https://scopeapi.sparecare.in/api/v1/dm";
+  // final String baseUrl = "http://web10.185.238.new.ocpwebserver.com/api/v1/dm";
+  // final String baseUrl = 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/dm';
+  final String scopeUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
+  final String baseUrl = "https://scopeapi.sparecare.in/api/v1/dm";
 
   Future<Map<String, dynamic>> getUserRole({required String userId}) async {
-    String url = '$baseUrl/user-role';
+    final String url = '$baseUrl/user-role';
 
-    final Map<String, dynamic> requestBody = {
-      "userId": userId,
-    };
+    final Map<String, dynamic> requestBody = {"userId": userId};
 
     try {
       final response = await http
@@ -78,7 +76,7 @@ class DMApiServices {
     required String locationId,
     required String partNumber,
   }) async {
-    String url = '$baseUrl/partdetail';
+    final String url = '$baseUrl/partdetail';
 
     final Map<String, dynamic> requestBody = {
       "brandid": brandId,
@@ -136,7 +134,7 @@ class DMApiServices {
     required String partNumber,
     required String userId,
   }) async {
-    String url = '$baseUrl/partsale';
+    final String url = '$baseUrl/partsale';
     final Map<String, dynamic> requestBody = {
       "brandid": brandId,
       "dealerid": dealerId,
@@ -146,6 +144,7 @@ class DMApiServices {
     };
 
     try {
+      print("Request: $url, $requestBody");
       final response = await http
           .post(
             Uri.parse(url),
@@ -154,7 +153,7 @@ class DMApiServices {
           )
           .timeout(const Duration(seconds: 10));
 
-      // print("response of partsale: ${response.body}");
+      print("response of partsale: ${response.body}");
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         final data = json['Details'];
@@ -197,7 +196,7 @@ class DMApiServices {
     required String partNumber,
     required String userId,
   }) async {
-    String url = '$baseUrl/partstock';
+    final String url = '$baseUrl/partstock';
 
     final Map<String, dynamic> requestBody = {
       "brandid": brandId,
@@ -259,7 +258,7 @@ class DMApiServices {
     required String userId,
     String? monthDate,
   }) async {
-    String url = '$baseUrl/ppni-l';
+    final String url = '$baseUrl/ppni-l';
     final Map<String, dynamic> requestBody = {
       "dealerid": dealerId,
       "locationid": locationId,
@@ -338,7 +337,7 @@ class DMApiServices {
     int page = 1,
     int limit = 15,
   }) async {
-    String url = '$baseUrl/ppni-v';
+    final String url = '$baseUrl/ppni-v';
 
     final Map<String, dynamic> requestBody = {
       "dealerid": dealerId,
@@ -424,7 +423,7 @@ class DMApiServices {
     required String userId,
     String? monthDate,
   }) async {
-    String url = '$baseUrl/ppni-p';
+    final String url = '$baseUrl/ppni-p';
 
     final Map<String, dynamic> requestBody = {
       "dealerid": dealerId,
@@ -485,7 +484,7 @@ class DMApiServices {
     required String userId,
     String? date,
   }) async {
-    String url = '$baseUrl/ppni-a';
+    final String url = '$baseUrl/ppni-a';
 
     final Map<String, dynamic> requestBody = {
       "dealerid": dealerId,
@@ -543,7 +542,7 @@ class DMApiServices {
     required String? jobCardStatus,
     String? advisor,
   }) async {
-    String url = '$baseUrl/ppni';
+    final String url = '$baseUrl/ppni';
 
     final Map<String, dynamic> requestBody = {
       "dealerid": dealerId,
@@ -606,7 +605,7 @@ class DMApiServices {
     int page = 1,
     int limit = 10,
   }) async {
-    String url = '$baseUrl/vehicle';
+    final String url = '$baseUrl/vehicle';
 
     final Map<String, dynamic> requestBody = {
       "dealerid": dealerId,
@@ -620,7 +619,6 @@ class DMApiServices {
       "userId": userId,
     };
 
-    print("Request Body for Vehicle: $url, $requestBody");
     try {
       final response = await http
           .post(
@@ -629,566 +627,8 @@ class DMApiServices {
             body: jsonEncode(requestBody),
           )
           .timeout(const Duration(seconds: 10));
-      print(
-          "🔹 Response Body Vehicle: ${response.statusCode}, ${response.body}");
 
       if (response.statusCode == 200) {
-        // final dummyData = {
-        //   "Data": [
-        //     {"Count": 23},
-        //     [
-        //       {
-        //         "bigid": "96625",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0W32111NA",
-        //         "Latest": "0W32111NA",
-        //         "partdesc": "CED BOL PANEL ROOF",
-        //         "category": "Spare Part",
-        //         "Price": 11612.7,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 11612.7,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 0,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 0,
-        //         "GroupStock": 0,
-        //         "LocationQtyJson": null
-        //       },
-        //       {
-        //         "bigid": "96613",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0101EN2070A",
-        //         "Latest": "0101EN2070A",
-        //         "partdesc": "PANEL BODY SIDE QTR RH-CED.",
-        //         "category": "Spare Part",
-        //         "Price": 9666.41,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 9666.41,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 0,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 0,
-        //         "GroupStock": 0,
-        //         "LocationQtyJson": null
-        //       },
-        //       {
-        //         "bigid": "96614",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0101EN2080A",
-        //         "Latest": "0101EN2080A",
-        //         "partdesc": "PANEL BODY SIDE QTR LH-CED..",
-        //         "category": "Spare Part",
-        //         "Price": 9666.41,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 9666.41,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "Y",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 1,
-        //         "GroupStock": 1,
-        //         "LocationQtyJson": "[{\"Location\":\"Alwar\",\"Qty\":1.00}]"
-        //       },
-        //       {
-        //         "bigid": "96616",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0103AAN00910A",
-        //         "Latest": "0103AAN00910A",
-        //         "partdesc": "FRONT DOOR ASSY COMPLETE LH - CED",
-        //         "category": "Spare Part",
-        //         "Price": 6712.24,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 6712.24,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 1,
-        //         "GroupStock": 1,
-        //         "LocationQtyJson": "[{\"Location\":\"Alwar\",\"Qty\":1.00}]"
-        //       },
-        //       {
-        //         "bigid": "96617",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0103AN0350A",
-        //         "Latest": "0103AN0350A",
-        //         "partdesc": "ASSY DOOR FRT WELDG COMP RT-ced",
-        //         "category": "Spare Part",
-        //         "Price": 6712.24,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 6712.24,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 0,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 1,
-        //         "GroupStock": 4,
-        //         "LocationQtyJson":
-        //             "[{\"Location\":\"Alwar\",\"Qty\":1.00},{\"Location\":\"Bharatpur\",\"Qty\":2.00},{\"Location\":\"Bhiwadi\",\"Qty\":1.00}]"
-        //       },
-        //       {
-        //         "bigid": "96618",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0103BN0280A",
-        //         "Latest": "0103BN0280A",
-        //         "partdesc": "ASSY DOOR REAR WELDG COMP RH-ced",
-        //         "category": "Spare Part",
-        //         "Price": 6712.24,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 6712.24,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 3,
-        //         "GroupStock": 4,
-        //         "LocationQtyJson":
-        //             "[{\"Location\":\"Alwar\",\"Qty\":3.00},{\"Location\":\"Bhiwadi\",\"Qty\":1.00}]"
-        //       },
-        //       {
-        //         "bigid": "96619",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0103BN0290A",
-        //         "Latest": "0103BN0290A",
-        //         "partdesc": "ASSY DOOR REAR WELDG COMP LH-ced",
-        //         "category": "Spare Part",
-        //         "Price": 6712.24,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 6712.24,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 0,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 0,
-        //         "GroupStock": 1,
-        //         "LocationQtyJson": "[{\"Location\":\"Bharatpur\",\"Qty\":1.00}]"
-        //       },
-        //       {
-        //         "bigid": "96611",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0101CN0130NCED",
-        //         "Latest": "0101CN0130NCED",
-        //         "partdesc": "assy C/ TOP+W/SHILED FRAME- Bolero -CED",
-        //         "category": "Spare Part",
-        //         "Price": 6211.16,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 6211.16,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 3,
-        //         "GroupStock": 6,
-        //         "LocationQtyJson":
-        //             "[{\"Location\":\"Alwar\",\"Qty\":3.00},{\"Location\":\"Bharatpur\",\"Qty\":3.00}]"
-        //       },
-        //       {
-        //         "bigid": "96620",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0105CAN00910A",
-        //         "Latest": "0105CAN00910A",
-        //         "partdesc": "ROOF TRIM HIGH BEIGE",
-        //         "category": "Spare Part",
-        //         "Price": 3738.3,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 3738.3,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 2,
-        //         "GroupStock": 2,
-        //         "LocationQtyJson": "[{\"Location\":\"Alwar\",\"Qty\":2.00}]"
-        //       },
-        //       {
-        //         "bigid": "96628",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "1701AAA06421N",
-        //         "Latest": "1701AAA06421N",
-        //         "partdesc": "HEAD LAMP ASSY RH",
-        //         "category": "Spare Part",
-        //         "Price": 2805,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 2805,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 0,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 0,
-        //         "GroupStock": 2,
-        //         "LocationQtyJson":
-        //             "[{\"Location\":\"Bharatpur\",\"Qty\":1.00},{\"Location\":\"Bhiwadi\",\"Qty\":1.00}]"
-        //       },
-        //       {
-        //         "bigid": "96622",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0108EAN03220N",
-        //         "Latest": "0108EAN03220N",
-        //         "partdesc": "DECAL FOR LIGHT BODIES",
-        //         "category": "Spare Part",
-        //         "Price": 2149.65,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 2149.65,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "Y",
-        //         "PPNI_Qty": 0,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 0,
-        //         "GroupStock": 0,
-        //         "LocationQtyJson": null
-        //       },
-        //       {
-        //         "bigid": "96615",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0102CAN02850NA",
-        //         "Latest": "0102CAN02850NA",
-        //         "partdesc": "CED FENDER ASSY COMPLETE RH",
-        //         "category": "Spare Part",
-        //         "Price": 1987.58,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 1987.58,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "Y",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 2,
-        //         "GroupStock": 4,
-        //         "LocationQtyJson":
-        //             "[{\"Location\":\"Alwar\",\"Qty\":2.00},{\"Location\":\"Bharatpur\",\"Qty\":2.00}]"
-        //       },
-        //       {
-        //         "bigid": "96641",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0108AAN00210N",
-        //         "Latest": "0108AAN00210N",
-        //         "partdesc": "RADIATOR GRILL ASSY COMP",
-        //         "category": "Spare Part",
-        //         "Price": 1556.78,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 1556.78,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 2,
-        //         "GroupStock": 4,
-        //         "LocationQtyJson":
-        //             "[{\"Location\":\"Alwar\",\"Qty\":2.00},{\"Location\":\"Bharatpur\",\"Qty\":2.00}]"
-        //       },
-        //       {
-        //         "bigid": "96612",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0101DK0570A",
-        //         "Latest": "0101DK0570A",
-        //         "partdesc": "DRIP RAIL SIDE LH CED Bolero SLX",
-        //         "category": "Spare Part",
-        //         "Price": 632.4,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 632.4,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 2,
-        //         "GroupStock": 2,
-        //         "LocationQtyJson": "[{\"Location\":\"Alwar\",\"Qty\":2.00}]"
-        //       },
-        //       {
-        //         "bigid": "96624",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0109AN0010A",
-        //         "Latest": "0109AN0010A",
-        //         "partdesc": "MIRROR-INSIDE-ANTIGLARE WITH CAP",
-        //         "category": "Spare Part",
-        //         "Price": 395.25,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 395.25,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "Y",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 1,
-        //         "GroupStock": 1,
-        //         "LocationQtyJson": "[{\"Location\":\"Alwar\",\"Qty\":1.00}]"
-        //       },
-        //       {
-        //         "bigid": "96621",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0105CN0060A",
-        //         "Latest": "0105CN0060A",
-        //         "partdesc": "KIT PILLAR TRIM",
-        //         "category": "Spare Part",
-        //         "Price": 323.85,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 323.85,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 1,
-        //         "GroupStock": 1,
-        //         "LocationQtyJson": "[{\"Location\":\"Alwar\",\"Qty\":1.00}]"
-        //       },
-        //       {
-        //         "bigid": "96608",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0028446CED",
-        //         "Latest": "0028446CED",
-        //         "partdesc": "ASSYA-PILLAR INNERRHWITHCED",
-        //         "category": "Spare Part",
-        //         "Price": 310.46,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 310.46,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 2,
-        //         "GroupStock": 2,
-        //         "LocationQtyJson": "[{\"Location\":\"Alwar\",\"Qty\":2.00}]"
-        //       },
-        //       {
-        //         "bigid": "96607",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0028445CED1",
-        //         "Latest": "0028445CED1",
-        //         "partdesc": "Assy. A-Pillar Inner Lh with CED",
-        //         "category": "Spare Part",
-        //         "Price": 301.54,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 301.54,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 1,
-        //         "GroupStock": 2,
-        //         "LocationQtyJson":
-        //             "[{\"Location\":\"Alwar\",\"Qty\":1.00},{\"Location\":\"Bharatpur\",\"Qty\":1.00}]"
-        //       },
-        //       {
-        //         "bigid": "96626",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0W33211",
-        //         "Latest": "0W33211",
-        //         "partdesc": "FRT PLR OTR RT",
-        //         "category": "Spare Part",
-        //         "Price": 249.9,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 249.9,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 2,
-        //         "GroupStock": 3,
-        //         "LocationQtyJson":
-        //             "[{\"Location\":\"Alwar\",\"Qty\":2.00},{\"Location\":\"Bharatpur\",\"Qty\":1.00}]"
-        //       },
-        //       {
-        //         "bigid": "96627",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0W33212",
-        //         "Latest": "0W33212",
-        //         "partdesc": "FRT PLR OUTER LT",
-        //         "category": "Spare Part",
-        //         "Price": 249.9,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 249.9,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 0,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 1,
-        //         "GroupStock": 1,
-        //         "LocationQtyJson": "[{\"Location\":\"Alwar\",\"Qty\":1.00}]"
-        //       },
-        //       {
-        //         "bigid": "96609",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0029202",
-        //         "Latest": "29202",
-        //         "partdesc": "STRIP RR.DOOR RT.",
-        //         "category": "Spare Part",
-        //         "Price": 153,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 153,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 3,
-        //         "GroupStock": 4,
-        //         "LocationQtyJson":
-        //             "[{\"Location\":\"Alwar\",\"Qty\":3.00},{\"Location\":\"Bharatpur\",\"Qty\":1.00}]"
-        //       },
-        //       {
-        //         "bigid": "96610",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0029203",
-        //         "Latest": "29203",
-        //         "partdesc": "W/STRIP RR DOOR LT",
-        //         "category": "Spare Part",
-        //         "Price": 153,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 153,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 3,
-        //         "GroupStock": 4,
-        //         "LocationQtyJson":
-        //             "[{\"Location\":\"Alwar\",\"Qty\":3.00},{\"Location\":\"Bharatpur\",\"Qty\":1.00}]"
-        //       },
-        //       {
-        //         "bigid": "96623",
-        //         "DealerId": 8,
-        //         "LocationId": 14,
-        //         "Vehiclenumber": "RJ02UA9554",
-        //         "jobcard_number": "RO26A022906",
-        //         "part_number1": "0108FN0990N",
-        //         "Latest": "0108FN0990N",
-        //         "partdesc": "COVER ASSY VENTILATOR RH",
-        //         "category": "Spare Part",
-        //         "Price": 44.63,
-        //         "Qty": 1,
-        //         "Final_close": "Close",
-        //         "Value": 44.63,
-        //         "OrderDate": "2026-02-03T17:07:56.753Z",
-        //         "All_Time_NonStck": "N",
-        //         "PPNI_Qty": 1,
-        //         "IssueStatus": "Not Issued",
-        //         "BrandID": 9,
-        //         "StockQty": 6,
-        //         "GroupStock": 15,
-        //         "LocationQtyJson":
-        //             "[{\"Location\":\"Alwar\",\"Qty\":6.00},{\"Location\":\"Bharatpur\",\"Qty\":5.00},{\"Location\":\"Bhiwadi\",\"Qty\":3.00},{\"Location\":\"Neemrana\",\"Qty\":1.00}]"
-        //       }
-        //     ]
-        //   ],
-        //   "Score": [
-        //     {
-        //       "InStockCount": 18,
-        //       "InStockTotal": 46110.88,
-        //       "OutStockCount": 5,
-        //       "OutStockTotal": 32946
-        //     }
-        //   ]
-        // };
-        // final Map<String, dynamic> json = dummyData;
         final Map<String, dynamic> json = jsonDecode(response.body);
 
         if (json.containsKey('Data') && json['Data'] is List) {
@@ -1241,7 +681,7 @@ class DMApiServices {
   }) async {
     // print("DealerId: $dealerId, PartNumber: $partNumber");
 
-    String url = '$baseUrl/norms';
+    final String url = '$baseUrl/norms';
     final Map<String, dynamic> requestBody = {
       "locationid": locationId,
       "dealerid": dealerId,
@@ -1295,7 +735,7 @@ class DMApiServices {
     required String lDate,
     required String userId,
   }) async {
-    String url = '$baseUrl/order';
+    final String url = '$baseUrl/order';
 
     final Map<String, dynamic> requestBody = {
       "dealerid": dealerId,
@@ -1353,7 +793,7 @@ class DMApiServices {
     required partNumber,
     required String userId,
   }) async {
-    String url = "$baseUrl/subparts";
+    final String url = "$baseUrl/subparts";
     final Map<String, dynamic> requestBody = {
       "brandid": brandId,
       "dealerid": dealerId,
@@ -1407,7 +847,7 @@ class DMApiServices {
     final String url = "https://scopeapi.sparecare.in/api/v1/master/dates";
     final Map<String, dynamic> requestBody = {
       "dealerid": dealerId,
-      "locationid": locationId
+      "locationid": locationId,
     };
     // print("RequestBody of Dates: $requestBody");
 
@@ -1539,9 +979,7 @@ class DMApiServices {
     required type,
   }) async {
     final String url = "$baseUrl/remark";
-    final Map<String, dynamic> requestBody = {
-      "type": type,
-    };
+    final Map<String, dynamic> requestBody = {"type": type};
     // print("RequestBody of getRemarksItem: $requestBody");
 
     try {
@@ -1636,10 +1074,10 @@ class DMApiServices {
         request.fields['advancevalue'] = advanceValue.toString();
         final ext = p.extension(file.path).toLowerCase();
         final mt = ext == '.png'
-            ? MediaType('image', 'png')
+            ? http.MediaType('image', 'png')
             : ext == '.webp'
-                ? MediaType('image', 'webp')
-                : MediaType('image', 'jpeg'); // default
+                ? http.MediaType('image', 'webp')
+                : http.MediaType('image', 'jpeg'); // default
         request.files.add(await http.MultipartFile.fromPath(
           'file',
           file.path,
@@ -1816,10 +1254,10 @@ class DMApiServices {
   }
 
   Future<Map<String, dynamic>> searchPart(String partNumber) async {
-    String brandId = await AuthService.getBrandId();
-    String locationId = await AuthService.getLocationId();
-    String tCode = await AuthService.getTCode();
-    String url = '$scopeUrl/GetPartNumber';
+    final String brandId = await AuthService.getBrandId();
+    final String locationId = await AuthService.getLocationId();
+    final String tCode = await AuthService.getTCode();
+    final String url = '$scopeUrl/GetPartNumber';
     final payload = {
       "PartNumber": partNumber,
       "BrandID": brandId,
@@ -1860,10 +1298,10 @@ class DMApiServices {
   }
 
   Future<Map<String, dynamic>> getGrpStockForVehicle(String partNumber) async {
-    String brandId = await AuthService.getBrandId();
-    String dealerId = await AuthService.getDealerId();
-    String locationId = await AuthService.getLocationId();
-    String url = '$baseUrl/grpstk';
+    final String brandId = await AuthService.getBrandId();
+    final String dealerId = await AuthService.getDealerId();
+    final String locationId = await AuthService.getLocationId();
+    final String url = '$baseUrl/grpstk';
 
     final payload = {
       "brandid": brandId,
@@ -1872,7 +1310,6 @@ class DMApiServices {
       "partnumber": partNumber,
     };
     try {
-      // print("url: $url, $payload");
       final http.Response response = await http
           .post(
             Uri.parse(url),
@@ -1880,7 +1317,6 @@ class DMApiServices {
             body: jsonEncode(payload),
           )
           .timeout(Duration(seconds: 10));
-
       final jsonData = jsonDecode(response.body);
       // get data as json string from json data
 
@@ -1907,10 +1343,10 @@ class DMApiServices {
   }
 
   Future<Map<String, dynamic>> getPartReservedDetails(String partNumber) async {
-    String brandId = await AuthService.getBrandId();
-    String dealerId = await AuthService.getDealerId();
-    String locationId = await AuthService.getLocationId();
-    String url = '$baseUrl/reserved';
+    final String brandId = await AuthService.getBrandId();
+    final String dealerId = await AuthService.getDealerId();
+    final String locationId = await AuthService.getLocationId();
+    final String url = '$baseUrl/reserved';
 
     final payload = {
       "brandid": brandId,
@@ -1919,7 +1355,6 @@ class DMApiServices {
       "partnumber": partNumber,
     };
     try {
-      print("url: $url, $payload");
       final http.Response response = await http
           .post(
             Uri.parse(url),
@@ -1927,7 +1362,6 @@ class DMApiServices {
             body: jsonEncode(payload),
           )
           .timeout(Duration(seconds: 10));
-      print("Response::: ${response.body}");
 
       final jsonData = jsonDecode(response.body);
       // get data as json string from json data

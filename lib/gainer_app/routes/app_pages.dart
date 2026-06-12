@@ -50,6 +50,7 @@ class AppPages {
       page: () => const SplashView(),
       binding: SplashBinding(),
     ),
+
     GetPage(
       name: Routes.LOGIN,
       page: () => const LoginView(),
@@ -60,14 +61,15 @@ class AppPages {
       name: Routes.DMSPLASH,
       page: () => const DMSplashScreen(),
       transition: Transition.rightToLeft,
-      // binding: HomeBinding(),
     ),
+
     GetPage(
       name: Routes.GAINERSPLASH,
       page: () => const GainerSplashView(),
       binding: GainerSplashBinding(),
       transition: Transition.rightToLeft,
     ),
+
     GetPage(
       name: Routes.NOINTERNETVIEW,
       page: () => const NoInternetView(),
@@ -77,15 +79,14 @@ class AppPages {
     GetPage(
       name: Routes.APPSWITCHER,
       page: () => const AppSwitcherView(),
-      // binding: AppSwitcherBinding(),
-      bindings: [AppSwitcherBinding(), HomeBinding()],
+      binding: AppSwitcherBinding(),
     ),
 
     ///Gainer
     GetPage(
       name: Routes.GAINERMAINVIEW,
       page: () => const GainerMainView(),
-      bindings: [GainerMainBinding(), HelpBinding()],
+      bindings: [GainerMainBinding(), HelpBinding(), HomeBinding()],
       transition: Transition.rightToLeft,
     ),
 
@@ -131,6 +132,7 @@ class AppPages {
       page: () => DrReceivedView(),
       binding: DrReceivedBinding(),
     ),
+
     GetPage(
       name: Routes.ORDERRECEIVED,
       page: () => OrderReceivedView(),

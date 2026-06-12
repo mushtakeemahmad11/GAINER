@@ -44,7 +44,9 @@ class CalFCView extends GetView<CalFCController> {
                   const SizedBox(height: 5),
                   GainerPrimaryButton(
                     title: '₹ Calculate Freight',
+                    isLoading: controller.isLoadingFC.value,
                     onPressed: () {
+                      if (controller.isLoadingFC.value) return;
                       FocusScope.of(context).unfocus();
                       controller.calculateFreight();
                     },
@@ -53,7 +55,7 @@ class CalFCView extends GetView<CalFCController> {
                   _warningText(),
                   const SizedBox(height: 16),
                   Obx(() => controller.isLoadingFC.value
-                      ? const Center(child: CircularProgressIndicator())
+                      ? const Center(child: GainerCircularLoader())
                       : _courierList(size)),
                   const SizedBox(height: 16),
                   // _remarksAndSubmit(),
@@ -527,7 +529,6 @@ class CalFCView extends GetView<CalFCController> {
       ],
     );
   }
-
 
   Map<int, TableColumnWidth> _buildColumnWidths(int columnCount) {
     final Map<int, TableColumnWidth> widths = {};

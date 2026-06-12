@@ -290,12 +290,14 @@ class DDController extends GetxController {
                       return child; // Display the image once loaded
                     }
                     return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                (loadingProgress.expectedTotalBytes ?? 1)
-                            : null, // Show indeterminate if null
-                      ),
+                      child: Platform.isIOS
+                          ? CircularProgressIndicator.adaptive()
+                          : CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      (loadingProgress.expectedTotalBytes ?? 1)
+                                  : null, // Show indeterminate if null
+                            ),
                     );
                   },
                   errorBuilder: (context, error, stackTrace) =>

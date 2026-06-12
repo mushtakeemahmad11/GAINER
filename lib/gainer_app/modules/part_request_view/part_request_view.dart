@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/core/theme/app_colors.dart';
 import 'package:gainer/dealer_monitoring/core/utils/dm_images.dart';
@@ -26,9 +24,12 @@ class PartRequestView extends GetView<PartRequestController> {
 
   @override
   Widget build(BuildContext context) {
+    //Comes from Dealer App
     final bool isDealer = controller.isFromDealer.value;
+    //Comes from Dealer App's Main page
     final bool isDealerDirect = controller.isFromDealerDirect.value;
-    final bool isAllowBuying = controller.isAllowBuying.value;
+    //Checking is direct buying allow on this location
+
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -93,12 +94,13 @@ class PartRequestView extends GetView<PartRequestController> {
                             );
                           }
                           final err = controller.errorMsg;
+                          final bool isAllowBuying = controller.isAllowBuying;
                           if (err.value != null && err.value!.isNotEmpty) {
                             if (err.value!.startsWith('Part Not Available')) {
                               return Column(
                                 children: [
                                   Center(child: AppErrorText(error: err)),
-                                  if (isAllowBuying && Platform.isAndroid)
+                                  if (isAllowBuying)
                                     GainerSecondaryButton(
                                       isAccepted: true,
                                       onTap: () =>
@@ -110,9 +112,6 @@ class PartRequestView extends GetView<PartRequestController> {
                             }
                             return Center(child: AppErrorText(error: err));
                           }
-                          // if (controller.filteredList.isEmpty) {
-                          //   return const Center(child: Text("No Orders Found"));
-                          // }
 
                           final int partLen = controller.partGroups.length;
                           return ListView.builder(

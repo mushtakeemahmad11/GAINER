@@ -66,7 +66,8 @@ class PushNotification {
     required Map<String, dynamic> data,
   }) async {
     List<String> tokens =
-        await FirebaseDbCreation.getAllToken(locationId: locationID);
+        await FirebaseDbCreation.getDeviceTokens(locationId: locationID);
+    // await FirebaseDbCreation.getAllToken(locationId: locationID);
 
     String? lastToken = "";
     for (String token in tokens) {

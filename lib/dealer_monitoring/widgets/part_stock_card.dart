@@ -35,7 +35,6 @@ class _PartStockCardState extends State<PartStockCard>
       case 'Non-Moving':
         return DMAppColors.nonMoving;
       default:
-        // return Colors.grey.shade200;
         return DMAppColors.primary;
     }
   }
@@ -56,128 +55,8 @@ class _PartStockCardState extends State<PartStockCard>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // _buildInfoRow("Part Number:", widget.partDetails['Part Number']),
-                // _buildInfoRow("Part Description:", widget.partDetails['Part Number']),
-                // _buildInfoRow("Part Category:", widget.partDetails['Part Number']),
-                // _buildInfoRow("Part Rate:", widget.partDetails['Part Number']),
-                // _buildInfoRow("Stock Qty:", widget.partDetails['Part Number']),
-
                 ...firstEntries.map((entry) =>
                     InfoRow(label: entry.key, value: entry.value.toString())),
-
-                /// 🟢 Reserved & Group Stock with Toggle Button in one Row
-                // Row(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: [
-                //     // Left column with labels
-                //     Expanded(
-                //       child: Column(
-                //         crossAxisAlignment: CrossAxisAlignment.start,
-                //         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //         // children:  [
-                //         //   Text("Reserved for vehicle:",
-                //         //       style: TextStyle(fontWeight: FontWeight.w500)),
-                //         //   Text("Group Stock:",
-                //         //       style: TextStyle(fontWeight: FontWeight.w500)),
-                //         // ],
-                //         children: lastTwoEntries.map((entry) =>
-                //             Expanded(
-                //               // child: InfoRow(label: entry.key, value: entry.value.toString()),
-                //               child:  Text(entry.key,
-                //                   style: TextStyle(fontWeight: FontWeight.w500)),
-                //             ),
-                //         ).toList(),
-                //       ),
-                //     ),
-                //
-                //     // Right column with values and toggle button
-                //     Expanded(
-                //       child: Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //         crossAxisAlignment: CrossAxisAlignment.start,
-                //         children: [
-                //           Expanded(
-                //             child: Column(
-                //               crossAxisAlignment: CrossAxisAlignment.start,
-                //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //               children: [
-                //                 Text(widget.partDetails['Part Number']),
-                //                 Text(widget.partDetails['Part Number']),
-                //               ],
-                //             ),
-                //           ),
-                //           IconButton(
-                //             onPressed: () {
-                //               setState(() {
-                //                 showDetails = !showDetails;
-                //               });
-                //             },
-                //             icon: AnimatedDropIcon(isTrue: showDetails),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ],
-                // ),
-
-                // Row(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //
-                //   children: [
-                //     // Left column with labels
-                //     Expanded(
-                //       child: Column(
-                //         // crossAxisAlignment: CrossAxisAlignment.start,
-                //         crossAxisAlignment: CrossAxisAlignment.start,
-                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //         children: lastTwoEntries
-                //             .map(
-                //               (entry) => Padding(
-                //                 padding:
-                //                     const EdgeInsets.symmetric(vertical: 2),
-                //                 child: Text(
-                //                   entry.key,
-                //                   style: const TextStyle(
-                //                       fontWeight: FontWeight.w500),
-                //                 ),
-                //               ),
-                //             )
-                //             .toList(),
-                //       ),
-                //     ),
-                //
-                //     // Right column with values
-                //     Row(
-                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //       crossAxisAlignment: CrossAxisAlignment.start,
-                //       children: [
-                //         Expanded(
-                //           child: Column(
-                //             crossAxisAlignment: CrossAxisAlignment.start,
-                //             children: lastTwoEntries
-                //                 .map(
-                //                   (entry) => Padding(
-                //                     padding:
-                //                         const EdgeInsets.symmetric(vertical: 2),
-                //                     child: Text(entry.value.toString()),
-                //                   ),
-                //                 )
-                //                 .toList(),
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //     IconButton(
-                //       onPressed: () {
-                //         setState(() {
-                //           showDetails = !showDetails;
-                //         });
-                //       },
-                //       icon: AnimatedDropIcon(isTrue: showDetails),
-                //     ),
-                //   ],
-                // ),
-
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -211,17 +90,6 @@ class _PartStockCardState extends State<PartStockCard>
                     // Right column with values + toggle icon
                     Expanded(
                       child: widget.isGroupStock
-                          // ? Padding(
-                          //     padding: const EdgeInsets.symmetric(vertical: 2),
-                          //     child: Row(
-                          //       mainAxisAlignment:
-                          //           MainAxisAlignment.spaceBetween,
-                          //       children: [
-                          //         Text(lastTwoEntries.first.value.toString()),
-                          //         const Text("(for 60 days)   "),
-                          //       ],
-                          //     ),
-                          //   )
                           ? _vehicleDetails(
                               lastTwoEntries.first.value.toString())
                           : Row(
@@ -238,9 +106,8 @@ class _PartStockCardState extends State<PartStockCard>
                                           (entry) => Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 2),
-                                            // child: Text(entry.value.toString()),
-                                            child:
-                                                label(entry.value.toString()),
+                                            child: Text(entry.value.toString()),
+                                            // label(entry.value.toString()),
                                           ),
                                         )
                                         .toList(),
@@ -260,44 +127,37 @@ class _PartStockCardState extends State<PartStockCard>
 
         //for only part stock check
         if (widget.isGroupStock)
-          // GestureDetector(
-          //   onTap: (){
-          //     setState(() {
-          //       showDetails = !showDetails;
-          //     });
-          //   },
-          //   child:
           Card(
-              margin: EdgeInsets.zero,
-              // color: getColor(widget.partDetails['ColorType'] ?? "null"),
-              color: DMAppColors.secondary,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          lastTwoEntries.last.key,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w500, color: Colors.white),
+            margin: EdgeInsets.zero,
+            color: DMAppColors.secondary,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      lastTwoEntries.last.key,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, color: Colors.white),
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          lastTwoEntries.last.value.toString(),
+                          style: const TextStyle(color: Colors.white),
                         ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              lastTwoEntries.last.value.toString(),
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            _buildIconBtn(isWhite: true)
-                          ],
-                        ),
-                      ),
-                    ]),
-              )),
-        // ),
+                        _buildIconBtn(isWhite: true)
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
 
         /// 🟡 Animated dropdown: sub-stock locations
         ClipRect(
@@ -318,8 +178,8 @@ class _PartStockCardState extends State<PartStockCard>
                                   const BoxShadow(
                                     color: Colors.black45,
                                     blurRadius: 3,
-                                    offset: Offset(0,
-                                        2), // horizontal, vertical shadow offset
+                                    // horizontal, vertical shadow offset
+                                    offset: Offset(0, 2),
                                   ),
                                 ],
                               ),
@@ -348,7 +208,7 @@ class _PartStockCardState extends State<PartStockCard>
                                     ),
                                   ),
 
-                                  // RIGHT 50% (qty / stock date)
+                                  // RIGHT(Location) 50% + (qty / stock date)
                                   stock['qty'] == null
                                       ? Text("${stock['Max']}   ")
                                       : Expanded(
@@ -367,10 +227,11 @@ class _PartStockCardState extends State<PartStockCard>
                                                         MainAxisAlignment
                                                             .spaceBetween,
                                                     children: [
-                                                      Text(stock['qty']
-                                                          .toString()),
-                                                      label(
-                                                          "${stock['stockdate']} "),
+                                                      Text('${stock['qty']}'),
+                                                      Text(
+                                                          '${stock['stockdate']} '),
+                                                      // label(
+                                                      //     "${stock['stockdate']} "),
                                                       // "!500Stock Date!500  ${stock['stockdate']} "),
                                                     ],
                                                   ),
@@ -381,61 +242,6 @@ class _PartStockCardState extends State<PartStockCard>
                                         ),
                                 ],
                               ),
-
-                              // child: Row(
-                              //   children: [
-                              //     Expanded(
-                              //         child: Row(
-                              //       children: [
-                              //         const Icon(
-                              //           Icons.location_on_outlined,
-                              //           color: Colors.black,
-                              //         ),
-                              //         const SizedBox(width: 8),
-                              //         Text(
-                              //           stock['Location'] ?? "",
-                              //           style: TextStyle(
-                              //               fontWeight: FontWeight.w500),
-                              //         ),
-                              //       ],
-                              //     )),
-                              //     stock['qty'] == null
-                              //         ? Text("${stock['Max']}   ")
-                              //         // ? (stock['Stock'].toString().isNotEmpty)
-                              //         //     //for show norms screen data
-                              //         //     ? Expanded(
-                              //         //         child: Row(
-                              //         //           mainAxisAlignment:
-                              //         //               MainAxisAlignment
-                              //         //                   .spaceBetween,
-                              //         //           children: [
-                              //         //             Text(stock['Max'].toString()),
-                              //         //             label(
-                              //         //                 "!500Stock!500   ${stock['Stock']}"),
-                              //         //             // Text(
-                              //         //             //     "Stock  ${stock['Qty']}   "),
-                              //         //           ],
-                              //         //         ),
-                              //         //       )
-                              //         //     //for show error from screen in location place
-                              //         //     : SizedBox.shrink()
-                              //         // for part stock check
-                              //
-                              //     : Expanded(
-                              //         child: SingleChildScrollView(
-                              //           scrollDirection: Axis.horizontal,
-                              //           child: Row(
-                              //             spacing: 5,
-                              //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              //             children: [
-                              //               Text(stock['qty'].toString()),
-                              //               label("!500Stock Date!500  ${stock['stockdate']} "),
-                              //             ],
-                              //           ),
-                              //         ),
-                              //       ),
-                              //   ],
-                              // ),
                             ),
                           );
                         }).toList(),
@@ -448,42 +254,40 @@ class _PartStockCardState extends State<PartStockCard>
     );
   }
 
-  Widget label(String text) {
-    final RegExp exp = RegExp(r"!500(.*?)!500");
-    final matches = exp.allMatches(text);
-
-    if (matches.isEmpty) return Text(text);
-
-    List<TextSpan> spans = [];
-    int start = 0;
-
-    for (final match in matches) {
-      // Add normal text before the bold
-      if (match.start > start) {
-        spans.add(TextSpan(text: text.substring(start, match.start)));
-      }
-
-      // Add bold text
-      spans.add(TextSpan(
-        text: match.group(1),
-        style: const TextStyle(fontWeight: FontWeight.w500),
-      ));
-
-      start = match.end;
-    }
-
-    // Add the remaining text after the last match
-    if (start < text.length) {
-      spans.add(TextSpan(text: text.substring(start)));
-    }
-
-    return Text.rich(TextSpan(children: spans));
-  }
+  // Widget label(String text) {
+  //   final RegExp exp = RegExp(r"!500(.*?)!500");
+  //   final matches = exp.allMatches(text);
+  //
+  //   if (matches.isEmpty) return Text(text);
+  //
+  //   List<TextSpan> spans = [];
+  //   int start = 0;
+  //
+  //   for (final match in matches) {
+  //     // Add normal text before the bold
+  //     if (match.start > start) {
+  //       spans.add(TextSpan(text: text.substring(start, match.start)));
+  //     }
+  //
+  //     // Add bold text
+  //     spans.add(TextSpan(
+  //       text: match.group(1),
+  //       style: const TextStyle(fontWeight: FontWeight.w500),
+  //     ));
+  //
+  //     start = match.end;
+  //   }
+  //
+  //   // Add the remaining text after the last match
+  //   if (start < text.length) {
+  //     spans.add(TextSpan(text: text.substring(start)));
+  //   }
+  //
+  //   return Text.rich(TextSpan(children: spans));
+  // }
 
   Widget _buildIconBtn({bool isWhite = false}) {
     return IconButton(
-      // highlightColor: Colors.black12,
-      // highlightColor: Colors.white10,
       onPressed: () {
         setState(() {
           showDetails = !showDetails;
@@ -506,7 +310,7 @@ class _PartStockCardState extends State<PartStockCard>
           reservedQty == '0'
               ? Text(reservedQty)
               : GestureDetector(
-                  onTap: c.showReservedDetails,
+                  onTap: () => c.showReservedDetails(context),
                   child: Row(
                     spacing: 2,
                     children: [

@@ -24,8 +24,7 @@ class DiscountStockDropdownRow extends GetView<DrReceivedController> {
             controller: order.discountCtl,
             keyboardType: TextInputType.number,
             inputFormatters: [GainerInputFormatters.discountFormatter],
-            validator: (val) =>
-                val == null || val.isEmpty ? 'Mandatory' : null,
+            validator: (val) => val == null || val.isEmpty ? 'Mandatory' : null,
           ),
         ),
         Expanded(
@@ -35,21 +34,18 @@ class DiscountStockDropdownRow extends GetView<DrReceivedController> {
             controller: order.stockCtl,
             keyboardType: TextInputType.number,
             inputFormatters: [GainerInputFormatters.stockFormatter],
-            validator: (val) =>
-                val == null || val.isEmpty ? 'Mandatory' : null,
+            validator: (val) => val == null || val.isEmpty ? 'Mandatory' : null,
           ),
         ),
         Expanded(
           flex: 2,
           child: GainerAppDropdown(
             hintText: 'Stock Type',
-            items: controller.stockQualityList
-                .map((e) => e.stockQuality)
-                .toList(),
+            items:
+                controller.stockQualityList.map((e) => e.stockQuality).toList(),
             onChanged: (val) => controller.onStockQualityChanged(order, val),
-            validator: (val) => val == null || val.isEmpty
-                ? 'Please select stock type'
-                : null,
+            validator: (val) =>
+                val == null || val.isEmpty ? 'Please select stock type' : null,
           ),
         ),
       ],

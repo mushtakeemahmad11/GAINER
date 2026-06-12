@@ -10,6 +10,7 @@ import '../../widgets/elevated_button.dart';
 import '../../widgets/legend_bar.dart';
 import '../../widgets/part_stock_card.dart';
 import '../../widgets/search_bar.dart';
+import '../../widgets/reserved_details_sheet.dart';
 
 class PartStockCheckScreen extends StatefulWidget {
   const PartStockCheckScreen({super.key});
@@ -19,18 +20,20 @@ class PartStockCheckScreen extends StatefulWidget {
 }
 
 class _PartStockCheckScreenState extends State<PartStockCheckScreen> {
-  late PartStockCheckController _partStockCheckController;
+  late PartStockCheckController c;
 
   @override
   void initState() {
     super.initState();
-    _partStockCheckController = Get.put(PartStockCheckController());
+    c = Get.put(PartStockCheckController());
+    Get.lazyPut<ReservedController>(() => ReservedController());
   }
 
   @override
   void dispose() {
     // Dispose the controller when this screen is closed
     Get.delete<PartStockCheckController>();
+    Get.delete<ReservedController>();
     super.dispose();
   }
 
@@ -60,11 +63,10 @@ class _PartStockCheckScreenState extends State<PartStockCheckScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: SearchBarWidget(
         hintText: 'Enter Part Number',
-        onSearch: _partStockCheckController.search,
-        controller: _partStockCheckController.searchController,
-        formKey: _partStockCheckController.formKey,
-        onChanged: (value) =>
-            _partStockCheckController.fetchPartSuggestions(value),
+        onSearch: c.search,
+        controller: c.searchController,
+        formKey: c.formKey,
+        onChanged: (value) => c.fetchPartSuggestions(value),
       ),
     );
   }
@@ -74,10 +76,9 @@ class _PartStockCheckScreenState extends State<PartStockCheckScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Obx(() {
         return PartSuggestionList(
-          isLoading: _partStockCheckController.partSearchLoading.value,
-          suggestions: _partStockCheckController.partSuggestions.toList(),
-          onTap: (selected) =>
-              _partStockCheckController.selectPartNumber(selected),
+          isLoading: c.partSearchLoading.value,
+          suggestions: c.partSuggestions.toList(),
+          onTap: (selected) => c.selectPartNumber(selected),
         );
       }),
     );
@@ -85,27 +86,21 @@ class _PartStockCheckScreenState extends State<PartStockCheckScreen> {
 
   Widget _buildPartCard() {
     return Obx(() {
-      if (_partStockCheckController.isLoading.value) {
+      if (c.isLoading.value) {
         return CircularProgressIndicator();
       }
-      if (_partStockCheckController.errorMessage.value != null ||
-          _partStockCheckController.partDetails.isEmpty) {
-        return DmErrorMsg(
-            text: _partStockCheckController.errorMessage.value ?? "");
+      if (c.errorMessage.value != null || c.partDetails.isEmpty) {
+        return DmErrorMsg(text: c.errorMessage.value ?? "");
       }
       //data observed
-      final part = _partStockCheckController.partDetails;
-      final color = _partStockCheckController.partStatus.value;
-      final stockQty = _partStockCheckController.stock.value;
-      final grpStock = _partStockCheckController.groupStock.value;
-      final plannedLevel = _partStockCheckController.max.value;
-      final reserveForVehicle =
-          _partStockCheckController.reservedForVehicle.value;
-      checkDoubleInt(double val) {
-        return val % 1 == 0 //check for remainder 0
-            ? val.toInt()
-            : val.toStringAsFixed(2);
-      }
+      final part = c.partDetails;
+      final color = c.partStatus.value;
+      final stockQty = c.stock.value;
+      final grpStock = c.groupStock.value;
+      final plannedLevel = c.max.value;
+      final reserveForVehicle = c.reservedForVehicle.value;
+      checkDoubleInt(double val) =>
+          val % 1 == 0 ? val.toInt() : val.toStringAsFixed(2);
 
       return Column(
         children: [
@@ -118,14 +113,12 @@ class _PartStockCheckScreenState extends State<PartStockCheckScreen> {
                 "Part Number": part['partnumber1'] ?? "",
                 "Part Description": part['partdesc'] ?? "",
                 "Part Category": part['category'] ?? "",
-                // "Part Rate": part['mrp'] ?? 0,
                 "Stock Qty": checkDoubleInt(stockQty),
                 "Planned Level": checkDoubleInt(plannedLevel),
                 "Reserved for Vehicle": checkDoubleInt(reserveForVehicle),
                 "Group Free Stock": checkDoubleInt(grpStock),
               },
-
-              locations: _partStockCheckController.locationsList,
+              locations: c.locationsList,
             ),
           ),
           Padding(
@@ -133,13 +126,13 @@ class _PartStockCheckScreenState extends State<PartStockCheckScreen> {
             child: Column(
               children: [
                 BlinkingButton(
-                  onPressed: _partStockCheckController.onTapSubstitutionCheck,
+                  onPressed: c.onTapSubstitutionCheck,
                   text: "Check Substitution",
-                  isBlink: _partStockCheckController.isSubstitute.value,
+                  isBlink: c.isSubstitute.value,
                 ),
                 SizedBox(height: 5),
                 ReusableElevatedButton(
-                  onPressed: _partStockCheckController.onTapGainerStockCheck,
+                  onPressed: c.onTapGainerStockCheck,
                   text: "Show Gainer Stock Details",
                 ),
               ],

@@ -75,7 +75,6 @@ class NotificationServiceNEW {
         }
 
         if (apnsToken == null) {
-          print("❌ APNS token not available");
           return null;
         }
 

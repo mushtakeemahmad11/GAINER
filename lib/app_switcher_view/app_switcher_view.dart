@@ -14,7 +14,6 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    // bool isAppNotAccess = controller.appAccess.values.every((val) => val == 0);
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -22,7 +21,6 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
         appBar: AppBar(
           backgroundColor: GainerColors.primary,
           elevation: 0,
-          // centerTitle: false,
           title: Obx(
             () => Text(
               'Hi, ${controller.userName.value}',
@@ -31,6 +29,8 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
           ),
         ),
         body: Obx(() {
+          bool isLoading = controller.isLoading.value;
+          bool isAccess = controller.appAccess.values.every((val) => val == 0);
           return Stack(
             children: [
               Padding(
@@ -52,24 +52,7 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
                       isAccessed: controller.appAccess['IsSimsActive'] ?? 0,
                     ),
                     Spacer(),
-
-                    if (controller.appAccess.values.every((val) => val == 0))
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: OutlinedButton.icon(
-                          onPressed: controller.logout,
-                          icon: const Icon(Icons.logout,
-                              color: GainerColors.primary),
-                          label: const Text("Log Out",
-                              style: TextStyle(color: GainerColors.primary)),
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 45),
-                            side: const BorderSide(color: GainerColors.primary),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                          ),
-                        ),
-                      ),
+                    if (!isLoading && isAccess) _logOutBtn(),
                     _AppFooter(version: controller.oldVersion.value),
                   ],
                 ),
@@ -84,14 +67,30 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
                 if (controller.isAppUpdated.value) {
                   return const SizedBox.shrink();
                 }
-                return Align(
-                    alignment: Alignment.bottomRight,
-                    child: _updateAppCard(size));
+                return _updateAppCard(size);
               }),
               GainerAppLoader(isLoading: controller.isLoading)
             ],
           );
         }),
+      ),
+    );
+  }
+
+  Widget _logOutBtn() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: OutlinedButton.icon(
+        onPressed: controller.logout,
+        icon: const Icon(Icons.logout, color: GainerColors.primary),
+        label: const Text("Log Out",
+            style: TextStyle(color: GainerColors.primary)),
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(double.infinity, 45),
+          side: const BorderSide(color: GainerColors.primary),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
       ),
     );
   }
@@ -105,13 +104,12 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
     bool enable = isAccessed == 1;
     return Card(
       color: enable ? null : Colors.white12,
-      // color: enable ? null : Colors.grey,
-      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: enable ? () => controller.onModuleTap(title) : null,
+        onTap: enable
+            ? () => controller.onModuleTap(title)
+            : controller.appAccessSnackBar,
         borderRadius: BorderRadius.circular(12),
         child: ListTile(
-          // leading: Icon(icon, color: const Color(0xFF2C9AA0)),
           leading: Container(
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
@@ -146,95 +144,97 @@ class AppSwitcherView extends GetView<AppSwitcherController> {
   }
 
   Widget _updateAppCard(Size size) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            // color: Colors.black.withOpacity(0.08),
-            color: Colors.black.withAlpha(20),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 🔵 Icon Container
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: GainerColors.primary.withAlpha(25),
-              shape: BoxShape.circle,
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha(20),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
             ),
-            child: Icon(
-              Icons.system_update_alt_rounded,
-              color: GainerColors.primary,
-              size: 28,
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 🔵 Icon Container
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: GainerColors.primary.withAlpha(25),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.system_update_alt_rounded,
+                color: GainerColors.primary,
+                size: 28,
+              ),
             ),
-          ),
 
-          const SizedBox(width: 14),
+            const SizedBox(width: 14),
 
-          // 📝 Content
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Update Available 🚀',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+            // 📝 Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Update Available 🚀',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
                   ),
-                ),
 
-                const SizedBox(height: 6),
+                  const SizedBox(height: 6),
 
-                Text(
-                  'A newer version of the app is available. Update now for better performance and new features.',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.black54,
-                    height: 1.4,
+                  Text(
+                    'A newer version of the app is available. Update now for better performance and new features.',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.black54,
+                      height: 1.4,
+                    ),
                   ),
-                ),
 
-                const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
-                // 🔘 Button
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: UrlLaunchUtils.updateApk,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: GainerColors.primary,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: const Text(
-                        'Update Now',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
+                  // 🔘 Button
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: UrlLaunchUtils.updateApk,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: GainerColors.primary,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: const Text(
+                          'Update Now',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -48,9 +48,6 @@ class TrackOrderView extends GetView<HomeController> {
         maxLength: 10,
         controller: controller.trackOrderCtrl,
         keyboardType: TextInputType.number,
-        // inputFormatters: [
-        //   FilteringTextInputFormatter.digitsOnly,
-        // ],
         inputFormatters: [GainerInputFormatters.numbersOnly],
         onChanged: (value) => controller.onChangedTrackOrder(value),
         prefixIcon: const Icon(Icons.search),

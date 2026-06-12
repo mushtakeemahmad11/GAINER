@@ -8,7 +8,7 @@ import '../../gainer_app/core/constants/gainer_image.dart';
 import '../core/services/dm_api_services.dart';
 import '../core/theme/app_colors.dart';
 import '../widgets/remarks_bottom_sheet.dart';
-import '../widgets/vehicle_search_reserved_details_sheet.dart';
+import '../widgets/reserved_details_sheet.dart';
 import '../widgets/vehicle_search_stock_details_sheet.dart';
 
 class VehicleSearchController extends GetxController {
@@ -283,11 +283,9 @@ class VehicleSearchController extends GetxController {
   }
 
   Future<bool?> showBottomSheet(
-    BuildContext context,
-    String partNumber,
-    bool isReserved,
-  ) {
-    isReserved ? getReservedDetails(partNumber) : getGroupStock(partNumber);
+      BuildContext context, String partNumber, bool isReserved) {
+    final ReservedController c = Get.find<ReservedController>();
+    isReserved ? c.getReservedDetails(partNumber) : getGroupStock(partNumber);
 
     // RJ29GB1915
     //9554
@@ -297,7 +295,7 @@ class VehicleSearchController extends GetxController {
       backgroundColor: DMAppColors.primary,
       builder: (context) {
         return isReserved
-            ? const VehicleSearchReservedDetailsSheet()
+            ? const ReservedDetailsSheet()
             : const VehicleSearchGrpStockDetailsSheet();
       },
     );
@@ -326,24 +324,24 @@ class VehicleSearchController extends GetxController {
     }
   }
 
-  RxnString reservedDetailsError = RxnString();
-  RxnString lastReservedPart = RxnString();
-  RxBool isLoadingReservedDetails = false.obs;
-  List<dynamic> reservedDetailsList = [].obs;
-  Future<void> getReservedDetails(String partNumber) async {
-    final lastP = lastReservedPart.value;
-    if (lastP != null && lastP == partNumber) {
-      if (reservedDetailsList.isNotEmpty) return;
-    }
-    lastReservedPart.value = partNumber;
-    isLoadingReservedDetails(true);
-    final response = await api.getPartReservedDetails(partNumber);
-    isLoadingReservedDetails(false);
-    if (response['success']) {
-      reservedDetailsList = response['data'];
-    } else {
-      reservedDetailsList.clear();
-      reservedDetailsError.value = response['message'];
-    }
-  }
+  // RxnString reservedDetailsError = RxnString();
+  // RxnString lastReservedPart = RxnString();
+  // RxBool isLoadingReservedDetails = false.obs;
+  // List<dynamic> reservedDetailsList = [].obs;
+  // Future<void> getReservedDetails(String partNumber) async {
+  //   final lastP = lastReservedPart.value;
+  //   if (lastP != null && lastP == partNumber) {
+  //     if (reservedDetailsList.isNotEmpty) return;
+  //   }
+  //   lastReservedPart.value = partNumber;
+  //   isLoadingReservedDetails(true);
+  //   final response = await api.getPartReservedDetails(partNumber);
+  //   isLoadingReservedDetails(false);
+  //   if (response['success']) {
+  //     reservedDetailsList = response['data'];
+  //   } else {
+  //     reservedDetailsList.clear();
+  //     reservedDetailsError.value = response['message'];
+  //   }
+  // }
 }

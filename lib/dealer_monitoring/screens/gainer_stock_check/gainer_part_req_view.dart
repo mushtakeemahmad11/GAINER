@@ -17,14 +17,13 @@ class _GainerPartReqViewState extends State<GainerPartReqView> {
   Widget build(BuildContext context) {
     c.isFromDealer.value = true;
     c.isFromDealerDirect.value = true;
-    // PartRequestBinding().dependencies();
     return const PartRequestView();
   }
 
   @override
   void dispose() {
     if (Get.isRegistered<PartRequestController>()) {
-      Get.delete<PartRequestController>(); // 🔥 destroy old
+      Get.delete<PartRequestController>(); // destroy old
     }
     super.dispose();
   }

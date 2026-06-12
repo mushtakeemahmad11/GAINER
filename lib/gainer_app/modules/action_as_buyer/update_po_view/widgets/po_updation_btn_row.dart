@@ -38,7 +38,7 @@ class PoUpdationBtnRow extends GetView<UpdatePoController> {
               String qtyController = accCtrl.text;
               if (qtyController.isEmpty || qtyController == '0') {
                 GainerBottomSheet.showSnackBar(
-                   "Please fill Accept Qty greater than 0");
+                    "Please fill Accept Qty greater than 0");
               } else {
                 controller.toggleAccept(order, int.parse(accCtrl.text));
               }

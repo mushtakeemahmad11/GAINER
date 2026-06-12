@@ -28,5 +28,3 @@ class GainerExpansionTile extends StatelessWidget {
     );
   }
 }
-
-

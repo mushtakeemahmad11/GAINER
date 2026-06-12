@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gainer/gainer_app/core/widgets/gainer_app_loader.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import '../../../../core/constants/gainer_color.dart';
@@ -16,9 +17,6 @@ class HeaderView extends GetView<HomeController> {
       width: size.width,
       decoration: const BoxDecoration(
         color: GainerColors.primary,
-        // gradient: LinearGradient(
-        //   colors: [Color(0xff00695C), Color(0xff00796B)],
-        // ),
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
       ),
       child: Column(
@@ -42,7 +40,7 @@ class HeaderView extends GetView<HomeController> {
                     radius: 25,
                     backgroundColor: GainerColors.white,
                     child: isUpload
-                        ? CircularProgressIndicator()
+                        ? const GainerCircularLoader()
                         : IconButton(
                             icon: Icon(Icons.camera_alt,
                                 color: GainerColors.primary),
@@ -83,34 +81,4 @@ class HeaderView extends GetView<HomeController> {
       ),
     );
   }
-
-  // Widget _buildProfileImage() {
-  //   final pickedImg = controller.pickedProfileImg.value;
-  //   final apiImg = controller.profileImage.value;
-  //
-  //   return Container(
-  //     width: 150,
-  //     height: 150,
-  //     decoration: BoxDecoration(
-  //       shape: BoxShape.circle,
-  //       border: Border.all(color: Colors.white10, width: 5),
-  //     ),
-  //     child: ClipOval(
-  //       child: pickedImg != null
-  //           ? Image.file(File(pickedImg), fit: BoxFit.cover)
-  //           : apiImg != null && apiImg.isNotEmpty
-  //               ? Image.network(
-  //                   apiImg,
-  //                   fit: BoxFit.cover,
-  //                   loadingBuilder: (_, child, progress) {
-  //                     if (progress == null) return child;
-  //                     return const Center(child: CircularProgressIndicator());
-  //                   },
-  //                   errorBuilder: (_, __, ___) =>
-  //                       Image.asset(GainerImages.profile),
-  //                 )
-  //               : Image.asset(GainerImages.profile),
-  //     ),
-  //   );
-  // }
 }

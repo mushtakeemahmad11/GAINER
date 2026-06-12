@@ -8,7 +8,6 @@ class ORExpansionTileHeader extends StatelessWidget {
   final String title2;
   final String subTitle2;
   final String title3;
-  // final String subTitle3;
 
   const ORExpansionTileHeader({
     super.key,
@@ -17,14 +16,13 @@ class ORExpansionTileHeader extends StatelessWidget {
     required this.title2,
     required this.subTitle2,
     required this.title3,
-    // required this.subTitle3,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
       children: [
         Column(
@@ -40,27 +38,11 @@ class ORExpansionTileHeader extends StatelessWidget {
               children: [
                 ScrollableTextWidget(textWidget: _titleText(title2)),
                 ScrollableTextWidget(textWidget: _titleText(subTitle2)),
-                // SingleChildScrollView(
-                //   scrollDirection: Axis.horizontal,
-                //   child: _titleText(title2),
-                // ),
-                // SingleChildScrollView(
-                //   scrollDirection: Axis.horizontal,
-                //   child: _titleText(subTitle2),
-                // ),
               ],
             ),
           ),
         ),
         _titleText(title3),
-        // Column(
-        //   crossAxisAlignment: CrossAxisAlignment.end,
-        //   // mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     _titleText(title3),
-        //     // _titleText(subTitle3),
-        //   ],
-        // ),
       ],
     );
   }

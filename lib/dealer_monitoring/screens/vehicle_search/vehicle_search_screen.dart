@@ -18,6 +18,7 @@ import '../../widgets/dm_error_msg.dart';
 import '../../widgets/head_bar.dart';
 import '../../widgets/reusable_table.dart';
 import '../../widgets/search_bar.dart';
+import '../../widgets/reserved_details_sheet.dart';
 
 class VehicleSearchScreen extends StatefulWidget {
   const VehicleSearchScreen({super.key});
@@ -34,12 +35,14 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
   @override
   void initState() {
     super.initState();
+    Get.lazyPut<ReservedController>(() => ReservedController());
     _dmMainController.initWork();
   }
 
   @override
   void dispose() {
     Get.delete<VehicleSearchController>();
+    Get.delete<ReservedController>();
     super.dispose();
   }
 
@@ -73,7 +76,6 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
         () => _controller.showScrollButton.value
             ? CircleAvatar(
                 backgroundColor: Colors.black45,
-                // backgroundColor: DMAppColors.secondary,
                 child: IconButton(
                   onPressed: _controller.scrollToBottom,
                   icon: Icon(
@@ -97,9 +99,6 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
             spacing: 5,
             runSpacing: 5,
             children: [
-              // _buildDateColumn("JobCard Closed", _controller.jobCardDate.value),
-              // _buildDateColumn("JobLine Closed", _controller.jobLineDate.value),
-              // _buildDateColumn("Stock Uploaded", _controller.stockDate.value),
               _buildDateColumn(
                   "JobCard Closed", _dmMainController.jobCardDate.value),
               _buildDateColumn(
@@ -126,22 +125,7 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
         onSearch: _controller.search,
         controller: _controller.searchController,
         formKey: _controller.formKey,
-        onChanged: (value) async {
-          // final controller = _controller.searchController;
-          // if (value.isEmpty) controller.clear();
-          //
-          // String upperText = value.toUpperCase();
-          // controller.value = controller.value.copyWith(text: upperText);
-          //
-          // String filteredValue =
-          //     await ControllerUtils.partNumberValidation(value);
-          // if (filteredValue != value) {
-          //   controller.text = filteredValue;
-          //   controller.selection = TextSelection.fromPosition(
-          //       TextPosition(offset: filteredValue.length));
-          // }
-          _controller.fetchVehicleSuggestions(value);
-        },
+        onChanged: (value) => _controller.fetchVehicleSuggestions(value),
       );
 
   Widget _buildVehicleSuggestion() => Obx(() {
@@ -211,9 +195,6 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
         final err = _controller.errorMsg.value;
         if (err != null) return DmErrorMsg(text: err);
 
-        // final status = _controller.isCardStatusOther.value;
-        // if (status != null) return CustomErrorMsg(text: status);
-
         final vehicleData = _controller.vehicleData;
         if (vehicleData.isEmpty) {
           return const SizedBox.shrink();
@@ -234,7 +215,6 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
         final rows = vehicleData.map<List<dynamic>>((part) {
           final value = (part["Value"] ?? 0);
           final isIssued = part["IssueStatus"] == "Issued";
-          print('${part['part_number1']}, ${part['ReservedforVehicle']}');
           return [
             part["part_number1"],
             "₹${tv.formatIndianNumber((value as num).toInt())}",
@@ -366,11 +346,7 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
                       },
                     );
                   }),
-                  // IconButton(
-                  //   onPressed: () => showCustomBottomSheet(),
-                  //   icon: Icon(Icons.add_a_photo, color: DMAppColors.secondary),
-                  // ),
-                  // const SizedBox(width: 10),
+
                   const Expanded(
                     child: Text(
                       "Confirm In case you want to close the job card",
@@ -420,54 +396,6 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
       color: Colors.black,
     );
   }
-
-  // Widget _buildStockQtyDetails(Map<String, dynamic> part) {
-  //   final int grpQty = part['StockQty'];
-  //   return GestureDetector(
-  //     child: Wrap(
-  //       alignment: WrapAlignment.center,
-  //       // mainAxisAlignment: MainAxisAlignment.center,
-  //       spacing: 2,
-  //       children: [
-  //         Text('$grpQty'),
-  //         const Text(
-  //           '(Show)',
-  //           style: TextStyle(
-  //             color: Colors.blue,
-  //             fontWeight: FontWeight.bold,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //     onTap: () {
-  //       _controller.showReservedDetails(context, part['part_number1']);
-  //     },
-  //   );
-  // }
-
-  // Widget _buildGrpStockDetails(Map<String, dynamic> part) {
-  //   final int grpQty = part['GroupStock'];
-  //   return GestureDetector(
-  //     child: Wrap(
-  //       alignment: WrapAlignment.center,
-  //       // mainAxisAlignment: MainAxisAlignment.center,
-  //       spacing: 2,
-  //       children: [
-  //         Text('$grpQty'),
-  //         const Text(
-  //           '(Show)',
-  //           style: TextStyle(
-  //             color: Colors.blue,
-  //             fontWeight: FontWeight.bold,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //     onTap: () {
-  //       _controller.showStockDetails(context, part['part_number1']);
-  //     },
-  //   );
-  // }
 
   Widget qtyWithShow(Map<String, dynamic> part, bool isReserved) {
     int qty = isReserved ? part["StockQty"] : part['GroupFreeStock'];
@@ -553,36 +481,4 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
       });
     }
   }
-
-  // Widget _buildJobCardTile(
-  //     String jobCardNo, String totalVal, Widget? statusImg) {
-  //   return GestureDetector(
-  //     onLongPress: () => showRemarksDialog(context, "Job Card No. $jobCardNo"),
-  //     child: Row(
-  //       children: [
-  //         if (statusImg != null) statusImg,
-  //         const SizedBox(width: 12),
-  //         Expanded(
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               const Text("Job card Number",
-  //                   style: TextStyle(fontWeight: FontWeight.w500)),
-  //               Text(jobCardNo),
-  //             ],
-  //           ),
-  //         ),
-  //         const SizedBox(width: 12),
-  //         Column(
-  //           crossAxisAlignment: CrossAxisAlignment.end,
-  //           children: [
-  //             const Text("Value",
-  //                 style: TextStyle(fontWeight: FontWeight.w500)),
-  //             Text(totalVal),
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }

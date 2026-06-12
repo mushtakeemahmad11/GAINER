@@ -17,11 +17,11 @@ class PRExpansionTileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _titleText(title1),
+        Flexible(child: ScrollableTextWidget(textWidget: _titleText(title1))),
         const SizedBox(width: 10),
         Expanded(
-          // child:  _titleText(title2),
           child: Center(
             child: ScrollableTextWidget(
               textWidget: _titleText(title2),

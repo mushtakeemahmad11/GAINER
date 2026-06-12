@@ -127,8 +127,6 @@ class _SaleTrendScreenState extends State<SaleTrendScreen> {
             "Part Number": part['partnumber1'] ?? "",
             "Description": part['partdesc'] ?? "",
             "Part Category": part['category'] ?? "",
-            // "Part Rate": part['mrp'].toString(),
-            // "MRP": "₹ ${part['mrp']??""}",
             "Stock": checkDoubleInt(stock),
             "Planned Level": checkDoubleInt(max),
             "Substitution":

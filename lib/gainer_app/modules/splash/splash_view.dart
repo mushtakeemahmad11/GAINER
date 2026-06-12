@@ -52,16 +52,3 @@ class SplashView extends GetView<AuthController> {
     );
   }
 }
-
-// class SplashView extends GetView<AuthController> {
-//   const SplashView({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Scaffold(
-//       body: Center(
-//         child: CircularProgressIndicator(),
-//       ),
-//     );
-//   }
-// }

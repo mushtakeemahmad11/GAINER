@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/constants/gainer_color.dart';
-import '../../../core/widgets/scrollable_text_widget.dart';
+import '../constants/gainer_color.dart';
+import 'scrollable_text_widget.dart';
 
-class CardHeader extends StatelessWidget {
+class ExpansionHeader3 extends StatelessWidget {
   final String title1;
   final String title2;
   final String title3;
-
-  const CardHeader({
+  const ExpansionHeader3({
     super.key,
     required this.title1,
     required this.title2,
@@ -19,15 +18,18 @@ class CardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 10,
       children: [
-        Expanded(child: ScrollableTextWidget(textWidget: _titleText(title1))),
+        Flexible(child: ScrollableTextWidget(textWidget: _titleText(title1))),
+        const SizedBox(width: 10),
         Expanded(
-          flex: 2,
-          child: ScrollableTextWidget(textWidget: _titleText(title2)),
+          child: Center(
+            child: ScrollableTextWidget(
+              textWidget: _titleText(title2),
+            ),
+          ),
         ),
-        _titleText('Qty: $title3'),
+        const SizedBox(width: 10),
+        _titleText(title3),
       ],
     );
   }

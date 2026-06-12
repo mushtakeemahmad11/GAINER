@@ -8,7 +8,4 @@ class AppSwitcherBinding extends Bindings {
       () => AppSwitcherController(),
     );
   }
-  // void dependencies() {
-  //   Get.put<AppSwitcherController>(AppSwitcherController());
-  // }
 }

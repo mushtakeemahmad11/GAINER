@@ -375,213 +375,199 @@ class _RemarksBottomSheetState extends State<RemarksBottomSheet> {
     // final controller = Get.put(RemarksController(), permanent: false);
     // controller.reset();
 
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            "Add Your Remarks",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-          ),
-          // Text(widget.titleText),
-          Text(controller.titleText.value),
-          const SizedBox(height: 5),
-
-          // Dropdown + Eye Icon
-          Row(
-            children: [
-              Expanded(
-                child: Center(
-                  child: Obx(() {
-                    if (controller.isLoading.value) {
-                      return CircularProgressIndicator();
-                    }
-                    if (controller.error.value != null) {
-                      return AppErrorText(error: controller.error);
-                      // return CustomErrorMsg(text: controller.error.value ?? "");
-                      // return Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //   children: [
-                      //     CustomErrorMsg(text: controller.error.value ?? ""),
-                      //     RotatingRefreshIcon(
-                      //         color: DMAppColors.secondary,
-                      //         isRotating: controller.isLoading.value,
-                      //         onRefresh: () async =>
-                      //             controller.fetchDropRemarks("P")),
-                      //   ],
-                      // );
-                    }
-                    final remarksList = controller
-                        .remarksItems; // keep full list, not just Remark
-
-                    return Form(
-                        key: _selectRFormKey,
-                        child: DmDropdown(
-                          hintText: "Select Remarks",
-                          options: remarksList
-                              .map((item) => item['Remark'].toString())
-                              .toList(),
-                          selectedValue: controller.selectedRemark.value,
-                          // controller.selectedRemark.value.isNotEmpty
-                          //     ? controller.selectedRemark.value
-                          //     : null,
-                          onChanged: (value) {
-                            _selectRFormKey.currentState!.validate();
-                            // Find selected item by Remark
-                            controller.isOtherSelected.value =
-                                value == 'Others';
-                            if (value != null) {
-                              final selectedItem = controller.remarksItems
-                                  .firstWhere(
-                                      (item) => item['Remark'] == value);
-
-                              // Store Id instead of Remark
-                              controller.selectedRemarkId.value =
-                                  selectedItem['Id'];
-                              controller.selectedRemark.value =
-                                  selectedItem['Remark'];
-                            } else {
-                              controller.selectedRemark.value = value;
-                              controller.selectedRemarkId.value = null;
-                            }
-                          },
-                          validator: (val) => val == null || val.isEmpty
-                              ? 'Please enter remarks'
-                              : null,
-                        ));
-
-                    // final remarksList = controller.remarksItems
-                    //     .map((item) => item['Remark'].toString())
-                    //     .toList();
-                    // return CustomDropdown(
-                    //   hintText: "Select Remarks",
-                    //   options: remarksList,
-                    //   selectedValue: controller.selectedRemark.value,
-                    //   onChanged: (value) {
-                    //     print("value::: $value");
-                    //     controller.selectedRemark.value = value;
-                    //     controller.isOtherSelected.value = value == 'Others';
-                    //   },
-                    // );
-                  }),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              "Add Your Remarks",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
+            // Text(widget.titleText),
+            Text(controller.titleText.value),
+            const SizedBox(height: 5),
+      
+            // Dropdown + Eye Icon
+            Row(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Obx(() {
+                      if (controller.isLoading.value) {
+                        return CircularProgressIndicator();
+                      }
+                      if (controller.error.value != null) {
+                        return AppErrorText(error: controller.error);
+                        // return CustomErrorMsg(text: controller.error.value ?? "");
+                        // return Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //   children: [
+                        //     CustomErrorMsg(text: controller.error.value ?? ""),
+                        //     RotatingRefreshIcon(
+                        //         color: DMAppColors.secondary,
+                        //         isRotating: controller.isLoading.value,
+                        //         onRefresh: () async =>
+                        //             controller.fetchDropRemarks("P")),
+                        //   ],
+                        // );
+                      }
+                      final remarksList = controller
+                          .remarksItems; // keep full list, not just Remark
+      
+                      return Form(
+                          key: _selectRFormKey,
+                          child: DmDropdown(
+                            hintText: "Select Remarks",
+                            options: remarksList
+                                .map((item) => item['Remark'].toString())
+                                .toList(),
+                            selectedValue: controller.selectedRemark.value,
+                            // controller.selectedRemark.value.isNotEmpty
+                            //     ? controller.selectedRemark.value
+                            //     : null,
+                            onChanged: (value) {
+                              _selectRFormKey.currentState!.validate();
+                              // Find selected item by Remark
+                              controller.isOtherSelected.value =
+                                  value == 'Others';
+                              if (value != null) {
+                                final selectedItem = controller.remarksItems
+                                    .firstWhere(
+                                        (item) => item['Remark'] == value);
+      
+                                // Store Id instead of Remark
+                                controller.selectedRemarkId.value =
+                                    selectedItem['Id'];
+                                controller.selectedRemark.value =
+                                    selectedItem['Remark'];
+                              } else {
+                                controller.selectedRemark.value = value;
+                                controller.selectedRemarkId.value = null;
+                              }
+                            },
+                            validator: (val) => val == null || val.isEmpty
+                                ? 'Please enter remarks'
+                                : null,
+                          ));
+                    }),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              PreviousRemarksDialog(
-                  // vehiclePart: "controller.item",
-                  // screenType: controller.screen.value ?? "",
-                  ),
-            ],
-          ),
-
-          const SizedBox(height: 10),
-          // Other Text Field
-          Obx(
-            () => controller.isOtherSelected.value
-                ? Form(
-                    key: _formKey,
-                    child: DmTextFormField(
-                      controller: controller.textEditingController,
-                      text: 'Type Here...',
-                      validator: (val) => val == null || val.isEmpty
-                          ? 'Please enter remarks'
-                          : null,
-                      // onChanged: (val) {
-                      //   // Re-validate to remove warning if fixed
-                      //   if (_formKey.currentState != null) {
-                      //     _formKey.currentState!.validate();
-                      //   }
-                      // },
-                      onChanged: (val) async {
-                        // 1. Validate form only if mounted
-                        _formKey.currentState?.validate();
-
-                        // 2. Skip if empty (optional)
-                        if (val.isEmpty) return;
-
-                        // 3. Sanitize/validate input
-                        final filteredValue =
-                            await GainerTextFiledValidator.remarksValidation(val);
-
-                        // 4. Only update if value actually changed
-                        if (val != filteredValue &&
-                            controller.textEditingController.text !=
-                                filteredValue) {
-                          // Keep cursor at end after updating
-                          final cursorPos = filteredValue.length;
-                          controller.textEditingController.value =
-                              TextEditingValue(
-                            text: filteredValue,
-                            selection:
-                                TextSelection.collapsed(offset: cursorPos),
-                          );
-                        }
-                      },
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(
-                            200), // ✅ max 200 chars
-                      ],
+                const SizedBox(width: 10),
+                PreviousRemarksDialog(),
+              ],
+            ),
+      
+            const SizedBox(height: 10),
+            // Other Text Field
+            Obx(
+              () => controller.isOtherSelected.value
+                  ? Form(
+                      key: _formKey,
+                      child: DmTextFormField(
+                        controller: controller.textEditingController,
+                        text: 'Type Here...',
+                        validator: (val) => val == null || val.isEmpty
+                            ? 'Please enter remarks'
+                            : null,
+                        // onChanged: (val) {
+                        //   // Re-validate to remove warning if fixed
+                        //   if (_formKey.currentState != null) {
+                        //     _formKey.currentState!.validate();
+                        //   }
+                        // },
+                        onChanged: (val) async {
+                          // 1. Validate form only if mounted
+                          _formKey.currentState?.validate();
+      
+                          // 2. Skip if empty (optional)
+                          if (val.isEmpty) return;
+      
+                          // 3. Sanitize/validate input
+                          final filteredValue =
+                              await GainerTextFiledValidator.remarksValidation(
+                                  val);
+      
+                          // 4. Only update if value actually changed
+                          if (val != filteredValue &&
+                              controller.textEditingController.text !=
+                                  filteredValue) {
+                            // Keep cursor at end after updating
+                            final cursorPos = filteredValue.length;
+                            controller.textEditingController.value =
+                                TextEditingValue(
+                              text: filteredValue,
+                              selection:
+                                  TextSelection.collapsed(offset: cursorPos),
+                            );
+                          }
+                        },
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(
+                              200), // ✅ max 200 chars
+                        ],
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+      
+            const SizedBox(height: 10),
+      
+            // Submit Button
+            Column(
+              children: [
+                const SizedBox(height: 10),
+                // Capture Advance Receipt
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Capture Advance Receipt",
+                      style: TextStyle(fontSize: 16),
                     ),
-                  )
-                : const SizedBox.shrink(),
-          ),
-
-          const SizedBox(height: 10),
-
-          // Submit Button
-          Column(
-            children: [
-              const SizedBox(height: 10),
-              // Capture Advance Receipt
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Capture Advance Receipt",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.camera_alt_outlined,
-                      color: DMAppColors.secondary,
-                    ),
-                    // onPressed: () => Get.off(() => ImagePickScreen()),
-                    onPressed: () {
-                      if (controller.selectedRemarkId.value == 0) {
-                        if (_formKey.currentState!.validate()) {
+                    IconButton(
+                      icon: const Icon(
+                        Icons.camera_alt_outlined,
+                        color: DMAppColors.secondary,
+                      ),
+                      // onPressed: () => Get.off(() => ImagePickScreen()),
+                      onPressed: () {
+                        if (controller.selectedRemarkId.value == 0) {
+                          if (_formKey.currentState!.validate()) {
+                            showCustomBottomSheet();
+                          }
+                        } else {
                           showCustomBottomSheet();
                         }
+                      },
+                    ),
+                  ],
+                ),
+                Obx(() {
+                  if (controller.isSubmitting.value) {
+                    return const CircularProgressIndicator();
+                  }
+                  return DmElevatedButton(
+                    text: "Submit",
+                    onTap: () {
+                      if (controller.selectedRemarkId.value == 0) {
+                        if (_formKey.currentState!.validate()) {
+                          controller.onSubmit();
+                        }
                       } else {
-                        showCustomBottomSheet();
+                        // if(controller.selectedRemark.value != null) {
+                        if (_selectRFormKey.currentState!.validate()) {
+                          controller.onSubmit();
+                        }
                       }
                     },
-                  ),
-                ],
-              ),
-              Obx(() {
-                if (controller.isSubmitting.value) {
-                  return const CircularProgressIndicator();
-                }
-                return DmElevatedButton(
-                  text: "Submit",
-                  onTap: () {
-                    if (controller.selectedRemarkId.value == 0) {
-                      if (_formKey.currentState!.validate()) {
-                        controller.onSubmit();
-                      }
-                    } else {
-                      // if(controller.selectedRemark.value != null) {
-                      if (_selectRFormKey.currentState!.validate()) {
-                        controller.onSubmit();
-                      }
-                    }
-                  },
-                );
-              }),
-            ],
-          ),
-        ],
+                  );
+                }),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

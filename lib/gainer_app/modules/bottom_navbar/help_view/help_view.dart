@@ -86,7 +86,7 @@ class HelpView extends GetView<HelpController> {
 
                 // Show loading while fetching sub-issues
                 if (controller.isSubIssueLoading.value)
-                  const Center(child: CircularProgressIndicator())
+                  const Center(child: GainerCircularLoader())
 
                 // Show dropdown if sub-issues are loaded
                 else if (controller.subIssues.isNotEmpty)

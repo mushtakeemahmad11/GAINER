@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:gainer/dealer_monitoring/core/services/dm_api_services.dart';
 import '../../gainer_app/core/widgets/scrollable_text_widget.dart';
 import '../core/theme/app_colors.dart';
 import '../core/utils/transform_value_ind.dart';
 import 'package:gainer/gainer_app/core/widgets/error_text.dart';
 import 'package:get/get.dart';
-import '../controllers/vehicle_search_controller.dart';
 
-class VehicleSearchReservedDetailsSheet extends StatelessWidget {
-  const VehicleSearchReservedDetailsSheet({super.key});
+class ReservedDetailsSheet extends StatelessWidget {
+  const ReservedDetailsSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<VehicleSearchController>();
+    final controller = Get.find<ReservedController>();
+
     return SafeArea(
       child: DraggableScrollableSheet(
         expand: false,
@@ -43,7 +44,7 @@ class VehicleSearchReservedDetailsSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(controller.lastReservedPart.value??''),
+              Text(controller.lastReservedPart.value ?? ''),
               // LegendBar(),
               const SizedBox(height: 10),
               Obx(() {
@@ -177,60 +178,34 @@ class ReservedDetailCard extends StatelessWidget {
   }
 }
 
-class VehicleSearchReservedDetailsSheetTest extends StatelessWidget {
-  const VehicleSearchReservedDetailsSheetTest({super.key});
+class ReservedController extends GetxController {
+  DMApiServices api = DMApiServices();
+  RxnString reservedDetailsError = RxnString();
+  RxnString lastReservedPart = RxnString();
+  RxBool isLoadingReservedDetails = false.obs;
+  List<dynamic> reservedDetailsList = [].obs;
+  Future<void> getReservedDetails(String partNumber) async {
 
-  @override
-  Widget build(BuildContext context) {
-    final controller = Get.find<VehicleSearchController>();
-
-    return SafeArea(
-      child: Column(
-        children: [
-          const SizedBox(height: 10),
-          Container(
-            height: 4,
-            width: 100,
-            decoration: BoxDecoration(
-              color: Colors.black38,
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'Reserved Stock Details',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Obx(() {
-            if (controller.isLoadingReservedDetails.value) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-
-            if (controller.reservedDetailsList.isEmpty) {
-              return const Center(
-                child: Text('Details not available'),
-              );
-            }
-
-            return ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: controller.reservedDetailsList.length,
-              itemBuilder: (context, index) {
-                return ReservedDetailCard(
-                  item: controller.reservedDetailsList[index],
-                );
-              },
-            );
-          }),
-        ],
-      ),
-    );
+    final lastP = lastReservedPart.value;
+    if (lastP != null && lastP == partNumber) {
+      if (reservedDetailsList.isNotEmpty) return;
+    }
+    lastReservedPart.value = partNumber;
+    isLoadingReservedDetails(true);
+    final response = await api.getPartReservedDetails(partNumber);
+    isLoadingReservedDetails(false);
+    if (response['success']) {
+      reservedDetailsList = response['data'];
+      // final data = response['data'];
+      // reservedDetailsList.assignAll([
+      //   ...data,
+      //   ...data,
+      //   ...data,
+      //   ...data,
+      // ]);
+    } else {
+      reservedDetailsList.clear();
+      reservedDetailsError.value = response['message'];
+    }
   }
 }

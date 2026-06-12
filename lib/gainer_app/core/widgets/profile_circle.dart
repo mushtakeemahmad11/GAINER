@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:gainer/gainer_app/core/widgets/gainer_app_loader.dart';
 import '../constants/gainer_image.dart';
 
 class ProfileCircle extends StatelessWidget {
@@ -44,10 +45,11 @@ class ProfileCircle extends StatelessWidget {
         loadingBuilder: (_, child, progress) {
           if (progress == null) return child;
 
-          return const Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-            ),
+          return Center(
+            child: GainerCircularLoader(),
+            // child: CircularProgressIndicator(
+            //   strokeWidth: 2,
+            // ),
           );
         },
         errorBuilder: (_, __, ___) {

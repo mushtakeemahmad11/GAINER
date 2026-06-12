@@ -35,7 +35,6 @@ class HomeController extends GetxController {
     String tempLocation = await AuthService.getLocation();
     final stockDetails = appSwitcherController.getStock();
     String? location = stockDetails?.location.toString() ?? tempLocation;
-
     onChangeLocation(location);
   }
 
@@ -111,18 +110,10 @@ class HomeController extends GetxController {
         break;
 
       case 'DirectRequestSent':
-        if (Platform.isIOS) {
-          Get.to(() => GainerSims());
-          return;
-        }
         Get.toNamed(Routes.DIRECTREQSENT);
         break;
 
       case 'DirectRequestReceived':
-        if (Platform.isIOS) {
-          Get.to(() => GainerSims());
-          return;
-        }
         Get.toNamed(Routes.DIRECTREQRECEIVED);
         break;
 
@@ -184,10 +175,6 @@ class HomeController extends GetxController {
       partSuggestions.clear();
       return;
     }
-    //
-    // String brandId = await AuthService.getBrandId();
-    // String locationId = await AuthService.getLocationId();
-    // String tCode = await AuthService.getTCode();
 
     partSearchLoading.value = true;
 
@@ -345,44 +332,28 @@ class HomeController extends GetxController {
       if (response['success']) {
         final List data = jsonDecode(response['data']);
         final stages = data.map((e) => StageModel.fromJson(e)).toList();
-
-        // stages.add(StageModel(
-        //   stage: "DirectReqSent",
-        //   partsCount: 5,
-        //   val: 12500.50,
-        //   walletBalance: 3000.00,
-        //   fundBalance: 9500.50,
-        //   stageDate: "2026-05-12",
-        // ));
-        // stages.add(StageModel(
-        //   stage: "DirectReqReceived",
-        //   partsCount: 5,
-        //   val: 12500.50,
-        //   walletBalance: 3000.00,
-        //   fundBalance: 9500.50,
-        //   stageDate: "2026-05-12",
-        // ));
         setStageData(stages);
         funBalance.value = stageList.first.walletBalance.toInt().toString();
         appSwitcherController.updateStockDetails(locationId);
-        await _getDirectReqAccess(locationId);
         await AuthService.saveLocationId(locationId);
         await AuthService.saveLocation(location);
+        await getDirectReqAccess();
       } else {
-        err.value = response['message']+' pull down to refresh the page';
+        err.value = response['message'] + ' pull down to refresh the page';
       }
       await getUserDetails();
       showLowBalanceSheet();
       await initNotification();
     } catch (e) {
       // print("catch: $e");
-      // err.value = 'Some thing went wrong, Please try again';
+      err.value = 'Some thing went wrong, Please try again';
     }
   }
 
   RxBool isAllowBuying = false.obs;
   RxBool isAllowSelling = false.obs;
-  Future<void> _getDirectReqAccess(String locationId) async {
+  Future<void> getDirectReqAccess() async {
+    final String locationId = await AuthService.getLocationId();
     final response =
         await GainerApiService().getDirectRequestAccess(locationId: locationId);
     if (response['success']) {
@@ -403,7 +374,6 @@ class HomeController extends GetxController {
 
   void getSnackBar() {
     GainerBottomSheet.showSnackBar("Please connect to Gainer team for access");
-    // GainerBottomSheet.showSnackBar("You don't have permission to access this");
   }
 
   //══════════════════════════════════════════════════════════════════════//
@@ -525,7 +495,6 @@ class HomeController extends GetxController {
           imageFiles: imgFile,
         );
         isProfileUploading.value = false;
-        // print("Response of upload image: $response");
         if (response['success']) {
           await AuthService.saveProfile(image.path);
           pickedProfileImg.value = await AuthService.getProfile();

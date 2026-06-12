@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/gainer_color.dart';
+import 'gainer_app_loader.dart';
 
 class GainerPrimaryButton extends StatelessWidget {
   final String? title;
@@ -35,10 +36,10 @@ class GainerPrimaryButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(borderRadius),
           ),
         ),
-        // onPressed: isLoading ? null : onPressed,
         onPressed: onPressed,
         child: isLoading
-            ? CircularProgressIndicator(color: GainerColors.secondary)
+            // ? CircularProgressIndicator(color: GainerColors.secondary)
+            ? GainerCircularLoader(color: GainerColors.secondary)
             : icon != null
                 ? Icon(icon, color: GainerColors.white)
                 : Text(

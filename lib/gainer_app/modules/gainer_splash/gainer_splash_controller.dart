@@ -13,7 +13,6 @@ class GainerSplashController extends GetxController {
     await Future.delayed(const Duration(seconds: 2));
     final isLoggedIn = await AuthService.isLoggedIn();
     if (isLoggedIn) {
-      // Get.OffNamed(Routes.GAINERMAINVIEW);
       Get.offNamed(Routes.GAINERMAINVIEW);
     } else {
       Get.offAllNamed(Routes.LOGIN);
