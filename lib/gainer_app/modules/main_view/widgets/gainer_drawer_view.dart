@@ -7,7 +7,7 @@ import '../gainer_main_controller.dart';
 
 class GainerDrawerView extends GetView<GainerMainController> {
   GainerDrawerView({super.key});
-  final c = Get.find<HomeController>();
+  final hc = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,33 +36,39 @@ class GainerDrawerView extends GetView<GainerMainController> {
   Widget _header() {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Obx(
-        () => Row(
-          children: [
-            ProfileCircle(
-              size: 60,
-              pickedImg: c.pickedProfileImg.value,
-              apiImg: c.profileImage.value,
-            ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  c.name.value,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  c.username.value,
-                  style: TextStyle(
-                      color: Colors.white70, fontSize: 12, letterSpacing: 1),
-                ),
-              ],
-            )
-          ],
+      child: InkWell(
+        onTap: () {
+          Get.back();
+          controller.currentIndex.value = 3;
+        },
+        child: Obx(
+          () => Row(
+            children: [
+              ProfileCircle(
+                size: 60,
+                pickedImg: hc.pickedProfileImg.value,
+                apiImg: hc.profileImage.value,
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    hc.name.value,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    hc.username.value,
+                    style: TextStyle(
+                        color: Colors.white70, fontSize: 12, letterSpacing: 1),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -123,7 +129,7 @@ class GainerDrawerView extends GetView<GainerMainController> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: ElevatedButton.icon(
-        onPressed: c.logout,
+        onPressed: hc.logout,
         icon: const Icon(Icons.logout),
         label: const Text('Logout'),
         style: ElevatedButton.styleFrom(

@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/core/services/dm_api_services.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_bottom_sheet.dart';
 import 'package:gainer/gainer_app/modules/main_view/models/location_data_model.dart';
-import 'package:gainer/test/gainer_sims.dart';
 import 'package:get/get.dart';
 import '../gainer_app/core/Services/auth_service.dart';
 import '../gainer_app/core/services/fcm_service/firebase_db_creation.dart';
@@ -19,7 +17,7 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
   RxString userName = ''.obs;
 
   /// for notified app update
-  RxString oldVersion = '1.0.4'.obs;
+  RxString oldVersion = '2.0.0'.obs;
   RxString newVersion = ''.obs;
   RxBool isAppUpdated = true.obs;
 
@@ -42,9 +40,9 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
 
   Future<void> appSwitcherInitWork() async {
     isLoading.value = true;
+    await _checkSession();
     try {
       await Future.wait([
-        _checkSession(),
         _checkAppAccess(),
         _fetchVersionFromFirestore(),
         getLocation(),
@@ -55,9 +53,6 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
     }
     isLoading.value = false;
   }
-
-  // make instance of Notification class
-  // final NotificationServices _notificationServices = NotificationServices();
 
   Rxn<LocationDataModel> selectedStock = Rxn<LocationDataModel>();
   void updateStockDetails(String selectedLocationID) {
@@ -78,11 +73,7 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
         Get.toNamed(Routes.GAINERSPLASH);
         break;
       case 'sims':
-        if (Platform.isIOS) {
-          Get.to(() => GainerSims());
-        } else {
-          Get.toNamed(Routes.DMSPLASH);
-        }
+        Get.toNamed(Routes.DMSPLASH);
         break;
     }
   }
@@ -94,7 +85,6 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
   Future<void> _checkSession() async {
     final session = await AuthService.checkSessionExpired();
     if (session) await AuthService.logout('SessionExpired');
-    print('_checkSession: $session');
   }
 
   LocationDataModel? getStock() => selectedStock.value;
@@ -120,23 +110,13 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
         return;
       }
 
-      // Safe access
-      // final dealerId = locationDataList.first.dealerId;
-      // final List<String> locationsId =
-      //     locationDataList.map((item) => item.locationId.toString()).toList();
-      // String? userId = await AuthService.getUserId();
-      // await FirebaseDbCreation.storeDeviceToken(
-      //   tCode: userTCode.toString(),
-      //   userId: userId,
-      //   dealerId: dealerId.toString(),
-      //   locationIds: locationsId,
-      // );
-
       await getUSerRole();
+      final List<String> locationsIds =
+          locationDataList.map((item) => item.locationId.toString()).toList();
       await FirebaseDbCreation.storeUserDetails(
         role: userRole.value,
         dealerId: locationIdMap.values.first,
-        locationIds: locationIdMap,
+        locationIds: locationsIds,
         appVersion: newVersion.value,
       );
     } catch (e, stack) {
@@ -144,14 +124,12 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
       errMsg.value = 'Unexpected error occurred. Please try again.';
       debugPrintStack(stackTrace: stack);
     }
-    print('getLocation Done');
   }
 
   RxString userRole = ''.obs;
   Future<void> getUSerRole() async {
     String tCode = await AuthService.getTCode();
     final response = await DMApiServices().getUserRole(userId: tCode);
-    print('Response getUserRole $response');
     if (response['success']) {
       final role = response['role'].toLowerCase() ?? "NotDefine";
       userRole.value = role;
@@ -175,7 +153,6 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
             item.location: item.locationId.toString()
         };
         selectedLocation.value = locationIdMap.keys.first;
-        print('Location Data: ${locationIdMap}');
         //update stock details by default 0 index
         updateStockDetails(locationIdMap.values.first);
 
@@ -199,31 +176,29 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> _fetchVersionFromFirestore() async {
-    final response = await GainerApiService().fetchAppVersion();
-    print("Version from API: $response");
-    // if (response['success']) {
-    //   final data = response['data'];
-    //   newVersion.value = data['Version'];
-    //   isAppUpdated.value = oldVersion.value == newVersion.value;
-    // } else {
-    //   debugPrint(response['message']);
-    // }
+    bool versionFB = await FirebaseDbCreation.versionCheckFB();
+    if (versionFB) {
+      try {
+        final doc = await FirebaseFirestore.instance
+            .collection('update')
+            .doc('tel-e-scope')
+            .get();
 
-    try {
-      final doc = await FirebaseFirestore.instance
-          .collection('update')
-          .doc('tel-e-scope')
-          .get();
-
-      if (doc.exists) {
-        print("Version from Firebase: ${doc['versionName']}");
-        newVersion.value = doc['versionName'];
+        if (doc.exists) {
+          newVersion.value = doc['versionName'];
+          isAppUpdated.value = oldVersion.value == newVersion.value;
+        }
+      } catch (e) {
+        debugPrint('Version fetch error: $e');
+      }
+    } else {
+      final response = await GainerApiService().fetchAppVersion();
+      if (response['success']) {
+        final data = response['data'];
+        newVersion.value = data['Version'];
         isAppUpdated.value = oldVersion.value == newVersion.value;
       }
-    } catch (e) {
-      debugPrint('Version fetch error: $e');
     }
-    print('_fetchVersionFromFirestore $response');
   }
 
   final RxMap<String, dynamic> appAccess = <String, dynamic>{}.obs;
@@ -233,22 +208,11 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
     if (response['success']) {
       final data = response['data'];
       appAccess.assignAll(data);
-      // appAccess.assignAll({'IsSimsActive': 1, 'IsGainerActive': 0});
     }
-    print('_checkAppAccess: $response');
   }
 
   Future<void> _notificationPermission() async {
     NotificationServiceNEW.requestPermission();
-    print('_notificationPermission Done');
-    return;
-    // await NotificationServiceNEW.init();
-    // await LocalNotificationService.init();
-    // await FCMService.init();
-    // await NotificationServicesNEW.getFirebaseMessagingToken();
-    // await NotificationServicesNEW.init();
-    // await NotificationServices.requestNotificationPermission();
-    // await NotificationServices().firebaseInit();
   }
 
   void logout() {

@@ -10,7 +10,10 @@ import 'package:gainer/gainer_app/modules/direct_request_view/models/location_li
 import 'package:gainer/gainer_app/modules/direct_request_view/models/order_type_list_model.dart';
 import 'package:gainer/gainer_app/modules/direct_request_view/widgets/help_view_snack_bar.dart';
 import 'package:get/get.dart';
+import '../../../../core/services/fcm_service/firebase_db_creation.dart';
+import '../../../../core/services/fcm_service/send_notification_service.dart';
 import '../../../../core/utils/gainer_text_filed_validator.dart';
+import '../../../../routes/app_routes.dart';
 import '../../models/part_model.dart';
 
 class DirectRequestController extends GetxController {
@@ -271,9 +274,9 @@ class DirectRequestController extends GetxController {
       final response = await GainerApiService().submitDirectRequest(payload);
 
       if (response['success']) {
-        // GainerBottomSheet.showSnackBar(response['data']);
         GainerDialog.midPopUp(GainerImages.checkIcon, response['data']);
         parts.clear();
+        await sendNotification();
       } else {
         GainerBottomSheet.showSnackBar(
           response['message'] ?? 'Failed to submit request',
@@ -283,6 +286,29 @@ class DirectRequestController extends GetxController {
       GainerBottomSheet.showSnackBar('Something went wrong');
     } finally {
       isLoading(false);
+    }
+  }
+
+  Future<void> sendNotification() async {
+    bool needN = await FirebaseDbCreation.needNotificationSend();
+    if (!needN) return;
+
+    final partList = parts;
+    for (var i in partList) {
+      String sellerLocationID = i.locationId.toString();
+      String partNum = i.partNo;
+
+      String dealerName = await AuthService.getDealer();
+      String locationName = await AuthService.getLocation();
+
+      await PushNotification.notifyDealer(
+        locationID: sellerLocationID,
+        title: "Order Request (RECEIVED)",
+        body: "Part: $partNum\n"
+            "Buyer: $dealerName, $locationName\n"
+            "Pl check & CONFIRM order",
+        data: {'moduleRoute': Routes.ORDERRECEIVED},
+      );
     }
   }
 

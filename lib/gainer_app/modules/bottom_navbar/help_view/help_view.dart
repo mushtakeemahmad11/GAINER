@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:gainer/gainer_app/core/widgets/error_text.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_app_loader.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_bottom_sheet.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_dropdown.dart';
@@ -87,6 +88,8 @@ class HelpView extends GetView<HelpController> {
                 // Show loading while fetching sub-issues
                 if (controller.isSubIssueLoading.value)
                   const Center(child: GainerCircularLoader())
+                else if (controller.subIssueError.value != null)
+                  Center(child: AppErrorText(error: controller.subIssueError))
 
                 // Show dropdown if sub-issues are loaded
                 else if (controller.subIssues.isNotEmpty)

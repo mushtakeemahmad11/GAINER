@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:gainer/gainer_app/core/widgets/gainer_primary_button.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/Services/auth_service.dart';
@@ -9,6 +8,7 @@ import '../../../core/constants/gainer_image.dart';
 import '../../../core/services/gainer_api_service.dart';
 import '../../../core/widgets/gainer_bottom_sheet.dart';
 import '../../../core/widgets/gainer_dialog.dart';
+import '../../../core/widgets/image_preview.dart';
 import 'models/dd_model.dart';
 
 class DDController extends GetxController {
@@ -253,92 +253,19 @@ class DDController extends GetxController {
   }
 
   void onImageTap(
-      BuildContext context,
-      Object? image,
-      String? apiImage,
-      String title,
-      DDModel order,
-      int row,
-      int col,
-      bool isSigned,
-      String fileName,
-      Size size) {
+    BuildContext context,
+    Object? image,
+    String? apiImage,
+    String title,
+    DDModel order,
+    int row,
+    int col,
+    bool isSigned,
+    String fileName,
+    Size size,
+  ) {
     if (image != null || apiImage != null) {
-      Get.defaultDialog(
-        title: title,
-        cancel: GainerPrimaryButton(
-          title: 'Close',
-          onPressed: Get.back,
-        ),
-        content: Container(
-          constraints: BoxConstraints(
-            minHeight: size.height * .2, // Minimum height
-            maxHeight: size.height * .7, // Maximum height
-            minWidth: size.width * .9,
-            maxWidth: size.width,
-          ),
-          child: image is File
-              ? Image.file(
-                  image,
-                  fit: BoxFit.cover,
-                )
-              : Image.network(
-                  'https://scope.sparecare.in/Upload/DispatchDetails/$image',
-                  fit: BoxFit.contain,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child; // Display the image once loaded
-                    }
-                    return Center(
-                      child: Platform.isIOS
-                          ? CircularProgressIndicator.adaptive()
-                          : CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                      (loadingProgress.expectedTotalBytes ?? 1)
-                                  : null, // Show indeterminate if null
-                            ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.error),
-                ),
-        ),
-
-        // image is File
-        //     ? Image.file(
-        //         image,
-        //         fit: BoxFit.cover,
-        //       )
-        //     : Container(
-        //         constraints: BoxConstraints(
-        //           minHeight: size.height * .2, // Minimum height
-        //           maxHeight: size.height * .7, // Maximum height
-        //           minWidth: size.width * .9,
-        //           maxWidth: size.width,
-        //         ),
-        //         child: Image.network(
-        //           'https://scope.sparecare.in/Upload/DispatchDetails/$image',
-        //           fit: BoxFit.contain,
-        //           loadingBuilder: (context, child, loadingProgress) {
-        //             if (loadingProgress == null) {
-        //               return child; // Display the image once loaded
-        //             }
-        //             return Center(
-        //               child: CircularProgressIndicator(
-        //                 value: loadingProgress.expectedTotalBytes != null
-        //                     ? loadingProgress.cumulativeBytesLoaded /
-        //                         (loadingProgress.expectedTotalBytes ?? 1)
-        //                     : null, // Show indeterminate if null
-        //               ),
-        //             );
-        //           },
-        //           errorBuilder: (context, error, stackTrace) =>
-        //               const Icon(Icons.error),
-        //         ),
-        //       ),
-      );
-
+      ImagePreview.show(image: image, title: title);
       return;
     }
 

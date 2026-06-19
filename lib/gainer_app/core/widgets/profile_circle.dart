@@ -58,23 +58,6 @@ class ProfileCircle extends StatelessWidget {
       );
     }
 
-    // if (imageUrl != null) {
-    //   try {
-    //     return Image.network(
-    //       imageUrl,
-    //       fit: BoxFit.cover,
-    //       loadingBuilder: (_, child, progress) {
-    //         if (progress == null) return child;
-    //         return const Center(
-    //             child: CircularProgressIndicator(strokeWidth: 2));
-    //       },
-    //       errorBuilder: (_, __, ___) => _profileIcon(),
-    //     );
-    //   } catch (e) {
-    //     return _profileIcon();
-    //   }
-    // }
-
     return _profileIcon();
   }
 

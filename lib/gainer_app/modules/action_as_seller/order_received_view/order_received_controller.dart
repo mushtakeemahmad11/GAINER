@@ -6,9 +6,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../../../core/Services/auth_service.dart';
 import '../../../core/constants/gainer_image.dart';
+import '../../../core/services/fcm_service/firebase_db_creation.dart';
+import '../../../core/services/fcm_service/send_notification_service.dart';
 import '../../../core/services/gainer_api_service.dart';
 import '../../../core/widgets/gainer_bottom_sheet.dart';
 import '../../../core/widgets/gainer_dialog.dart';
+import '../../../routes/app_routes.dart';
 import 'models/order_received_model.dart';
 import 'models/order_received_part_model.dart';
 import 'models/order_received_seller_model.dart';
@@ -404,8 +407,8 @@ class OrderReceivedController extends GetxController {
       return;
     }
     onTapBtn('Are you sure to accept this order?', () async {
-      // final String dealer = await AuthService.getDealer();
-      // final String location = await AuthService.getLocation();
+      final String dealer = await AuthService.getDealer();
+      final String location = await AuthService.getLocation();
       final String locationId = await AuthService.getLocationId();
       final String userID = await AuthService.getTCode();
 
@@ -432,15 +435,16 @@ class OrderReceivedController extends GetxController {
         await fetchORDetails();
         GainerDialog.midPopUp(
             GainerImages.agreement, response['data'].toString());
-
+        bool needN = await FirebaseDbCreation.needNotificationSend();
+        if (!needN) return;
         /// Send notification to buyer
-        // await PushNotification.notifyDealer(
-        //   locationID: order.buyerLocationId.toString(),
-        //   title: 'ORDER CONFIRMATION',
-        //   body:
-        //       'Enquiry raised from $location for ${order.partNumber} ($reqQty Qty) is ACCEPTED by $dealer $location. Please raise Final PO in ${order.buyerLocation} & update on Gainer.',
-        //   data: {'moduleRoute': Routes.UPDATEPO},
-        // );
+        await PushNotification.notifyDealer(
+          locationID: order.buyerLocationId.toString(),
+          title: 'ORDER CONFIRMATION',
+          body:
+              'Enquiry raised from $location for ${order.partNumber} ($reqQty Qty) is ACCEPTED by $dealer $location. Please raise Final PO in ${order.buyerLocation} & update on Gainer.',
+          data: {'moduleRoute': Routes.UPDATEPO},
+        );
 
         // FocusScope.of(context).unfocus();
         // await _orderReceivedController.orderReceivedAsSeller(
@@ -511,8 +515,8 @@ class OrderReceivedController extends GetxController {
       String remarks = rejectRemarksCtrl.text.trim();
       String tCode = await AuthService.getTCode();
       String sellerLocationId = await AuthService.getLocationId();
-      // String sellerLocation = await AuthService.getLocation();
-      // String dealer = await AuthService.getDealer();
+      String sellerLocation = await AuthService.getLocation();
+      String dealer = await AuthService.getDealer();
       isRejectLoading.value = true;
       final response = await GainerApiService().orderDueReject(
         remarks: remarks,
@@ -531,14 +535,15 @@ class OrderReceivedController extends GetxController {
         GainerDialog.midPopUp(GainerImages.checkIcon, '${response['data']}');
         // ORDER REQUEST (REJECTED)
         // Enquiry raised from Location for PartNumber (3 Qty) is REJECTED by Dealer_Location. Pl check part on Gainer & place enquiry to another Co-Dealer.
-
-        // await PushNotification.notifyDealer(
-        //   locationID: order.buyerLocationId.toString(),
-        //   title: 'ORDER REQUEST (REJECTED)',
-        //   body:
-        //       'Enquiry raised from $sellerLocation for ${order.partNumber} (${order.qty} Qty) is REJECTED by $dealer/$sellerLocation. Please check part on Gainer & place enquiry to another Co-Dealer',
-        //   data: {'moduleRoute': Routes.PARTREQUESTVIEW},
-        // );
+        bool needN = await FirebaseDbCreation.needNotificationSend();
+        if (!needN) return;
+        await PushNotification.notifyDealer(
+          locationID: order.buyerLocationId.toString(),
+          title: 'ORDER REQUEST (REJECTED)',
+          body:
+              'Enquiry raised from $sellerLocation for ${order.partNumber} (${order.qty} Qty) is REJECTED by $dealer/$sellerLocation. Please check part on Gainer & place enquiry to another Co-Dealer',
+          data: {'moduleRoute': Routes.PARTREQUESTVIEW},
+        );
       } else {
         GainerBottomSheet.showSnackBar('${response['message']}');
       }

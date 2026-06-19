@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/gainer_color.dart';
@@ -30,7 +29,7 @@ class DrReceivedExpansionTileHeader extends StatelessWidget {
                 maxWidth: maxFirstWidth,
               ),
               child: ScrollableTextWidget(
-                textWidget: _titleText('$title1 $title1 $title1 $title1 $title1'),
+                textWidget: _titleText(title1),
               ),
             ),
 

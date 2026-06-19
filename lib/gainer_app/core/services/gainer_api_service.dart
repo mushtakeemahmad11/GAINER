@@ -14,11 +14,12 @@ import '../../routes/app_routes.dart';
 import '../Services/auth_service.dart';
 
 class GainerApiService {
-  // final String baseUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
+  final String baseUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
   final String scopeApiBaseurl = "https://scopeapi.sparecare.in/api/v1";
-  // final String scopeApiBaseurl = "http://web10.185.238.new.ocpwebserver.com/api/v1";
-  final String baseUrl =
-      "http://web13.185.238.new.ocpwebserver.com/AppServicesV2.asmx";
+  // final String scopeApiBaseurl =
+  //     "http://web36.185.238.new.ocpwebserver.com/api/v1";
+  // final String baseUrl =
+  //     "http://web13.185.238.new.ocpwebserver.com/AppServicesV2.asmx";
 
   ///checking internet before hit API
   final networkC = Get.find<NoInternetController>();
@@ -37,8 +38,8 @@ class GainerApiService {
     int timeoutSeconds = 20, // default
   }) async {
     return guardRequest<http.Response>(() {
-      print("URL::: $url");
-      print("Payload::: $payload");
+      // print("URL::: $url");
+      // print("Payload::: $payload");
       return http
           .post(
             Uri.parse(url),
@@ -64,8 +65,6 @@ class GainerApiService {
     try {
       final response = await apiRequest(url, payload);
       final jsonData = jsonDecode(response.body);
-      print("requestBody: $url $payload");
-print("Reponse login: ${response.statusCode} ${response.body}");
       // get data as json string from json data
       final data = jsonData['d'];
 
@@ -332,7 +331,6 @@ print("Reponse login: ${response.statusCode} ${response.body}");
       // final stopwatch = Stopwatch()..start();
       final response = await apiRequest(url, payload, timeoutSeconds: 60);
       final jsonData = jsonDecode(response.body);
-
       // get data as json string from json data
       final data = jsonData['d'];
       if (response.statusCode == 200) {
@@ -492,6 +490,7 @@ print("Reponse login: ${response.statusCode} ${response.body}");
       final jsonData = jsonDecode(response.body);
       // get data as json string from json data
       final data = jsonData['d'];
+
       if (response.statusCode == 200) {
         if (data.isNotEmpty) {
           if (jsonDecode(data)[0]['Status'] == "Error") {
@@ -1524,7 +1523,6 @@ print("Reponse login: ${response.statusCode} ${response.body}");
         final response = await http.Response.fromStream(streamedResponse);
 
         final contentType = response.headers['content-type'] ?? '';
-
         if (contentType.contains('application/json')) {
           final data = jsonDecode(response.body);
           if (response.statusCode == 200) {
@@ -1666,9 +1664,7 @@ print("Reponse login: ${response.statusCode} ${response.body}");
   }
 
   Future<Map<String, dynamic>> fetchAppVersion() async {
-    // String apiUrl = "$scopeApiBaseurl/dm/version";
-    String apiUrl =
-        "http://web10.185.238.new.ocpwebserver.com/api/v1/dm/version";
+    String apiUrl = "$scopeApiBaseurl/dm/version";
     final url = Uri.parse(apiUrl);
 
     try {
@@ -1696,12 +1692,10 @@ print("Reponse login: ${response.statusCode} ${response.body}");
   }
 
   Future<Map<String, dynamic>> getAppAccess(String userCode) async {
-    // String apiUrl = "$scopeApiBaseurl/dm/app-switcher";
-    String apiUrl =
-        "http://web10.185.238.new.ocpwebserver.com/api/v1/dm/app-switcher";
-    final payload = {
-      'userId': userCode,
-    };
+    String apiUrl = "$scopeApiBaseurl/dm/app-switcher";
+    // String apiUrl =
+    //     "http://web10.185.238.new.ocpwebserver.com/api/v1/dm/app-switcher";
+    final payload = {'userId': userCode};
 
     try {
       final response = await apiRequest(apiUrl, payload);
@@ -1863,7 +1857,8 @@ print("Reponse login: ${response.statusCode} ${response.body}");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        if (data['d'] != null) {
+        final d = data['d'];
+        if (d != null && d.isNotEmpty) {
           // final List<dynamic> decodedList = jsonDecode(data['d']);
           return {'success': true, 'data': data['d']};
         }

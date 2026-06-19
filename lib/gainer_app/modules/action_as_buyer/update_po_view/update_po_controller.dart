@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:gainer/gainer_app/core/services/fcm_service/firebase_db_creation.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/models/update_po_part_model.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/widgets/sort_filter/po_filter_sheet.dart';
 import 'package:gainer/gainer_app/modules/action_as_buyer/update_po_view/widgets/sort_filter/po_sort_sheet.dart';
@@ -7,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../core/Services/auth_service.dart';
 import '../../../core/constants/gainer_image.dart';
+import '../../../core/services/fcm_service/send_notification_service.dart';
 import '../../../core/services/gainer_api_service.dart';
 import '../../../core/utils/url_launch_utils.dart';
 import '../../../core/widgets/gainer_bottom_sheet.dart';
@@ -456,7 +458,7 @@ class UpdatePoController extends GetxController {
     String dealerId = bdl['dealerId'].toString();
     String locationId = bdl['locationId'].toString();
     // String dealer = await AuthService.getDealer();
-    // String location = await AuthService.getLocation();
+    String location = await AuthService.getLocation();
 
     // Update remarks
     for (var item in tableVal) {
@@ -494,13 +496,15 @@ class UpdatePoController extends GetxController {
       _fetchPoDetails();
       acceptedOrders.clear();
       GainerDialog.midPopUp(GainerImages.checkIcon, response['data']);
-      // await PushNotification.notifyDealer(
-      //   locationID: sellerLocationID,
-      //   title: 'Purchase Order (CONFIRMED)',
-      //   body:
-      //       'Enquiry raised from $location worth $totalPrice Please do Invoice & manifest details on Gainer.',
-      //   data: {'moduleRoute': Routes.MANIFESTATIONVIEW},
-      // );
+      bool needN = await FirebaseDbCreation.needNotificationSend();
+      if (!needN) return;
+      await PushNotification.notifyDealer(
+        locationID: sellerLocationID,
+        title: 'Purchase Order (CONFIRMED)',
+        body:
+            'Enquiry raised from $location worth $totalPrice Please do Invoice & manifest details on Gainer.',
+        data: {'moduleRoute': Routes.MANIFESTATIONVIEW},
+      );
     } else {
       GainerBottomSheet.showSnackBar(response['message']);
     }
@@ -686,16 +690,17 @@ class UpdatePoController extends GetxController {
           Get.back();
           _fetchPoDetails();
           GainerDialog.midPopUp(GainerImages.rejectIcon, response['data']);
-
-          // String location = await AuthService.getLocation();
+          bool needN = await FirebaseDbCreation.needNotificationSend();
+          if (!needN) return;
+          String location = await AuthService.getLocation();
           // String dealer = await AuthService.getDealer();
-          // await PushNotification.notifyDealer(
-          //   locationID: order.sellerLocationId.toString(),
-          //   title: 'Purchase Order (REJECTED)',
-          //   body:
-          //       'Enquiry raised from $location for ${order.partNumber}. for $selectedIssue Please check & update on Gainer.',
-          //   data: {'moduleRoute': Routes.ORDERRECEIVED},
-          // );
+          await PushNotification.notifyDealer(
+            locationID: order.sellerLocationId.toString(),
+            title: 'Purchase Order (REJECTED)',
+            body:
+                'Enquiry raised from $location for ${order.partNumber}. for $selectedIssue Please check & update on Gainer.',
+            data: {'moduleRoute': Routes.ORDERRECEIVED},
+          );
         } else {
           GainerBottomSheet.showSnackBar(response['message']);
         }
@@ -732,15 +737,17 @@ class UpdatePoController extends GetxController {
       Get.back();
       _fetchPoDetails();
       GainerDialog.midPopUp(GainerImages.checkIcon, response['data']);
-      // final location = await AuthService.getLocation();
-      // final dealer = await AuthService.getDealer();
-      // await PushNotification.notifyDealer(
-      //   locationID: sellerLocationID,
-      //   title: 'Purchase Order (Further Remarks)',
-      //   body:
-      //       'Enquiry raised from $location for $partNumber $remarks PO Return for Further remarks, by $dealer $location. PO Return for Further remarks, please Check & update on Gainer.',
-      //   data: {'moduleRoute': Routes.ORDERRECEIVED},
-      // );
+      bool needN = await FirebaseDbCreation.needNotificationSend();
+      if (!needN) return;
+      final location = await AuthService.getLocation();
+      final dealer = await AuthService.getDealer();
+      await PushNotification.notifyDealer(
+        locationID: sellerLocationID,
+        title: 'Purchase Order (Further Remarks)',
+        body:
+            'Enquiry raised from $location for $partNumber $remarks PO Return for Further remarks, by $dealer $location. PO Return for Further remarks, please Check & update on Gainer.',
+        data: {'moduleRoute': Routes.ORDERRECEIVED},
+      );
     } else {
       Get.back();
       GainerBottomSheet.showSnackBar(response['message']);

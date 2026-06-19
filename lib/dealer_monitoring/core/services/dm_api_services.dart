@@ -4,12 +4,13 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import '../../../gainer_app/core/Services/auth_service.dart';
 import 'package:http/http.dart' as http;
-// import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 class DMApiServices {
   // final String baseUrl = "http://web10.185.238.new.ocpwebserver.com/api/v1/dm";
   // final String baseUrl = 'https://6mztnd0t-3000.inc1.devtunnels.ms/api/v1/dm';
+  // final String scopeUrl = "http://web36.185.238.new.ocpwebserver.com/api/v1";
+  // final String baseUrl = "http://web36.185.238.new.ocpwebserver.com/api/v1/dm";
   final String scopeUrl = "https://scope.sparecare.in/AppServicesV2.asmx";
   final String baseUrl = "https://scopeapi.sparecare.in/api/v1/dm";
 
@@ -144,7 +145,7 @@ class DMApiServices {
     };
 
     try {
-      print("Request: $url, $requestBody");
+      // print("Request: $url, $requestBody");
       final response = await http
           .post(
             Uri.parse(url),
@@ -153,7 +154,7 @@ class DMApiServices {
           )
           .timeout(const Duration(seconds: 10));
 
-      print("response of partsale: ${response.body}");
+      // print("response of partsale: ${response.body}");
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         final data = json['Details'];
@@ -206,7 +207,6 @@ class DMApiServices {
       "userId": userId,
     };
 
-    print("Request Body of part stock check: $requestBody, $url");
     try {
       final response = await http
           .post(
@@ -216,7 +216,6 @@ class DMApiServices {
           )
           .timeout(const Duration(seconds: 20));
 
-      print("response of part stock ${response.statusCode}, ${response.body}");
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(response.body);
         // print("json body part stock: $json");
@@ -627,7 +626,7 @@ class DMApiServices {
             body: jsonEncode(requestBody),
           )
           .timeout(const Duration(seconds: 10));
-
+      // print("vehicle: $url, $requestBody, ${response.body}");
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(response.body);
 

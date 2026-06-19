@@ -154,7 +154,6 @@ class HelpController extends GetxController {
   }
 
   Future<void> submitForm() async {
-
     clearErrors();
 
     if (!formKey.currentState!.validate()) return;

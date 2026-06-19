@@ -33,56 +33,10 @@ class NotificationController extends GetxController {
 
   /// 🔥 COMMON HANDLER
   Future<void> handleData(Map data) async {
-    // await _handleGainerFlow(data);
-    // print("Data of Notification handleData: $data");
-    // final String route = data['route'];  //when own
     final String route = data['moduleRoute'];
     final String notifyId = data['LocationId'];
     await checkAndNavigate(route, notifyId);
   }
-
-  /// 🚀 CLEAN FLOW (NO CONFLICT / NO DUPLICATE)
-  // Future<void> _handleGainerFlow(Map data) async {
-  //   final String route = data['moduleRoute'] ?? "";
-  //   final String locationId = data['notifyTo'] ?? "";
-  //
-  //   /// ✅ Lazy init (ONLY when needed)
-  //   // final appController = Get.isRegistered<AppController>()
-  //   //     ? Get.find<AppController>()
-  //   //     : Get.put(AppController());
-  //   /// 1️⃣ Switch App Switcher
-  //   Get.offAllNamed(Routes.APPSWITCHER);
-  //   // await Future.delayed(const Duration(milliseconds: 300));
-  //
-  //   final switcherController = Get.find<AppSwitcherController>();
-  //
-  //   final homeController = Get.isRegistered<HomeController>()
-  //       ? Get.find<HomeController>()
-  //       : Get.put(HomeController());
-  //
-  //   /// 2️⃣ Navigation Gainer
-  //   Get.toNamed(Routes.GAINERMAINVIEW);
-  //
-  //   /// 3️⃣ Load locations
-  //   await switcherController.getLocation();
-  //
-  //   final locationDetails = switcherController.locationDataList.firstWhere(
-  //     (e) => e.locationId.toString() == locationId,
-  //     orElse: () => switcherController.locationDataList.first,
-  //   );
-  //   switcherController.selectedLocation.value = locationDetails.location;
-  //   switcherController.selectedLocationId.value =
-  //       locationDetails.locationId.toString();
-  //
-  //   /// 4️⃣ Load data
-  //   await homeController.getBuyerDetails(
-  //     locationDetails.locationId.toString(),
-  //     locationDetails.location,
-  //   );
-  //
-  //   /// 5️⃣ Navigate
-  //   Get.toNamed(route, arguments: data);
-  // }
 
   Future<void> checkAndNavigate(String screen, String locationId) async {
     final route = Get.currentRoute;
@@ -166,70 +120,4 @@ class NotificationController extends GetxController {
     /// 🔹 Final Navigation
     Get.toNamed(screen);
   }
-
-  // Future<void> checkNavigate(String screen, String locationId) async {
-  //   String route = Get.currentRoute;
-  //   if (route == Routes.NOTIFICATIONVIEW) {
-  //   } else if (route == Routes.GAINERMAINVIEW) {
-  //     /// Already on main
-  //     // Get.toNamed(Routes.NOTIFICATIONVIEW);
-  //     Get.toNamed(screen);
-  //   } else if (route == Routes.APPSWITCHER) {
-  //     /// 2️⃣ Navigation Gainer
-  //     Get.toNamed(Routes.GAINERMAINVIEW);
-  //     final switcherController = Get.find<AppSwitcherController>();
-  //     final homeController = Get.isRegistered<HomeController>()
-  //         ? Get.find<HomeController>()
-  //         : Get.put(HomeController());
-  //
-  //     final locationDetails = switcherController.locationDataList.firstWhere(
-  //       (e) => e.locationId.toString() == locationId,
-  //       orElse: () => switcherController.locationDataList.first,
-  //     );
-  //     switcherController.selectedLocation.value = locationDetails.location;
-  //     switcherController.selectedLocationId.value =
-  //         locationDetails.locationId.toString();
-  //
-  //     /// 4️⃣ Load data
-  //     await homeController.getBuyerDetails(
-  //       locationDetails.locationId.toString(),
-  //       locationDetails.location,
-  //     );
-  //
-  //     /// 5️⃣ Navigate
-  //     Get.toNamed(screen);
-  //   } else {
-  //     Get.offAllNamed(Routes.APPSWITCHER);
-  //     await Future.delayed(const Duration(milliseconds: 300));
-  //
-  //     final switcherController = Get.find<AppSwitcherController>();
-  //
-  //     final homeController = Get.isRegistered<HomeController>()
-  //         ? Get.find<HomeController>()
-  //         : Get.put(HomeController());
-  //
-  //     /// 2️⃣ Navigation Gainer
-  //     Get.toNamed(Routes.GAINERMAINVIEW);
-  //
-  //     /// 3️⃣ Load locations
-  //     await switcherController.getLocation();
-  //
-  //     final locationDetails = switcherController.locationDataList.firstWhere(
-  //       (e) => e.locationId.toString() == locationId,
-  //       orElse: () => switcherController.locationDataList.first,
-  //     );
-  //     switcherController.selectedLocation.value = locationDetails.location;
-  //     switcherController.selectedLocationId.value =
-  //         locationDetails.locationId.toString();
-  //
-  //     /// 4️⃣ Load data
-  //     await homeController.getBuyerDetails(
-  //       locationDetails.locationId.toString(),
-  //       locationDetails.location,
-  //     );
-  //
-  //     /// 5️⃣ Navigate
-  //     Get.toNamed(screen);
-  //   }
-  // }
 }

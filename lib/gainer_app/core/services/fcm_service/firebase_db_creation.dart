@@ -1,8 +1,5 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-
 import '../../Services/auth_service.dart';
 import 'firebase_notification_service.dart';
 
@@ -92,39 +89,70 @@ class FirebaseDbCreation {
   static Future<void> storeUserDetails({
     required String role,
     required String dealerId,
-    required Map<String, String> locationIds,
+    required List locationIds,
+    // required Map<String, String> locationIds,
     required String appVersion,
   }) async {
     String? userName = await AuthService.getUserId();
     String? tCode = await AuthService.getTCode();
+    if (tCode.isEmpty || tCode == "NULL") return;
+
+    final token = await NotificationServiceNEW.getFirebaseMessagingToken();
+    if (token == null) return;
+
     final ref =
         FirebaseFirestore.instance.collection('users-details').doc(tCode);
 
     final snap = await ref.get();
-    final token = await NotificationServiceNEW.getFirebaseMessagingToken();
-    if (token == null) return;
 
-    /// Always-updated fields
-    final updateData = {
-      'role': role,
-      'locationIds': locationIds,
+    final Map<String, dynamic> updateData = {
+      'role': role.toLowerCase(),
+      'dealerId': dealerId,
+      'locationIds': locationIds, // ✅ List<String>
       'deviceToken': token,
-      'lastUsedAt': FieldValue.serverTimestamp(),
       'appVersion': appVersion,
-      'deviceType': Platform.isIOS ? 'IOS' : 'android',
+      'deviceType': Platform.isIOS ? 'ios' : 'android',
+      'lastUsedAt': FieldValue.serverTimestamp(),
     };
 
-    /// First-time-only fields
+    /// First time only
     if (!snap.exists) {
       updateData.addAll({
         'uid': tCode,
         'userName': userName,
-        'dealerId': dealerId,
         'createdAt': FieldValue.serverTimestamp(),
       });
     }
-    print('Store User Details: $updateData');
     await ref.set(updateData, SetOptions(merge: true));
+
+    // final ref =
+    //     FirebaseFirestore.instance.collection('users-details').doc(tCode);
+    //
+    // final snap = await ref.get();
+    // final token = await NotificationServiceNEW.getFirebaseMessagingToken();
+    // if (token == null) return;
+    //
+    // /// Always-updated fields
+    // final updateData = {
+    //   'role': role,
+    //   'locationIds': locationIds.toList(),
+    //   'deviceToken': token,
+    //   'lastUsedAt': FieldValue.serverTimestamp(),
+    //   'appVersion': appVersion,
+    //   'deviceType': Platform.isIOS ? 'IOS' : 'android',
+    // };
+    //
+    // /// First-time-only fields
+    // if (!snap.exists) {
+    //   updateData.addAll({
+    //     'uid': tCode,
+    //     'userName': userName,
+    //     'dealerId': dealerId,
+    //     'createdAt': FieldValue.serverTimestamp(),
+    //   });
+    // }
+    // print('Store User Details: $updateData');
+    // await ref.set(updateData, SetOptions(merge: true));
   }
 
   static Future<List<String>> getDeviceTokens({
@@ -136,31 +164,85 @@ class FirebaseDbCreation {
       'Either dealerId or locationId must be provided',
     );
 
-    Query query = FirebaseFirestore.instance.collection('users-details');
+    Query query = FirebaseFirestore.instance
+        .collection('users-details')
+        .where('deviceToken', isNotEqualTo: null);
 
-    // Case 1: Dealer-based notification
+    // Dealer-based notification
     if (dealerId != null) {
       query = query.where('dealerId', isEqualTo: dealerId);
     }
 
-    // Case 2: Location-based notification
+    // Location-based notification
     if (locationId != null) {
-      query = query.where(
-        'locationIds.${locationId.toString()}',
-        isNull: false,
-      );
+      query = query.where('locationIds', arrayContains: locationId);
     }
 
     final snapshot = await query.get();
 
-    List<String> tokens = snapshot.docs
-        .map((doc) => doc['deviceToken'] as String?)
-        .where((token) => token != null && token.isNotEmpty)
-        .cast<String>()
+    return snapshot.docs
+        .map((doc) => doc['deviceToken'] as String)
+        .where((token) => token.isNotEmpty)
         .toList();
-
-    return tokens;
   }
+
+  static Future<bool> needNotificationSend() async {
+    final doc = await FirebaseFirestore.instance
+        .collection('notification-function')
+        .doc('sN0cGDacb68lZDhhZwk3')
+        .get();
+
+    if (doc.exists) {
+      bool isSend = doc.data()?['isSend'] ?? false;
+      return isSend;
+    }
+    return false;
+  }
+
+  static Future<bool> versionCheckFB() async {
+    final doc = await FirebaseFirestore.instance
+        .collection('notification-function')
+        .doc('sN0cGDacb68lZDhhZwk3')
+        .get();
+
+    if (doc.exists) {
+      bool isFB = doc.data()?['versionCheck'] ?? false;
+      return isFB;
+    }
+    return false;
+  }
+
+  // async {
+  //   assert(
+  //     dealerId != null || locationId != null,
+  //     'Either dealerId or locationId must be provided',
+  //   );
+  //
+  //   Query query = FirebaseFirestore.instance.collection('users-details');
+  //
+  //   // Case 1: Dealer-based notification
+  //   if (dealerId != null) {
+  //     query = query.where('dealerId', isEqualTo: dealerId);
+  //   }
+  //
+  //   // Case 2: Location-based notification
+  //   if (locationId != null) {
+  //     query = query.where(
+  //       'locationIds.${locationId.toString()}',
+  //       isNull: false,
+  //     );
+  //   }
+  //
+  //   final snapshot = await query.get();
+  //   print(snapshot.docs);
+  //   List<String> tokens = snapshot.docs
+  //       .map((doc) => doc['deviceToken'] as String?)
+  //       .where((token) => token != null && token.isNotEmpty)
+  //       .cast<String>()
+  //       .toList();
+  //
+  //   return tokens;
+  // }
 }
 
 // import 'package:cloud_firestore/cloud_firestore.dart';

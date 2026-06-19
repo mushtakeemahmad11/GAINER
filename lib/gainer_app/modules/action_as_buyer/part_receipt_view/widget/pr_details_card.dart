@@ -50,6 +50,7 @@ class PRDetailsCard extends GetView<PartReceiptController> {
                   ],
                 ),
               ),
+              const SizedBox(width: 5),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [

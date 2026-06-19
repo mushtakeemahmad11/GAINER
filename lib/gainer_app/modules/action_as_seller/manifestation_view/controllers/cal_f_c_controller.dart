@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/Services/auth_service.dart';
 import '../../../../core/constants/gainer_image.dart';
+import '../../../../core/services/fcm_service/firebase_db_creation.dart';
+import '../../../../core/services/fcm_service/send_notification_service.dart';
 import '../../../../core/services/gainer_api_service.dart';
 import '../../../../core/widgets/gainer_bottom_sheet.dart';
 import '../../../../core/widgets/gainer_dialog.dart';
+import '../../../../routes/app_routes.dart';
+import '../models/manifestation_model.dart';
 import 'manifestation_controller.dart';
 import '../models/cal_f_c_model.dart';
 import '../models/courier_model.dart';
@@ -404,7 +408,7 @@ class CalFCController extends GetxController {
 
     final userId = await AuthService.getTCode();
     final locationId = await AuthService.getLocationId();
-    // final bdl = await AuthService.getBDL();
+    final bdl = await AuthService.getBDL();
     Future<void> confirmAndManifest() async {
       isLoadingCFCSubmit.value = true;
       final response = await GainerApiService().manifestation(
@@ -440,17 +444,19 @@ class CalFCController extends GetxController {
       if (response['success']) {
         Get.back();
         Get.back();
-        // List<ManifestationModel> orderList = manifestController.selectedOrders;
+        List<ManifestationModel> orderList = manifestController.selectedOrders;
         await manifestController.fetchMDetails();
         GainerDialog.midPopUp(
             GainerImages.checkIcon, 'Order Manifested Successfully');
-        // await PushNotification.notifyDealer(
-        //   locationID: manifestationBuyerLocationID.value ?? '',
-        //   title: 'MANIFEST STAGE',
-        //   body:
-        //       'Final Purchase Order received at ${orderList.first.buyerLocation} for parts worth Rs $invoiceAmount/- from Buyer: ${bdl['dealer']} ${bdl['location']}. Pl Invoice & update shipment details on priority',
-        //   data: {'moduleRoute': Routes.PARTRECEIPT},
-        // );
+        bool needN = await FirebaseDbCreation.needNotificationSend();
+        if (!needN) return;
+        await PushNotification.notifyDealer(
+          locationID: manifestationBuyerLocationID.value ?? '',
+          title: 'MANIFEST STAGE',
+          body:
+              'Final Purchase Order received at ${orderList.first.buyerLocation} for parts worth Rs $invoiceAmount/- from Buyer: ${bdl['dealer']} ${bdl['location']}. Pl Invoice & update shipment details on priority',
+          data: {'moduleRoute': Routes.PARTRECEIPT},
+        );
       } else {
         GainerBottomSheet.showSnackBar(response['message']);
       }

@@ -3,6 +3,7 @@ import 'package:gainer/gainer_app/core/widgets/gainer_app_loader.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import '../../../../core/constants/gainer_color.dart';
+import '../../../../core/widgets/image_preview.dart';
 import '../../../../core/widgets/profile_circle.dart';
 import '../../home_view/home_controller.dart';
 
@@ -25,13 +26,22 @@ class HeaderView extends GetView<HomeController> {
             bool isUpload = controller.isProfileUploading.value;
             String? pickedImg = controller.pickedProfileImg.value;
             String? profileImg = controller.profileImage.value;
-
+            String url =
+                "https://scope.sparecare.in/Upload/Employee/$profileImg";
             return Stack(
               children: [
-                ProfileCircle(
-                  size: 150,
-                  pickedImg: pickedImg,
-                  apiImg: profileImg,
+                InkWell(
+                  onTap: () {
+                    ImagePreview.show(
+                      image: pickedImg ?? url,
+                      title: 'Profile',
+                    );
+                  },
+                  child: ProfileCircle(
+                    size: 150,
+                    pickedImg: pickedImg,
+                    apiImg: profileImg,
+                  ),
                 ),
                 Positioned(
                   bottom: 0,

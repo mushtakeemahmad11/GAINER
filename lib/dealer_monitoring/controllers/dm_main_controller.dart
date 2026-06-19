@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/Services/auth_service.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_bottom_sheet.dart';
@@ -24,8 +26,14 @@ class DMMainController extends GetxController {
   RxnString pickedProfileImg = RxnString(null);
 
   var currentScreen = 0.obs;
-  void openScreen(int index) => currentScreen.value = index;
-  // void goHome() => currentScreen.value = 0;
+  // void openScreen(int index) => currentScreen.value = index;
+  void openScreen(int index) {
+    if (index != 0 && Platform.isIOS) {
+      currentScreen.value = 13;
+    } else {
+      currentScreen.value = index;
+    }
+  }
 
   final List<Map<String, dynamic>> menuItems = [
     {

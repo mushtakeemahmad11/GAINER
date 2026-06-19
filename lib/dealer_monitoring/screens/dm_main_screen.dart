@@ -8,6 +8,7 @@ import 'package:gainer/dealer_monitoring/screens/scs_norms_view/scs_norms_screen
 import 'package:gainer/dealer_monitoring/screens/substitution_check/substitution_check_screen.dart';
 import 'package:gainer/dealer_monitoring/screens/vehicle_search/vehicle_search_screen.dart';
 import 'package:gainer/gainer_app/core/Services/auth_service.dart';
+import 'package:gainer/test/gainer_sims.dart';
 import 'package:get/get.dart';
 import '../../app_switcher_view/app_switcher_controller.dart';
 import '../../gainer_app/core/widgets/profile_circle.dart';
@@ -34,22 +35,25 @@ class _DMMainScreenState extends State<DMMainScreen> {
     _HomeMenuGrid(), // 0: Home
     // 1+: Other screens
     // BinLocationCheckScreen(),
-    PartStockCheckScreen(),
+    PartStockCheckScreen(), //1
     // PartRequestView(),
-    GainerPartReqView(),
+    GainerPartReqView(),  //2
     // GainerStockCheck(),
-    SubstitutionCheckScreen(),
-    Center(child: Text('PPNI List View Role Not Define')),
-    VehicleSearchScreen(),
-    SaleTrendScreen(),
-    OrderInfoScreen(),
-    ScsNormsScreen(),
-    GainerListingScreen(),
+    SubstitutionCheckScreen(),  //3
+    Center(child: Text('PPNI List View Role Not Define')),  //4
+    VehicleSearchScreen(),  //5
+    SaleTrendScreen(),  //6
+    OrderInfoScreen(),  //7
+    ScsNormsScreen(),  //8
+    GainerListingScreen(),  //9
 
     /// PPNI Screens
-    GeneralManagerScreen(),
-    WorkshopManagerFirstScreen(),
-    WorkshopAdvisorScreen(),
+    GeneralManagerScreen(), //10
+    WorkshopManagerFirstScreen(), //11
+    WorkshopAdvisorScreen(),  //12
+
+    GainerSims(), //13
+
   ];
 
   void _handleBackPressed(bool isTopRoute, dynamic result) {

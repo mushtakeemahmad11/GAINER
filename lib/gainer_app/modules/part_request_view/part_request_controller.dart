@@ -2,11 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/constants/gainer_image.dart';
+import 'package:gainer/gainer_app/core/services/fcm_service/send_notification_service.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_bottom_sheet.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_dialog.dart';
 import 'package:get/get.dart';
 import '../../core/Services/auth_service.dart';
+import '../../core/services/fcm_service/firebase_db_creation.dart';
 import '../../core/services/gainer_api_service.dart';
+import '../../routes/app_routes.dart';
 import 'model/part_request_model.dart';
 import 'model/part_request_part_model.dart';
 import 'widgets/tat_disc/tat_disc_sheet.dart';
@@ -325,8 +328,37 @@ class PartRequestController extends GetxController {
     if (response['success']) {
       Get.back();
       GainerDialog.midPopUp(GainerImages.checkIcon, response['data']);
+      await sendNotification();
     } else {
       GainerBottomSheet.showSnackBar(response['message']);
+    }
+  }
+
+  Future<void> sendNotification() async {
+    bool needN = await FirebaseDbCreation.needNotificationSend();
+    if (!needN) return;
+    final locList = sellerLocationList;
+    for (var i in locList) {
+      String sellerLocationID = i['locId'];
+      String partNum = i['parts'];
+
+      String dealerName = await AuthService.getDealer();
+      String locationName = await AuthService.getLocation();
+
+      await PushNotification.notifyDealer(
+        // {"app": "gainer", "Screen": "orderReceived"},
+        locationID: sellerLocationID,
+        title: "Order Request (RECEIVED)",
+        body: "Part: $partNum\n"
+            "Buyer: $dealerName, $locationName\n"
+            "Pl check & CONFIRM order",
+        data: {'moduleRoute': Routes.ORDERRECEIVED},
+      );
+      // Order Confirmation
+      // Order Request (RECEIVED)
+      // Part :
+      // Buyer :
+      // Pl check & CONFIRM order
     }
   }
 

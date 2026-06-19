@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/constants/gainer_color.dart';
 import '../models/part_model.dart';
 import 'card_header.dart';
 
@@ -15,18 +16,23 @@ class PartDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final decoration = GainerColors.gradientDecoration.copyWith(
+      borderRadius: BorderRadius.circular(10),
+    );
+
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        gradient: LinearGradient(
-          begin: Alignment(0.94, 0.97),
-          end: Alignment(2.94, -0.47),
-          colors: [
-            Color.fromRGBO(213, 221, 249, 0.5),
-            Color.fromRGBO(223, 247, 246, 0.2),
-          ],
-        ),
-      ),
+      decoration: decoration,
+      // decoration: BoxDecoration(
+      //   borderRadius: BorderRadius.circular(12),
+      //   gradient: LinearGradient(
+      //     begin: Alignment(0.94, 0.97),
+      //     end: Alignment(2.94, -0.47),
+      //     colors: [
+      //       Color.fromRGBO(213, 221, 249, 0.5),
+      //       Color.fromRGBO(223, 247, 246, 0.2),
+      //     ],
+      //   ),
+      // ),
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.only(bottom: 10),
       child: Column(
@@ -103,9 +109,9 @@ class PartDetailsCard extends StatelessWidget {
       Text(text ?? '', style: const TextStyle(fontSize: 12));
 
   Widget _bold(String? text) => Text(
-    text ?? '',
-    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-  );
+        text ?? '',
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+      );
 
   Widget _keyValue(String key, String? value) {
     return Row(

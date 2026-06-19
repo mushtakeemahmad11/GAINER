@@ -429,10 +429,6 @@ class _WorkshopAdvisorBodyState extends State<WorkshopAdvisorBody> {
                         monthDate: '',
                       ),
                     );
-                    // return Padding(
-                    //   padding: const EdgeInsets.only(top: 15),
-                    //   child: CircularProgressIndicator(),
-                    // );
                   }
                   final err = _controller.secondSError;
                   if (err.value != null) {

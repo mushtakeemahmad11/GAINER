@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../../../../app_switcher_view/app_switcher_controller.dart';
-import '../../../../test/gainer_sims.dart';
 import '../../../core/constants/gainer_image.dart';
 import '../../../core/services/gainer_api_service.dart';
 import '../../../routes/app_routes.dart';
