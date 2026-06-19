@@ -10,6 +10,8 @@ class GetServerKey {
     ];
 
     try {
+      final serviceAccountJson = {};
+      /*
       final serviceAccountJson = {
         "type": "service_account",
         "project_id": "gainer-app",
@@ -27,7 +29,7 @@ class GetServerKey {
             "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40gainer-app.iam.gserviceaccount.com",
         "universe_domain": "googleapis.com"
       };
-
+*/
       // final serviceAccountJson = {
       //   "type": "service_account",
       //   "project_id": "gainer-app",
