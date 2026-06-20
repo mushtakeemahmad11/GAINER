@@ -117,7 +117,7 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
         role: userRole.value,
         dealerId: locationIdMap.values.first,
         locationIds: locationsIds,
-        appVersion: newVersion.value,
+        appVersion: oldVersion.value,
       );
     } catch (e, stack) {
       // 🔒 GLOBAL SAFETY (App Store & Play Store friendly)

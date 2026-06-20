@@ -44,7 +44,7 @@ class CalFCView extends GetView<CalFCController> {
                   const SizedBox(height: 5),
                   GainerPrimaryButton(
                     title: '₹ Calculate Freight',
-                    isLoading: controller.isLoadingFC.value,
+                    // isLoading: controller.isLoadingFC.value,
                     onPressed: () {
                       if (controller.isLoadingFC.value) return;
                       FocusScope.of(context).unfocus();
@@ -58,7 +58,6 @@ class CalFCView extends GetView<CalFCController> {
                       ? const Center(child: GainerCircularLoader())
                       : _courierList(size)),
                   const SizedBox(height: 16),
-                  // _remarksAndSubmit(),
                 ],
               ),
             ),
