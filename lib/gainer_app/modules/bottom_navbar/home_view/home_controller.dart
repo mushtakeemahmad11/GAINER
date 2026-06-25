@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gainer/gainer_app/core/services/auth_service.dart';
 import 'package:gainer/gainer_app/core/utils/check_internet.dart';
@@ -12,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../../../../app_switcher_view/app_switcher_controller.dart';
 import '../../../core/constants/gainer_image.dart';
+import '../../../core/services/fcm_service/firebase_db_creation.dart';
 import '../../../core/services/gainer_api_service.dart';
 import '../../../routes/app_routes.dart';
 import '../../login/model/user_model.dart';
@@ -532,26 +534,44 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetchFCM(String selectedLocationID) async {
-    isNotificationLoading.value = true;
-    final response =
-        await GainerApiService().getNotifications(selectedLocationID);
-    isNotificationLoading.value = false;
-    if (response['success'] == true) {
-      final List<dynamic> decoded = jsonDecode(response['data']);
-      notificationList.value =
-          decoded.map((e) => NotificationModel.fromJson(e)).toList();
+    bool needN = await FirebaseDbCreation.needNotificationSend();
+    if (needN) {
+      try {
+        isNotificationLoading.value = true;
+        FirebaseFirestore.instance
+            .collection('gainer-notifications')
+            .where('locationId', isEqualTo: selectedLocationID)
+            .orderBy('createdAt', descending: true)
+            .snapshots()
+            .listen((snap) {
+          if (snap.docs.isEmpty) {
+            notificationError.value = 'No notification found';
+          } else {
+            notificationList.value = snap.docs.map((e) {
+              final data = e.data();
+              data['ID'] = e.id;
+              return NotificationModel.fromJsonFCM(data);
+            }).toList();
+          }
+        });
+        isNotificationLoading.value = false;
+      } catch (e) {
+        notificationError.value =
+            'There is some problem to fetch notification data';
+      }
     } else {
-      notificationError.value = response['message'];
+      isNotificationLoading.value = true;
+      final response =
+          await GainerApiService().getNotifications(selectedLocationID);
+      isNotificationLoading.value = false;
+      if (response['success'] == true) {
+        final List<dynamic> decoded = jsonDecode(response['data']);
+        notificationList.value =
+            decoded.map((e) => NotificationModel.fromJson(e)).toList();
+      } else {
+        notificationError.value = response['message'];
+      }
     }
-    // FirebaseFirestore.instance
-    //     .collection('gainer-notifications')
-    //     .where('locationId', isEqualTo: selectedLocationID)
-    //     .orderBy('createdAt', descending: true)
-    //     .snapshots()
-    //     .listen((snap) {
-    //   notificationList.value =
-    //       snap.docs.map(GainerAppNotification.fromDoc).toList();
-    // });
   }
 
   String timeAgo(DateTime ts) {
@@ -568,16 +588,15 @@ class HomeController extends GetxController {
     return DateFormat('dd MMM yyyy').format(date);
   }
 
-  RxBool fromNotification = false.obs;
-  // Map<String, dynamic>? notificationData;
-  Map<String, dynamic>? notificationData;
-
   void onNotificationTap(NotificationModel n) async {
-    // String route = n.data['moduleRoute'];
     String route = n.moduleRoute;
     Get.offNamed(route);
-    await GainerApiService().readNotification(n.id);
-    // FirebaseDbCreation.markRead(n.id);
+    bool needN = await FirebaseDbCreation.needNotificationSend();
+    if (needN) {
+      FirebaseDbCreation.markRead(n.id);
+    } else {
+      await GainerApiService().readNotification(n.id);
+    }
   }
 
   void logout() {

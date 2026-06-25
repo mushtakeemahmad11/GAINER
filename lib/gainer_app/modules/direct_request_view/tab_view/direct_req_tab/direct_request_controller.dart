@@ -197,7 +197,6 @@ class DirectRequestController extends GetxController {
         );
         return;
       }
-
       final res = await GainerApiService().getPartDetails(
         brandId,
         partNo,
@@ -275,8 +274,8 @@ class DirectRequestController extends GetxController {
 
       if (response['success']) {
         GainerDialog.midPopUp(GainerImages.checkIcon, response['data']);
-        parts.clear();
         await sendNotification();
+        parts.clear();
       } else {
         GainerBottomSheet.showSnackBar(
           response['message'] ?? 'Failed to submit request',
@@ -300,7 +299,6 @@ class DirectRequestController extends GetxController {
 
       String dealerName = await AuthService.getDealer();
       String locationName = await AuthService.getLocation();
-
       await PushNotification.notifyDealer(
         locationID: sellerLocationID,
         title: "Order Request (RECEIVED)",

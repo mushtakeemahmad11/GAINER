@@ -28,7 +28,11 @@ class DMMainController extends GetxController {
   var currentScreen = 0.obs;
   // void openScreen(int index) => currentScreen.value = index;
   void openScreen(int index) {
-    if (index != 0 && Platform.isIOS) {
+    if (Platform.isIOS &&
+        index != 0 &&
+        index != 1 &&
+        index != 2 &&
+        index != 3) {
       currentScreen.value = 13;
     } else {
       currentScreen.value = index;
@@ -213,12 +217,14 @@ class DMMainController extends GetxController {
       }
       return;
     }
+    final gainerAccess = controller.appAccess['IsGainerActive'] ?? 0;
 
     // ---------------- ADVISOR RULE ----------------
-    if (userRole == 'workshop advisor') {
+    if (userRole == 'workshop advisor' || gainerAccess == 0) {
       if (label.startsWith("Gainer Stock")) {
-        DealerSnackbar.showAccessDenied(
-            'Advisor cannot access Gainer Stock Check');
+        // DealerSnackbar.showAccessDenied(
+        //     'Advisor cannot access Gainer Stock Check');
+        DealerSnackbar.showAccessDenied('You are not authorized for Gainer Stock Check');
         return;
       }
     }

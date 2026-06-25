@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/screens/PPNI_list_view/workshop_manager_first_screen.dart';
 import 'package:gainer/dealer_monitoring/screens/PPNI_list_view/general_manager_screen.dart';
@@ -30,6 +32,7 @@ class DMMainScreen extends StatefulWidget {
 class _DMMainScreenState extends State<DMMainScreen> {
   DMMainController dMMainController = Get.put(DMMainController());
   final appSwitcherCtrl = Get.find<AppSwitcherController>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final List<Widget> screens = [
     _HomeMenuGrid(), // 0: Home
@@ -37,23 +40,22 @@ class _DMMainScreenState extends State<DMMainScreen> {
     // BinLocationCheckScreen(),
     PartStockCheckScreen(), //1
     // PartRequestView(),
-    GainerPartReqView(),  //2
+    GainerPartReqView(), //2
     // GainerStockCheck(),
-    SubstitutionCheckScreen(),  //3
-    Center(child: Text('PPNI List View Role Not Define')),  //4
-    VehicleSearchScreen(),  //5
-    SaleTrendScreen(),  //6
-    OrderInfoScreen(),  //7
-    ScsNormsScreen(),  //8
-    GainerListingScreen(),  //9
+    SubstitutionCheckScreen(), //3
+    Center(child: Text('PPNI List View Role Not Define')), //4
+    VehicleSearchScreen(), //5
+    SaleTrendScreen(), //6
+    OrderInfoScreen(), //7
+    ScsNormsScreen(), //8
+    GainerListingScreen(), //9
 
     /// PPNI Screens
     GeneralManagerScreen(), //10
     WorkshopManagerFirstScreen(), //11
-    WorkshopAdvisorScreen(),  //12
+    WorkshopAdvisorScreen(), //12
 
     GainerSims(), //13
-
   ];
 
   void _handleBackPressed(bool isTopRoute, dynamic result) {
@@ -87,6 +89,7 @@ class _DMMainScreenState extends State<DMMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: DMAppColors.surface,
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
@@ -124,6 +127,8 @@ class _DMMainScreenState extends State<DMMainScreen> {
             }),
           ],
         ),
+        leading: Platform.isIOS ? _buildLeading(context) : null,
+        leadingWidth: Platform.isIOS ? 100 : null,
       ),
       drawer: _buildDrawerButton(),
       body: Obx(() {
@@ -153,6 +158,31 @@ class _DMMainScreenState extends State<DMMainScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildLeading(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        /// 🔸 Back Button (only when IOS pop)
+        IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          // onPressed: Get.back,
+          onPressed: () => _handleBackPressed(
+            dMMainController.currentScreen.value == 0,
+            true,
+          ),
+        ),
+
+        /// 🔸 Drawer Button
+        IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+          // onPressed: () => Scaffold.of(context).openDrawer(),
+        ),
+      ],
     );
   }
 

@@ -6,6 +6,7 @@ import 'package:gainer/gainer_app/core/widgets/part_suggestion_list.dart';
 import 'package:get/get.dart';
 import '../../controllers/part_stock_check_controller.dart';
 import '../../core/utils/dm_images.dart';
+import '../../widgets/dealer_app_loader.dart';
 import '../../widgets/elevated_button.dart';
 import '../../widgets/legend_bar.dart';
 import '../../widgets/part_stock_card.dart';
@@ -87,7 +88,8 @@ class _PartStockCheckScreenState extends State<PartStockCheckScreen> {
   Widget _buildPartCard() {
     return Obx(() {
       if (c.isLoading.value) {
-        return CircularProgressIndicator();
+        return DealerAppLoader();
+        // return CircularProgressIndicator();
       }
       if (c.errorMessage.value != null || c.partDetails.isEmpty) {
         return DmErrorMsg(text: c.errorMessage.value ?? "");

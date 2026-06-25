@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/controllers/substitution_check_controller.dart';
 import 'package:gainer/dealer_monitoring/core/theme/app_colors.dart';
 import 'package:gainer/dealer_monitoring/core/utils/dm_images.dart';
+import 'package:gainer/dealer_monitoring/widgets/dealer_app_loader.dart';
 import 'package:gainer/dealer_monitoring/widgets/head_bar.dart';
 import 'package:gainer/dealer_monitoring/widgets/reusable_table.dart';
 import 'package:gainer/gainer_app/core/widgets/part_suggestion_list.dart';
@@ -99,7 +100,7 @@ class _SubstitutionCheckScreenState extends State<SubstitutionCheckScreen> {
   Widget _buildSubstitutionTable() {
     return Obx(() {
       if (controller.isLoading.value) {
-        return const CircularProgressIndicator();
+        return const DealerAppLoader();
       }
       if (controller.error.value != null) {
         return DmErrorMsg(text: controller.error.value ?? "");
@@ -144,10 +145,10 @@ class _SubstitutionCheckScreenState extends State<SubstitutionCheckScreen> {
           }).toList(),
           columnWidths: [
             IntrinsicColumnWidth(),
-            FixedColumnWidth(100),
+            FixedColumnWidth(110),
             FixedColumnWidth(85),
             // IntrinsicColumnWidth(), //MRP
-            FixedColumnWidth(80),
+            FixedColumnWidth(70),
           ],
         );
       }

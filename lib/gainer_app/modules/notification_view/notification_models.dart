@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class NotificationModel {
-  final int id;
+  final String id;
   final int receiverId;
   final String receiver;
   final int senderId;
@@ -25,7 +27,8 @@ class NotificationModel {
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-      id: _toInt(json['ID']),
+      // id: _toInt(json['ID']),
+      id: _toString(json['ID']),
       receiverId: _toInt(json['ReceiverId']),
       receiver: _toString(json['Receiver']),
       senderId: _toInt(json['SenderId']),
@@ -35,6 +38,21 @@ class NotificationModel {
       isRead: _toBool(json['IsRead']),
       sentOn: _toDate(json['SentOn']),
       moduleRoute: _toString(json['ModuleRoute']),
+    );
+  }
+
+  factory NotificationModel.fromJsonFCM(Map<String, dynamic> json) {
+    return NotificationModel(
+      id: json['ID'],
+      receiverId: _toInt(json['locationId']),
+      receiver: _toString(json['locationId']),
+      senderId: _toInt(json['sourceLocationId']),
+      sender: _toString(json['sourceLocationId']),
+      title: _toString(json['title']),
+      message: _toString(json['body']),
+      isRead: _toBool(json['read']),
+      sentOn: _toDate(json['createdAt']),
+      moduleRoute: _toString(json['data']['moduleRoute']),
     );
   }
 
@@ -68,6 +86,10 @@ class NotificationModel {
 
     if (value is String && value.isNotEmpty) {
       return DateTime.tryParse(value);
+    }
+
+    if (value is Timestamp) {
+      return value.toDate();
     }
 
     return null;

@@ -15,7 +15,6 @@ class PushNotification {
     log("title: $title, Body: $body");
     try {
       if (token == null) {
-        // print('Push token is null');
         return;
       }
 
@@ -65,10 +64,12 @@ class PushNotification {
     required String body,
     required Map<String, dynamic> data,
   }) async {
+    if (locationID == "null" || locationID.isEmpty) return;
     List<String> tokens =
         await FirebaseDbCreation.getDeviceTokens(locationId: locationID);
     // await FirebaseDbCreation.getAllToken(locationId: locationID);
 
+    // print("${tokens.length} Tokens Found");
     String? lastToken = "";
     for (String token in tokens) {
       if (lastToken != token) {
@@ -87,10 +88,5 @@ class PushNotification {
       receiverLocationId: locationID,
       data: data,
     );
-    // await FirebaseDB.createNotificationDB(
-    //   locationID: locationID,
-    //   title: title,
-    //   body: body,
-    // );
   }
 }

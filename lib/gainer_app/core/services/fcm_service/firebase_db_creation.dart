@@ -212,6 +212,20 @@ class FirebaseDbCreation {
     return false;
   }
 
+  static Future<String> getServerKey() async {
+    final doc = await FirebaseFirestore.instance
+        .collection('notification-function')
+        .doc('sN0cGDacb68lZDhhZwk3')
+        .get();
+
+    if (doc.exists) {
+      // final Map<String, dynamic> key = doc.data()?['serverKey'] ?? {};
+      final String key = doc.data()?['fcmServerKey'] ?? {};
+      return key;
+    }
+    return '';
+  }
+
   // async {
   //   assert(
   //     dealerId != null || locationId != null,

@@ -3,6 +3,7 @@ import 'package:gainer/dealer_monitoring/core/services/dm_api_services.dart';
 import 'package:gainer/gainer_app/core/Services/auth_service.dart';
 import 'package:gainer/gainer_app/core/utils/check_internet.dart';
 import 'package:get/get.dart';
+import '../../app_switcher_view/app_switcher_controller.dart';
 import '../../gainer_app/routes/app_routes.dart';
 import '../core/theme/app_colors.dart';
 import '../core/utils/transform_value_ind.dart';
@@ -64,7 +65,7 @@ class PartStockCheckController extends GetxController {
       return;
     } else if (query.isNotEmpty) {
       partSearchLoading.value = true;
-      final response = await api.searchPart(query); // API call function
+      final response = await api.searchPart(query);
       partSearchLoading.value = false;
       if (response['success']) {
         partSuggestions.value = response['data'];
@@ -147,14 +148,6 @@ class PartStockCheckController extends GetxController {
             })
             .whereType<Map<String, dynamic>>()
             .toList();
-        // if (locationsList.isNotEmpty) {
-        //   locationsList.insert(0, {
-        //     "Location": 'Location',
-        //     "stockdate": 'Stock Date',
-        //     "qty": 'Grp Free Stock',
-        //     "type": 'null',
-        //   });
-        // }
         if (partStatus.value == null) {
           partStatus.value = "Non-Stockable";
         }
@@ -230,8 +223,12 @@ class PartStockCheckController extends GetxController {
 
   Future<void> onTapGainerStockCheck() async {
     final String userRole = await AuthService.getUserRole();
-    if (userRole == 'workshop advisor' || userRole == 'sales executive') {
-      DealerSnackbar.showAccessDenied('you cannot access Gainer Stock Check');
+    final gainerAccess =
+        Get.find<AppSwitcherController>().appAccess['IsGainerActive'] ?? 0;
+    if (userRole == 'workshop advisor' ||
+        userRole == 'sales executive' ||
+        gainerAccess == 0) {
+      DealerSnackbar.showAccessDenied('You are not authorized for Gainer Stock Check');
     } else {
       Get.toNamed(
         Routes.PARTREQUESTVIEW,

@@ -5,8 +5,11 @@ import 'package:get/get.dart';
 import '../../../core/Services/auth_service.dart';
 import '../../../core/Services/gainer_api_service.dart';
 import '../../../core/constants/gainer_image.dart';
+import '../../../core/services/fcm_service/firebase_db_creation.dart';
+import '../../../core/services/fcm_service/send_notification_service.dart';
 import '../../../core/widgets/gainer_bottom_sheet.dart';
 import '../../../core/widgets/gainer_dialog.dart';
+import '../../../routes/app_routes.dart';
 import 'models/dr_received_model.dart';
 import 'models/dr_received_part_model.dart';
 import 'models/dr_received_seller_model.dart';
@@ -174,6 +177,7 @@ class DrReceivedController extends GetxController {
     final locationId = await AuthService.getLocationId();
 
     onTapBtn('Are you sure to accept this order?', () async {
+      isLoading(true);
       final response = await GainerApiService().acceptDrReceived(
         id: part.id.toString(),
         discount: part.discountCtl.text.trim(),
@@ -182,28 +186,31 @@ class DrReceivedController extends GetxController {
         tCode: tCode,
         locationId: locationId,
       );
+      isLoading(false);
       if (response['success']) {
         GainerDialog.midPopUp(GainerImages.checkIcon, response['data']);
         await getDrReceivedOrders();
+        await sendNotification(part, 'accept');
       } else {
         GainerBottomSheet.showSnackBar(response['message']);
       }
     });
   }
 
-  Future<void> rejectRequest(String id) async {
+  Future<void> rejectRequest(DrReceivedModel part) async {
     // AcceptDRSeller - RejectDRSeller
 
     onTapBtn('Are you sure to reject order received', () async {
       final tCode = await AuthService.getTCode();
 
       final response = await GainerApiService().rejectDRReceived(
-        id: id.toString(),
+        id: part.id.toString(),
         tCode: tCode,
       );
       if (response['success']) {
         GainerDialog.midPopUp(GainerImages.checkIcon, response['data']);
         await getDrReceivedOrders();
+        sendNotification(part, 'reject');
       } else {
         GainerBottomSheet.showSnackBar(response['message']);
       }
@@ -518,6 +525,30 @@ class DrReceivedController extends GetxController {
     if (applied == true) {
       applyFilters();
       update();
+    }
+  }
+
+  Future<void> sendNotification(DrReceivedModel part, String action) async {
+    bool needN = await FirebaseDbCreation.needNotificationSend();
+    if (!needN) return;
+    String dealerName = await AuthService.getDealer();
+    String locationName = await AuthService.getLocation();
+    if (action == 'accept') {
+      await PushNotification.notifyDealer(
+        locationID: part.buyingLocationId ?? '',
+        title: 'ORDER CONFIRMATION',
+        body:
+            'Enquiry raised from ${part.buyingLocation} for ${part.partNumber} (${part.qty?.toInt()} Qty) is ACCEPTED by $dealerName $locationName. Please raise Final PO in ${part.buyingLocation} & update on Gainer.',
+        data: {'moduleRoute': Routes.UPDATEPO},
+      );
+    } else {
+      await PushNotification.notifyDealer(
+        locationID: part.buyingLocationId ?? '',
+        title: 'ORDER REQUEST (REJECTED)',
+        body:
+            'Enquiry raised from ${part.buyingLocation} for ${part.partNumber} (${part.qty?.toInt()} Qty) is REJECTED by $dealerName/$locationName. Please check part on Gainer & place enquiry to another Co-Dealer',
+        data: {'moduleRoute': Routes.PARTREQUESTVIEW},
+      );
     }
   }
 }

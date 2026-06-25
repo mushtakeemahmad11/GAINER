@@ -22,7 +22,7 @@ class DrReceivedButtonRow extends GetView<DrReceivedController> {
         )),
         Expanded(
             child: GainerSecondaryButton(
-          onTap: ()=>controller.rejectRequest(order.id.toString()),
+          onTap: ()=>controller.rejectRequest(order),
           title: 'Reject',
         )),
       ],

@@ -39,7 +39,7 @@ class DrReceivedExpansionTileHeader extends StatelessWidget {
             Expanded(
               child: Center(
                 child: ScrollableTextWidget(
-                  textWidget: _titleText('$title2 $title2 '),
+                  textWidget: _titleText(title2),
                 ),
               ),
             ),

@@ -81,7 +81,6 @@ class DetailsCard extends StatelessWidget {
         const SizedBox(width: 6),
         _priceText('₹${order.price?.toInt()}/Qty'),
         const SizedBox(width: 6),
-        // _discountChip('${order.discount}% Off'),
         DiscountFlag(text: '${order.discount}% Off'),
       ],
     );

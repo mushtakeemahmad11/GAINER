@@ -1747,7 +1747,7 @@ class GainerApiService {
     }
   }
 
-  Future<void> readNotification(int notificationId) async {
+  Future<void> readNotification(String notificationId) async {
     String apiUrl = "$baseUrl/isRead";
     await apiRequest(apiUrl, {'Id': notificationId});
   }
