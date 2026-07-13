@@ -45,8 +45,6 @@ class FirebaseDbDeletion {
     for (var doc in snapshot.docs) {
       await doc.reference.delete();
     }
-
-    // print("✅ Old notifications deleted");
   }
 
   Future<void> deleteInvalidToken(String docId) async {
