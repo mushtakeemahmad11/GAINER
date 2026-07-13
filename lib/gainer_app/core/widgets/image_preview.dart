@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'gainer_app_loader.dart';
+
 class ImagePreview {
   static void show({
     required dynamic image, // File or String URL
@@ -36,9 +38,8 @@ class ImagePreview {
                       fit: BoxFit.contain,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
-
                         return const Center(
-                          child: CircularProgressIndicator(),
+                          child: GainerCircularLoader(color: Colors.white),
                         );
                       },
                       errorBuilder: (_, __, ___) {

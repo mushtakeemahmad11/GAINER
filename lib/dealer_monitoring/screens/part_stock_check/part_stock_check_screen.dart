@@ -89,7 +89,6 @@ class _PartStockCheckScreenState extends State<PartStockCheckScreen> {
     return Obx(() {
       if (c.isLoading.value) {
         return DealerAppLoader();
-        // return CircularProgressIndicator();
       }
       if (c.errorMessage.value != null || c.partDetails.isEmpty) {
         return DmErrorMsg(text: c.errorMessage.value ?? "");

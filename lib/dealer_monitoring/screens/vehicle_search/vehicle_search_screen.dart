@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:gainer/dealer_monitoring/widgets/dealer_app_loader.dart';
 import 'package:gainer/gainer_app/core/widgets/gainer_bottom_sheet.dart';
 import 'package:gainer/gainer_app/core/widgets/part_suggestion_list.dart';
 import 'package:get/get.dart';
@@ -189,7 +190,7 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
 
   Widget _buildVehicleResults() => Obx(() {
         if (_controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return DealerAppLoader();
         }
 
         final err = _controller.errorMsg.value;
@@ -364,7 +365,7 @@ class _VehicleSearchScreenState extends State<VehicleSearchScreen> {
               () => _controller.isMoreLoading.value && _controller.hasMore.value
                   ? const Padding(
                       padding: EdgeInsets.all(12),
-                      child: Center(child: CircularProgressIndicator()),
+                      child: Center(child: DealerAppLoader()),
                     )
                   : const SizedBox.shrink(),
             ),

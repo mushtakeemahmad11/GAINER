@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/controllers/vehicle_search_controller.dart';
 
+import 'dealer_app_loader.dart';
 import 'dm_elevated_button.dart';
 
 class ConfirmationDialog extends StatelessWidget {
@@ -55,7 +56,7 @@ class ConfirmationDialog extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Obx(() {
-              if (c.isCheckLoading.value) return CircularProgressIndicator();
+              if (c.isCheckLoading.value) return DealerAppLoader();
               return Opacity(
                 opacity: c.isCheckFinal.value ? 1.0 : 0.5,
                 child: SizedBox(

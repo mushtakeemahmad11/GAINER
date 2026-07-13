@@ -65,22 +65,23 @@ class NotificationServiceNEW {
       /// 🍎 iOS: wait for APNs token
       if (Platform.isIOS) {
         return 'PlatFormIos';
-        // String? apnsToken;
-        // int retry = 0;
-        //
-        // while (apnsToken == null && retry < 10) {
-        //   await Future.delayed(const Duration(seconds: 1));
-        //   apnsToken = await _messaging.getAPNSToken();
-        //   retry++;
-        // }
-        //
-        // if (apnsToken == null) {
-        //   return null;
-        // }
-        //
-        // // print("✅ APNS Token: $apnsToken");
-        // AuthService.saveDeviceToken(apnsToken);
-        // return apnsToken;
+        String? apnsToken;
+        int retry = 0;
+
+        while (apnsToken == null && retry < 10) {
+          await Future.delayed(const Duration(seconds: 1));
+          apnsToken = await _messaging.getAPNSToken();
+          retry++;
+          print("Try: $retry, Token: $apnsToken");
+        }
+
+        if (apnsToken == null) {
+          return null;
+        }
+
+        // print("✅ APNS Token: $apnsToken");
+        AuthService.saveDeviceToken(apnsToken);
+        return apnsToken;
       }
 
       /// 🤖 Android: directly works

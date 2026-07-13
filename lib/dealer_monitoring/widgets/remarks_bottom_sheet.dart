@@ -16,6 +16,7 @@ import '../../gainer_app/core/constants/gainer_image.dart';
 import '../core/theme/app_colors.dart';
 import '../core/utils/transform_value_ind.dart';
 import '../screens/vehicle_search/image_pick_screen.dart';
+import 'dealer_app_loader.dart';
 import 'dm_elevated_button.dart';
 import 'dm_text_form_filed.dart';
 
@@ -303,7 +304,7 @@ class PreviousRemarksDialog extends StatelessWidget {
                     Center(
                       child: Obx(() {
                         if (controller.remarksLoading.value) {
-                          return CircularProgressIndicator();
+                          return DealerAppLoader();
                         }
                         final err = controller.remarksError.value;
                         if (err != null) {
@@ -396,7 +397,7 @@ class _RemarksBottomSheetState extends State<RemarksBottomSheet> {
                   child: Center(
                     child: Obx(() {
                       if (controller.isLoading.value) {
-                        return CircularProgressIndicator();
+                        return DealerAppLoader();
                       }
                       if (controller.error.value != null) {
                         return AppErrorText(error: controller.error);
@@ -546,7 +547,7 @@ class _RemarksBottomSheetState extends State<RemarksBottomSheet> {
                 ),
                 Obx(() {
                   if (controller.isSubmitting.value) {
-                    return const CircularProgressIndicator();
+                    return const DealerAppLoader();
                   }
                   return DmElevatedButton(
                     text: "Submit",

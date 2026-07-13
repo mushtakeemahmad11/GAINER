@@ -128,6 +128,7 @@ class DDController extends GetxController {
     isLoading.value = false;
     if (response['success']) {
       List<dynamic> jsonList = jsonDecode(response['data']);
+      print(jsonList);
       ddList.assignAll(
         jsonList.map((e) => DDModel.fromJson(e)),
       );

@@ -38,7 +38,7 @@ class GainerCircularLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Platform.isIOS
-          ? CircularProgressIndicator.adaptive()
+          ? CircularProgressIndicator.adaptive(backgroundColor: color)
           : CircularProgressIndicator(color: color),
     );
   }

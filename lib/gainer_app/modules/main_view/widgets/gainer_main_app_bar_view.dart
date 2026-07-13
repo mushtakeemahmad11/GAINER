@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
@@ -19,8 +18,8 @@ class GainerMainAppBarView extends GetView<GainerMainController>
       iconTheme: const IconThemeData(color: Colors.black54),
       backgroundColor: GainerColors.primary,
       title: _buildTitle(),
-      leadingWidth: Platform.isIOS ? 100 : null,
-      leading: Platform.isIOS ? _buildLeading(context) : null,
+      // leadingWidth: Platform.isIOS ? 100 : null,
+      // leading: Platform.isIOS ? _buildLeading(context) : null,
       centerTitle: true,
       actions: [_buildNotificationIcon(), const SizedBox(width: 12)],
     );

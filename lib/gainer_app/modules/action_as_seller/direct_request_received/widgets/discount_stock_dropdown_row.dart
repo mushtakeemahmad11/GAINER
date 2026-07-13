@@ -39,14 +39,19 @@ class DiscountStockDropdownRow extends GetView<DrReceivedController> {
         ),
         Expanded(
           flex: 2,
-          child: GainerAppDropdown(
-            hintText: 'Stock Type',
-            items:
-                controller.stockQualityList.map((e) => e.stockQuality).toList(),
-            onChanged: (val) => controller.onStockQualityChanged(order, val),
-            validator: (val) =>
-                val == null || val.isEmpty ? 'Please select stock type' : null,
-          ),
+          child: Obx(() {
+            return GainerAppDropdown(
+              hintText: 'Stock Type',
+              items: controller.stockQualityList
+                  .map((e) => e.stockQuality)
+                  .toList(),
+              onChanged: (val) => controller.onStockQualityChanged(order, val),
+              selectedItem: controller.selectedStockQuality.value,
+              validator: (val) => val == null || val.isEmpty
+                  ? 'Please select stock type'
+                  : null,
+            );
+          }),
         ),
       ],
     );

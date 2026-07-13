@@ -44,21 +44,41 @@ class GainerInputFormatters {
 }
 
 class PartNumberFormatter extends TextInputFormatter {
-  // final _allowed = RegExp(r'[A-Z0-9\-\/]');
-  final _allowed = RegExp(r'[A-Z0-9\-\/,]'); // <-- Allow
-
   @override
   TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    final upper = newValue.text.toUpperCase();
+      TextEditingValue oldValue,
+      TextEditingValue newValue) {
 
-    final filtered = upper.split('').where(_allowed.hasMatch).join();
+    final filtered = newValue.text
+        .toUpperCase()
+        .replaceAll(RegExp(r'[^A-Z0-9\-/,]'), '');
 
-    return TextEditingValue(text: filtered, selection: newValue.selection);
+    return newValue.copyWith(
+      text: filtered,
+      selection: TextSelection.collapsed(
+        offset: filtered.length,
+      ),
+      composing: TextRange.empty,
+    );
   }
 }
+
+// class PartNumberFormatter extends TextInputFormatter {
+//   // final _allowed = RegExp(r'[A-Z0-9\-\/]');
+//   final _allowed = RegExp(r'[A-Z0-9\-\/,]'); // <-- Allow
+//
+//   @override
+//   TextEditingValue formatEditUpdate(
+//     TextEditingValue oldValue,
+//     TextEditingValue newValue,
+//   ) {
+//     final upper = newValue.text.toUpperCase();
+//
+//     final filtered = upper.split('').where(_allowed.hasMatch).join();
+//
+//     return TextEditingValue(text: filtered, selection: newValue.selection);
+//   }
+// }
 
 class QtyLimitFormatter extends TextInputFormatter {
   final int maxReqQty;

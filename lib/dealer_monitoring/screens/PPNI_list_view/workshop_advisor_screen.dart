@@ -3,6 +3,7 @@ import 'package:gainer/dealer_monitoring/widgets/workshop_advisor_body.dart';
 import 'package:gainer/gainer_app/core/Services/auth_service.dart';
 
 import '../../../gainer_app/modules/login/model/user_model.dart';
+import '../../widgets/dealer_app_loader.dart';
 
 class WorkshopAdvisorScreen extends StatefulWidget {
   const WorkshopAdvisorScreen({super.key});
@@ -56,7 +57,7 @@ class _WorkshopAdvisorScreenState extends State<WorkshopAdvisorScreen> {
               dealerID: dealerID ?? "",
               advisor: advisorName ?? "",
             )
-          : Center(child: CircularProgressIndicator()),
+          : Center(child: DealerAppLoader()),
       // : Center(child: Text("There is some problem try after some time")),
     );
   }

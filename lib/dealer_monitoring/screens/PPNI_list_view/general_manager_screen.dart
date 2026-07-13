@@ -336,8 +336,8 @@ class _GeneralManagerScreenState extends State<GeneralManagerScreen> {
                           oddColor: DMAppColors.primary,
                           onPartTap: (part, locationID, advisorList) {},
                           advisorData: fakeLocation,
-                        ));
-                    // return const CircularProgressIndicator();
+                        ),
+                    );
                   }
                   final err = _generalManagerController.error.value;
                   if (err != null) {

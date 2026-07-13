@@ -2034,7 +2034,7 @@ class GainerApiService {
     required String tCode,
     required String locationId,
   }) async {
-    String apiUrl = "$baseUrl/AcceptDRSeller";
+    String apiUrl = "$baseUrl/AcceptDRSellerDEMO";
     final Map<String, dynamic> payload = {
       "id": id,
       "Discount": discount,

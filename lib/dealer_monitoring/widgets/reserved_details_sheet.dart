@@ -6,6 +6,8 @@ import '../core/utils/transform_value_ind.dart';
 import 'package:gainer/gainer_app/core/widgets/error_text.dart';
 import 'package:get/get.dart';
 
+import 'dealer_app_loader.dart';
+
 class ReservedDetailsSheet extends StatelessWidget {
   const ReservedDetailsSheet({super.key});
 
@@ -16,7 +18,7 @@ class ReservedDetailsSheet extends StatelessWidget {
     return SafeArea(
       child: DraggableScrollableSheet(
         expand: false,
-        initialChildSize: 0.28,
+        initialChildSize: 0.3,
         minChildSize: 0.2,
         maxChildSize: 0.7,
         snap: true,
@@ -49,7 +51,7 @@ class ReservedDetailsSheet extends StatelessWidget {
               const SizedBox(height: 10),
               Obx(() {
                 if (controller.isLoadingReservedDetails.value) {
-                  return CircularProgressIndicator();
+                  return DealerAppLoader();
                 }
                 final err = controller.reservedDetailsError;
                 if (err.value != null && err.value!.isNotEmpty) {
@@ -185,7 +187,6 @@ class ReservedController extends GetxController {
   RxBool isLoadingReservedDetails = false.obs;
   List<dynamic> reservedDetailsList = [].obs;
   Future<void> getReservedDetails(String partNumber) async {
-
     final lastP = lastReservedPart.value;
     if (lastP != null && lastP == partNumber) {
       if (reservedDetailsList.isNotEmpty) return;

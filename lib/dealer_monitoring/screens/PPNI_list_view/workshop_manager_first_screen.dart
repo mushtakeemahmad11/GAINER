@@ -243,9 +243,6 @@ class _WorkshopManagerFirstScreenState
           Obx(
             () {
               bool loading = _workShopManagerController.isFirstLoading.value;
-              // if (_workShopManagerController.isFirstLoading.value) {
-              //   return const CircularProgressIndicator();
-              // }
               if (loading) {
                 final fakeAdvisor = List.generate(
                   10,

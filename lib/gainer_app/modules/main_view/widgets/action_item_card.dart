@@ -11,7 +11,8 @@ class ActionItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final HomeController controller = Get.find<HomeController>();
     if (item.title == 'Direct Req Sent' ||
-        item.title == 'Direct Req Received') {
+        item.title == 'Direct Req Rec') {
+        // item.title == 'Direct Req Received') {
       return _isDirectReq(controller);
     }
     return _card(true, controller);

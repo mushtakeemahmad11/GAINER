@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../controllers/vehicle_search_controller.dart';
 import '../core/theme/app_colors.dart';
 import '../core/utils/transform_value_ind.dart';
+import 'dealer_app_loader.dart';
 
 class VehicleSearchGrpStockDetailsSheet extends StatelessWidget {
   const VehicleSearchGrpStockDetailsSheet({super.key});
@@ -44,7 +45,7 @@ class VehicleSearchGrpStockDetailsSheet extends StatelessWidget {
           const SizedBox(height: 10),
           Obx(() {
             if (controller.isLoadingGrpStock.value) {
-              return CircularProgressIndicator();
+              return DealerAppLoader();
             }
             final err = controller.grpStockError;
             if (err.value != null && err.value!.isNotEmpty) {

@@ -12,28 +12,49 @@ class GainerDrawerView extends GetView<GainerMainController> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: GainerColors.primary,
       width: MediaQuery.of(context).size.width * 0.7,
-      child: Container(
-        color: GainerColors.primary,
-        child: SafeArea(
-          child: Column(
-            children: [
-              _header(),
-              const SizedBox(height: 20),
-              Divider(),
-              _menuList(),
-              const Spacer(),
-              _logoutButton(),
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
+      child: Column(
+        children: [
+          _header(),
+          // const SizedBox(height: 20),
+          // Divider(),
+          _menuList(),
+          const Spacer(),
+          _logoutButton(),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }
 
   // ---------------- HEADER ----------------
   Widget _header() {
+    return DrawerHeader(
+      child: Center(
+        child: Obx(
+          () => ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: ProfileCircle(
+              size: 60,
+              pickedImg: hc.pickedProfileImg.value,
+              apiImg: hc.profileImage.value,
+            ),
+            title: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Text(
+                hc.name.value,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+            subtitle: Text(
+              hc.username.value,
+              style: TextStyle(color: Colors.white70),
+            ),
+          ),
+        ),
+      ),
+    );
     return Padding(
       padding: const EdgeInsets.all(16),
       child: InkWell(

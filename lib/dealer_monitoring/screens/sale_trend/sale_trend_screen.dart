@@ -8,6 +8,7 @@ import 'package:gainer/gainer_app/core/widgets/part_suggestion_list.dart';
 import 'package:get/get.dart';
 import '../../../main.dart';
 import '../../widgets/bar_chart_widget.dart';
+import '../../widgets/dealer_app_loader.dart';
 import '../../widgets/dm_dropdown.dart';
 import '../../widgets/dm_error_msg.dart';
 import '../../widgets/legend_bar.dart';
@@ -103,7 +104,7 @@ class _SaleTrendScreenState extends State<SaleTrendScreen> {
     return Obx(() {
       final err = _saleTrendController.error.value;
       if (_saleTrendController.isLoading.value) {
-        return const CircularProgressIndicator();
+        return const DealerAppLoader();
       } else if (err != null) {
         return DmErrorMsg(text: err);
       } else if (_saleTrendController.partDetails.isEmpty) {

@@ -305,7 +305,7 @@ class DirectRequestController extends GetxController {
         body: "Part: $partNum\n"
             "Buyer: $dealerName, $locationName\n"
             "Pl check & CONFIRM order",
-        data: {'moduleRoute': Routes.ORDERRECEIVED},
+        data: {'moduleRoute': Routes.DIRECTREQRECEIVED},
       );
     }
   }

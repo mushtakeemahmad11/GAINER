@@ -38,7 +38,6 @@ class GainerPrimaryButton extends StatelessWidget {
         ),
         onPressed: onPressed,
         child: isLoading
-            // ? CircularProgressIndicator(color: GainerColors.secondary)
             ? GainerCircularLoader(color: GainerColors.secondary)
             : icon != null
                 ? Icon(icon, color: GainerColors.white)

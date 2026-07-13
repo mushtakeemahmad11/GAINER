@@ -20,7 +20,7 @@ Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
   );
 }
 
-/// for SSL certificate By-Pass
+// /// for SSL certificate By-Pass
 // class MyHttpOverrides extends HttpOverrides {
 //   @override
 //   HttpClient createHttpClient(SecurityContext? context) {
@@ -36,7 +36,9 @@ final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  /// Initialize Firebase only once
+  // // Optional: Global override if needed (e.g., for self-signed certs)
+  // HttpOverrides.global = MyHttpOverrides();
+  /// Initialize Firebase only onc
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

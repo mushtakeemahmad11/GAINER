@@ -8,6 +8,7 @@ import 'package:gainer/dealer_monitoring/widgets/legend_bar.dart';
 import 'package:gainer/gainer_app/core/widgets/part_suggestion_list.dart';
 import 'package:get/get.dart';
 import '../../../main.dart';
+import '../../widgets/dealer_app_loader.dart';
 import '../../widgets/search_bar.dart';
 
 class GainerListingScreen extends StatefulWidget {
@@ -99,7 +100,7 @@ class _GainerListingScreenState extends State<GainerListingScreen> {
   Widget _buildPartCard(){
     return Obx(() {
       if (controller.isLoading.value) {
-        return const CircularProgressIndicator();
+        return const DealerAppLoader();
       }
 
       if (controller.error.value != null) {

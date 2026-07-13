@@ -28,15 +28,8 @@ class DMMainController extends GetxController {
   var currentScreen = 0.obs;
   // void openScreen(int index) => currentScreen.value = index;
   void openScreen(int index) {
-    if (Platform.isIOS &&
-        index != 0 &&
-        index != 1 &&
-        index != 2 &&
-        index != 3) {
-      currentScreen.value = 13;
-    } else {
-      currentScreen.value = index;
-    }
+    print('openScreen Index: $index');
+    currentScreen.value = index;
   }
 
   final List<Map<String, dynamic>> menuItems = [
@@ -224,7 +217,8 @@ class DMMainController extends GetxController {
       if (label.startsWith("Gainer Stock")) {
         // DealerSnackbar.showAccessDenied(
         //     'Advisor cannot access Gainer Stock Check');
-        DealerSnackbar.showAccessDenied('You are not authorized for Gainer Stock Check');
+        DealerSnackbar.showAccessDenied(
+            'You are not authorized for Gainer Stock Check');
         return;
       }
     }

@@ -7,6 +7,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import '../controllers/workshop_part_controller.dart';
 import '../core/theme/app_colors.dart';
 import '../core/utils/transform_value_ind.dart';
+import 'dealer_app_loader.dart';
 import 'info_tap_widget.dart';
 
 class WorkshopExpansionTable extends StatefulWidget {
@@ -79,7 +80,6 @@ class _WorkshopExpansionTableState extends State<WorkshopExpansionTable> {
 
         return Column(
           children: [
-
             if (index == 0) _buildHeaderRow(size),
             Obx(() {
               final parts = _c.partsByVehicle[vno];
@@ -127,12 +127,14 @@ class _WorkshopExpansionTableState extends State<WorkshopExpansionTable> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-              width: 18,
-              height: 18,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white,
-              )),
+            width: 18,
+            height: 18,
+            child: DealerAppLoader(color: Colors.white),
+            // child: CircularProgressIndicator(
+            //   strokeWidth: 2,
+            //   color: Colors.white,
+            // ),
+          ),
           SizedBox(width: 8),
           Text(
             "Loading parts...",

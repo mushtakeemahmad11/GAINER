@@ -242,7 +242,8 @@ class HomeController extends GetxController {
 
   static const Map<String, Map<String, dynamic>> sellerStageMap = {
     'DirectRequestReceived': {
-      'title': 'Direct Req Received',
+      'title': 'Direct Req Rec',
+      // 'title': 'Direct Req Received',
       'icon': Icons.call_received,
     },
     'OrderDue': {
@@ -367,7 +368,8 @@ class HomeController extends GetxController {
   bool checkAllow(String title) {
     if (title == 'Direct Req Sent') {
       return isAllowBuying.value;
-    } else if (title == 'Direct Req Received') {
+    } else if (title == 'Direct Req Rec') {
+      // } else if (title == 'Direct Req Received') {
       return isAllowSelling.value;
     }
     return true;

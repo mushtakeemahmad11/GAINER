@@ -16,6 +16,7 @@ import '../core/utils/dm_images.dart';
 import '../core/utils/transform_graph_ppni_data.dart';
 import '../models/vehicle_parts_details_model.dart';
 import 'bar_chart_widget.dart';
+import 'dealer_app_loader.dart';
 import 'dm_dropdown.dart';
 import 'head_bar.dart';
 import 'no_internet_dialog.dart';
@@ -488,7 +489,7 @@ class _WorkshopAdvisorBodyState extends State<WorkshopAdvisorBody> {
                       if (hasMore && _controller.isMoreLoading.value)
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: CircularProgressIndicator(),
+                          child: DealerAppLoader(),
                         ),
                     ],
                   );

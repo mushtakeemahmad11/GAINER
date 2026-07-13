@@ -502,7 +502,7 @@ class UpdatePoController extends GetxController {
         locationID: sellerLocationID,
         title: 'Purchase Order (CONFIRMED)',
         body:
-            'Enquiry raised from $location worth $totalPrice Please do Invoice & manifest details on Gainer.',
+            'Enquiry raised from $location worth ₹${totalPrice.toInt()} Please do Invoice & manifest details on Gainer.',
         data: {'moduleRoute': Routes.MANIFESTATIONVIEW},
       );
     } else {
@@ -716,18 +716,15 @@ class UpdatePoController extends GetxController {
 
   ///FURTHER REMARKS FUNCTIONALITY
   RxBool isFRLoading = false.obs;
-  Future<void> onSubmitFurtherDetails(String bigId, String furtherRemarks,
-      String sellerLocationID, String partNumber, BuildContext context) async {
-    String remarks = furtherRemarks;
-
-    // bool checkInt = await checkInternet();
-    // if (checkInt) {
-    //   if (await checkInternet()) {
-    // final locationId = await AuthService.getLocationId();
-    // final tCode = await AuthService.getTCode();
+  Future<void> onSubmitFurtherDetails(
+    String bigId,
+    String furtherRemarks,
+    String sellerLocationID,
+    String partNumber,
+  ) async {
     isFRLoading.value = true;
     final response = await GainerApiService().poFurtherDetails(
-      remarks: remarks,
+      remarks: furtherRemarks,
       bigID: bigId,
       locationId: locationId,
       tCode: tCode,
@@ -745,17 +742,13 @@ class UpdatePoController extends GetxController {
         locationID: sellerLocationID,
         title: 'Purchase Order (Further Remarks)',
         body:
-            'Enquiry raised from $location for $partNumber $remarks PO Return for Further remarks, by $dealer $location. PO Return for Further remarks, please Check & update on Gainer.',
+            'Enquiry raised from $location for $partNumber $furtherRemarks PO Return for Further remarks, by $dealer $location. Check & update on Gainer.',
         data: {'moduleRoute': Routes.ORDERRECEIVED},
       );
     } else {
       Get.back();
       GainerBottomSheet.showSnackBar(response['message']);
     }
-    // } else {
-    //   Get.toNamed(Routes.NOINTERNETVIEW);
-    // }
-    // }
   }
 
   ///FILTER FUNCTIONALITY

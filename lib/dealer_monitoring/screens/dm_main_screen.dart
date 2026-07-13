@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:gainer/dealer_monitoring/screens/PPNI_list_view/workshop_manager_first_screen.dart';
 import 'package:gainer/dealer_monitoring/screens/PPNI_list_view/general_manager_screen.dart';
@@ -13,11 +11,9 @@ import 'package:gainer/gainer_app/core/Services/auth_service.dart';
 import 'package:gainer/test/gainer_sims.dart';
 import 'package:get/get.dart';
 import '../../app_switcher_view/app_switcher_controller.dart';
-import '../../gainer_app/core/widgets/profile_circle.dart';
 import '../controllers/dm_main_controller.dart';
 import '../core/theme/app_colors.dart';
-import '../core/utils/dm_images.dart';
-import '../widgets/dm_list_tile.dart';
+import '../widgets/dealer_drawer_view.dart';
 import 'PPNI_list_view/workshop_advisor_screen.dart';
 import 'gainer_listing/gainer_listing_screen.dart';
 import 'order_information/order_info_screen.dart';
@@ -127,10 +123,10 @@ class _DMMainScreenState extends State<DMMainScreen> {
             }),
           ],
         ),
-        leading: Platform.isIOS ? _buildLeading(context) : null,
-        leadingWidth: Platform.isIOS ? 100 : null,
+        // leading: Platform.isIOS ? _buildLeading(context) : null,
+        // leadingWidth: Platform.isIOS ? 100 : null,
       ),
-      drawer: _buildDrawerButton(),
+      drawer: DealerDrawerView(),
       body: Obx(() {
         return PopScope(
           // Only allow pop if on the home screen
@@ -183,74 +179,6 @@ class _DMMainScreenState extends State<DMMainScreen> {
           // onPressed: () => Scaffold.of(context).openDrawer(),
         ),
       ],
-    );
-  }
-
-  Widget _buildDrawerButton() {
-    return Drawer(
-      backgroundColor: DMAppColors.secondary,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DrawerHeader(
-            child: Center(
-              child: Obx(
-                () => ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: ProfileCircle(
-                    size: 55,
-                    pickedImg: dMMainController.pickedProfileImg.value,
-                    apiImg: dMMainController.profileImage.value,
-                  ),
-                  title: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Text(
-                      dMMainController.name.value,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  subtitle: Text(
-                    dMMainController.userRole.value,
-                    style: TextStyle(color: Colors.white70),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: _drawerItems(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  List<Widget> _drawerItems() {
-    return [
-      _drawerTile(DMImages.partStockCheck, "Part Stock Check", 0),
-      _drawerTile(DMImages.gLogoW, "Gainer Stock Check", 1),
-      _drawerTile(DMImages.substitutionCheck, "Substitution Check", 2),
-      _drawerTile(DMImages.ppniList, "PPNI List", 3),
-      _drawerTile(DMImages.vehicleSearch, "Vehicle Search", 4),
-      _drawerTile(DMImages.saleTrend, "Sale Trend", 5),
-      _drawerTile(DMImages.orderInfo, "Order info", 6),
-      _drawerTile(DMImages.scsNorms, "SCS Norms", 7),
-      // _drawerTile(ConstantImages.gainerListening, "My Gainer Listing", 9),
-    ];
-  }
-
-  Widget _drawerTile(String imageUrl, String title, int index) {
-    return DmListTile(
-      url: imageUrl,
-      title: title,
-      onTap: () {
-        Get.back();
-        dMMainController.goto(title, index);
-      },
     );
   }
 }

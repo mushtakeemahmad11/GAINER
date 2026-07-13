@@ -17,7 +17,7 @@ class AppSwitcherController extends GetxController with WidgetsBindingObserver {
   RxString userName = ''.obs;
 
   /// for notified app update
-  RxString oldVersion = '2.0.0'.obs;
+  RxString oldVersion = '2.0.1'.obs;
   RxString newVersion = ''.obs;
   RxBool isAppUpdated = true.obs;
 

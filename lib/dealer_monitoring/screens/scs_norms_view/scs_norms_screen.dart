@@ -7,6 +7,7 @@ import 'package:gainer/dealer_monitoring/widgets/search_bar.dart';
 import 'package:gainer/gainer_app/core/widgets/part_suggestion_list.dart';
 import 'package:get/get.dart';
 import '../../../main.dart';
+import '../../widgets/dealer_app_loader.dart';
 import '../../widgets/dm_error_msg.dart';
 
 class ScsNormsScreen extends StatefulWidget {
@@ -70,7 +71,7 @@ class _ScsNormsScreenState extends State<ScsNormsScreen> {
   Widget _buildNormsCard() {
     return Obx(() {
       if (controller.isLoading.value) {
-        return const CircularProgressIndicator();
+        return const DealerAppLoader();
       }
       if (controller.error.value != null || controller.partDetails.isEmpty) {
         return DmErrorMsg(text: controller.error.value ?? "");

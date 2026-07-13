@@ -14,9 +14,9 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.android.tools.build:gradle:8.1.0'
+        classpath 'com.android.tools.build:gradle:9.0.1'
 //        classpath 'com.android.tools.build:gradle:8.13.2' // Replace with your required version
-        classpath 'com.google.gms:google-services:4.4.4' // Required Google Services plugin (firebase)
+        classpath 'com.google.gms:google-services:4.5.0' // Required Google Services plugin (firebase)
     }
 }
 

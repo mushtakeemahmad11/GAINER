@@ -8,6 +8,7 @@ import 'package:gainer/gainer_app/core/widgets/part_suggestion_list.dart';
 import 'package:get/get.dart';
 import '../../../main.dart';
 import '../../controllers/order_info_controller.dart';
+import '../../widgets/dealer_app_loader.dart';
 import '../../widgets/dm_dropdown.dart';
 import '../../widgets/reusable_table.dart';
 
@@ -197,7 +198,7 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
   Widget _buildInfoCard() {
     return Obx(() {
       if (controller.isLoading.value) {
-        return const CircularProgressIndicator();
+        return const DealerAppLoader();
       }
       if (controller.error.value != null || controller.data.isEmpty) {
         return DmErrorMsg(text: controller.error.value ?? "");
